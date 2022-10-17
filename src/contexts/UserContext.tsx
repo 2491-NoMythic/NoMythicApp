@@ -1,10 +1,4 @@
-import {
-    createContext,
-    createSignal,
-    Accessor,
-    useContext,
-    Setter,
-} from 'solid-js'
+import { createContext, createSignal, Accessor, useContext } from 'solid-js'
 import { Session } from '@supabase/supabase-js'
 
 import { AuthSession, GoogleUser, Member } from '../types/Api'
@@ -12,7 +6,6 @@ import {
     convertGoogleSessionToAuthSession,
     convertGoogleSessionToGoogleUser,
 } from '../utilities/converters'
-import { IoThumbsUpOutline } from 'solid-icons/io'
 
 type UserStore = [
     Accessor<AuthSession>,

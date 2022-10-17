@@ -10,11 +10,9 @@ import { CounterProvider } from './contexts/CountContext'
 render(
     () => (
         <Router>
-            <CounterProvider>
-                <UserProvider>
-                    <App />
-                </UserProvider>
-            </CounterProvider>
+            <UserProvider>
+                <App />
+            </UserProvider>
         </Router>
     ),
     document.getElementById('root') as HTMLElement

@@ -1,4 +1,4 @@
-import { Component, createEffect, Show, Switch, Match } from 'solid-js'
+import { Component, createEffect, Switch, Match } from 'solid-js'
 import { useMyUser } from '../contexts/UserContext'
 import { getMemberByEamil } from '../api/members'
 import unicorn from '../assets/2491_logo_disc_outline.png'

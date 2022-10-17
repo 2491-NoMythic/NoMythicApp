@@ -1,9 +1,8 @@
 import { Accessor, Component, createSignal, For, Setter } from 'solid-js'
-import { IoCalendarOutline } from 'solid-icons/io'
 
 const validYears = ['2023']
 
-const DatePicker: Component<{
+const YearPicker: Component<{
     year: Accessor<string>
     setYear: Setter<string>
 }> = (props) => {
@@ -38,4 +37,4 @@ const DatePicker: Component<{
     )
 }
 
-export default DatePicker
+export default YearPicker
