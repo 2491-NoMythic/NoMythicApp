@@ -1,4 +1,4 @@
-import { Component, createEffect, createMemo } from 'solid-js'
+import { Component } from 'solid-js'
 import HamburgerMenu from './HamburgerMenu'
 import PersonMenu from './PersonMenu'
 import { useLocation } from '@solidjs/router'
