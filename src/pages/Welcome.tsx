@@ -9,7 +9,7 @@ const Welcome: Component = () => {
         authSession,
         googleUser,
         member,
-        { loadUser, loadMember, isLoggedIn, isMember },
+        { loadMember, isLoggedIn, isMember },
     ] = useMyUser()
 
     const navigate = useNavigate()
@@ -19,12 +19,9 @@ const Welcome: Component = () => {
     })
 
     const handleLoadMember = async () => {
-        console.log('handle load member')
         // no point if not logged in
         if (isLoggedIn()) {
             const member = await getMemberByEamil('veggie2u@gmail.com')
-            console.log('member', member)
-
             if (member !== null && member.id !== undefined) {
                 loadMember(member)
             }
@@ -108,9 +105,6 @@ const Welcome: Component = () => {
                     </div>
                 </Match>
             </Switch>
-            {/* <div class="mt-20">
-                <img src={unicorn} class="w-80 h-80"></img>
-            </div> */}
         </div>
     )
 }

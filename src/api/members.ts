@@ -8,7 +8,6 @@ const getMemberByEamil = async (email: string) => {
         .eq('email', email)
 
     if (error) throw error
-    //console.log(data)
 
     if (data.length === 0) {
         return null

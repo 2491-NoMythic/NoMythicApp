@@ -1,15 +1,15 @@
 import { Component, createEffect, createSignal, For, Show } from 'solid-js'
-import YearPicker from '../components/YearPicker'
-import SubTeamSelector from '../components/SubTeamSelector'
+import YearPicker from '../../components/YearPicker'
+import SubTeamSelector from '../../components/SubTeamSelector'
 // static file instead of fetching from internet for now
-import { teamMembers } from '../assets/teamFull'
-import { filterBySubTeam } from '../utilities/filters'
-import { sortByFirstName } from '../utilities/sorts'
-import SelectTeamInfoMessage from '../components/SelectTeamInfoMessage'
-import MasterTeamTable from '../components/MasterTeamTable'
-import { TeamMember } from '../types/Api'
+import { teamMembers } from '../../assets/teamFull'
+import { filterBySubTeam } from '../../utilities/filters'
+import { sortByFirstName } from '../../utilities/sorts'
+import SelectTeamInfoMessage from '../../components/SelectTeamInfoMessage'
+import MasterTeamTable from '../../components/MasterTeamTable'
+import { TeamMember } from '../../types/Api'
 
-const Admin: Component = () => {
+const MasterTeamList: Component = () => {
     // when not a static file, useResource
     const [team, setTeam] = createSignal<TeamMember[]>([])
     const [subTeam, setSubTeam] = createSignal('')
@@ -44,4 +44,4 @@ const Admin: Component = () => {
     )
 }
 
-export default Admin
+export default MasterTeamList

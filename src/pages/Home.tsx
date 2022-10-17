@@ -2,19 +2,20 @@ import { Component } from 'solid-js'
 import { useNavigate } from '@solidjs/router'
 import { supabase } from '../api/SupabaseClient'
 
+const redirectUrl = import.meta.env.VITE_REDIRECT_URL
+
 const Home: Component = () => {
     const navigate = useNavigate()
 
     const signInWithGoogle = async () => {
-        console.log('signInWithGoogle')
         const { data, error } = await supabase.auth.signInWithOAuth({
             provider: 'google',
             options: {
-                redirectTo: 'http://localhost:3000/welcome',
+                redirectTo: redirectUrl,
             },
         })
-        //'https://resilient-bienenstitch-c3634e.netlify.app/welcome',
     }
+
     const continueAsGuest = () => {
         navigate('/guest')
     }

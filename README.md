@@ -6,11 +6,18 @@ Since most students run their lives through their phones, the goal is to keep th
 
 ## Tech
 
--   SolidJS
+-   SolidJS - React like framework
 -   Typescript
--   TailwindJS
--   Daisy (helper for TailwindJS)
--   Google account login
+-   TailwindJS - CSS framwork
+-   Daisy - helper for TailwindJS
+-   GoogleCloud - account login
+-   Supabase - database in the cloud
+-   Netlify - deploys
+
+## Keys
+
+You will need to get your Supabase keys to run. If you are not NoMythic, you will have to set up Supabase and GoogleCloud for login.
+These things are beyond the scope of this readme. If you are another First Robotics team interrested in this, contact. Chris Ward <veggie2u@cyberward.net>
 
 ## Usage
 

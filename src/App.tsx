@@ -6,11 +6,13 @@ import { AuthChangeEvent, Session } from '@supabase/supabase-js'
 import { useMyUser } from './contexts/UserContext'
 
 const Home = lazy(() => import('./pages/Home'))
-const Attendance = lazy(() => import('./pages/Attendance'))
-const Admin = lazy(() => import('./pages/Admin'))
 const Welcome = lazy(() => import('./pages/Welcome'))
 const Guest = lazy(() => import('./pages/Guest'))
 const Profile = lazy(() => import('./pages/Profile'))
+const AdminAccess = lazy(() => import('./pages/admin/AdminAccess'))
+const MasterTeamList = lazy(() => import('./pages/admin/MasterTeamList'))
+const MemberAccess = lazy(() => import('./pages/members/MemberAccess'))
+const Attendance = lazy(() => import('./pages/members/Attendance'))
 
 const App: Component = () => {
     const [
@@ -24,8 +26,6 @@ const App: Component = () => {
     createEffect(() => {
         supabase.auth.onAuthStateChange(
             (event: AuthChangeEvent, session: Session) => {
-                console.log('event', event)
-                console.log('session changed', session)
                 if (event === 'SIGNED_IN') {
                     loadUser(session)
                 } else if (event === 'SIGNED_OUT' || event === 'USER_DELETED') {
@@ -46,11 +46,15 @@ const App: Component = () => {
             <AppToolBar />
             <Routes>
                 <Route path="/home" component={Home} />
-                <Route path="/attendance" component={Attendance} />
-                <Route path="/admin" component={Admin} />
                 <Route path="/welcome" component={Welcome} />
                 <Route path="/guest" component={Guest} />
                 <Route path="/profile" component={Profile} />
+                <Route path="/members" component={MemberAccess}>
+                    <Route path="/attendance" component={Attendance} />
+                </Route>
+                <Route path="/admin" component={AdminAccess}>
+                    <Route path="/teamlist" component={MasterTeamList} />
+                </Route>
                 <Route path="*" component={Redirect} />
             </Routes>
         </div>

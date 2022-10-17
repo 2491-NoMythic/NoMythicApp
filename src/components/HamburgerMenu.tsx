@@ -36,7 +36,7 @@ const HamburgerMenu: Component = () => {
                 </li>
                 <Show when={isMember()}>
                     <li>
-                        <A href="/attendance" onClick={close}>
+                        <A href="/members/attendance" onClick={close}>
                             Attendance
                         </A>
                     </li>
@@ -44,8 +44,8 @@ const HamburgerMenu: Component = () => {
                 {/* Need check for team role or something */}
                 <Show when={isMember()}>
                     <li>
-                        <A href="/admin" onClick={close}>
-                            Admin
+                        <A href="/admin/teamlist" onClick={close}>
+                            Team List
                         </A>
                     </li>
                 </Show>

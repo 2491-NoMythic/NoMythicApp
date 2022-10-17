@@ -24,6 +24,7 @@ type UserStore = [
         removeUser: () => void
         isLoggedIn: () => boolean
         isMember: () => boolean
+        isAdmin: () => boolean
     }
 ]
 
@@ -44,7 +45,6 @@ export function UserProvider(props) {
         member,
         {
             loadUser(googleSession: Session) {
-                console.log('google load')
                 const authSession =
                     convertGoogleSessionToAuthSession(googleSession)
                 const googleUser =
@@ -53,11 +53,9 @@ export function UserProvider(props) {
                 setGoogleUser(googleUser)
             },
             loadMember(member: Member) {
-                console.log('member load')
                 setMember(member)
             },
             removeUser() {
-                console.log('remove user')
                 setAuthSession({} as AuthSession)
                 setGoogleUser({} as GoogleUser)
                 setMember({} as Member)
@@ -70,6 +68,14 @@ export function UserProvider(props) {
             },
             isMember() {
                 return member() !== null && member().id !== undefined
+            },
+            isAdmin() {
+                return (
+                    member() != null &&
+                    (member().team_role === 'mentor' ||
+                        member().team_role === 'coach' ||
+                        member().team_role === 'captain')
+                )
             },
         },
     ]

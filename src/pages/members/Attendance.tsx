@@ -1,12 +1,12 @@
 import { Component, createEffect, createSignal, For, Show } from 'solid-js'
-import DatePicker from '../components/DatePicker'
-import SubTeamSelector from '../components/SubTeamSelector'
+import DatePicker from '../../components/DatePicker'
+import SubTeamSelector from '../../components/SubTeamSelector'
 // static file instead of fetching from internet for now
-import { teamMembers } from '../assets/team'
-import { filterBySubTeam } from '../utilities/filters'
-import { sortByFirstName } from '../utilities/sorts'
-import SelectTeamInfoMessage from '../components/SelectTeamInfoMessage'
-import { TeamMemberAttendance } from '../types/Api'
+import { teamMembers } from '../../assets/team'
+import { filterBySubTeam } from '../../utilities/filters'
+import { sortByFirstName } from '../../utilities/sorts'
+import SelectTeamInfoMessage from '../../components/SelectTeamInfoMessage'
+import { TeamMemberAttendance } from '../../types/Api'
 
 const Attendance: Component = () => {
     // when not a static file, useResource
