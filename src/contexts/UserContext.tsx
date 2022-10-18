@@ -60,7 +60,7 @@ export function UserProvider(props) {
                 )
             },
             isMember() {
-                return member() !== null && member().id !== undefined
+                return member() !== null && member().member_id !== undefined
             },
             isAdmin() {
                 return (

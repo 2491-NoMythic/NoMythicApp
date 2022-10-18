@@ -12,34 +12,42 @@ enum TeamRole {
     COACH = 'coach',
 }
 
-type TeamMemberAttendance = {
-    id: number
-    firstName: string
-    lastName: string
-    subTeam: SubTeam
-    teamRole: TeamRole
+enum AttendanceType {
+    FULL_TIME = 'full_time',
+    PART_TIME = 'part_time',
+    ABSENT = 'absent',
 }
 
+type MemberAttendance = {
+    member_id: number
+    first_name: string
+    last_name: string
+    sub_team: SubTeam
+    team_role: TeamRole
+    attendance: Attendance[]
+}
+
+// static json master team list
 type TeamMember = {
-    id: number
-    firstName: string
-    lastName: string
+    member_id: number
+    first_name: string
+    last_name: string
     pronouns: string
-    subTeam: SubTeam
-    teamRole: TeamRole
+    sub_team: SubTeam
+    team_role: TeamRole
     school: string
     grade: number
     advisor: string
-    parentNames: string
-    parentEmails: string
+    parent_names: string
+    parent_emails: string
     phone: string
     email: string
     address: string
-    foodNeeds: string
+    food_needs: string
 }
 
 type Member = {
-    id: number
+    member_id: number
     auth_id?: string
     first_name: string
     last_name: string
@@ -74,13 +82,13 @@ type AuthUser = {
     googleUser: GoogleUser
 }
 
-export type {
-    TeamMemberAttendance,
-    TeamMember,
-    Member,
-    AuthSession,
-    GoogleUser,
-    AuthUser,
+type Attendance = {
+    attendance_id: number
+    member_id: number
+    meeting_date: string
+    attendance: AttendanceType
 }
 
-export { SubTeam, TeamRole }
+export type { MemberAttendance, TeamMember, Member, AuthSession, GoogleUser, AuthUser, Attendance }
+
+export { SubTeam, TeamRole, AttendanceType }
