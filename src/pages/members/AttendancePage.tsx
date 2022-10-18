@@ -10,7 +10,9 @@ import { getMemberAttendance, insertAttendance, updateAttendance } from '../../a
 const AttendancePage: Component = () => {
     const [subTeam, setSubTeam] = createSignal('')
     const [filteredTeam, setFilteredTeam] = createSignal<MemberAttendance[]>([])
-    const [meetingDate, setMeetingDate] = createSignal<string>('2022-10-17')
+    const today = new Date()
+    const formatted = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate()
+    const [meetingDate, setMeetingDate] = createSignal<string>(formatted)
     const [team, { mutate, refetch }] = createResource(meetingDate, getMemberAttendance)
 
     // runs whenever team or subTeam are changed
