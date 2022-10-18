@@ -2,7 +2,6 @@ import { Attendance, AttendanceType, MemberAttendance } from '../types/Api'
 import { supabase } from './SupabaseClient'
 
 const getMemberAttendance = async (meetingDate: string) => {
-    console.log('getmemberAttendance')
     const { data, error } = await supabase
         .from('members')
         .select('member_id, first_name, last_name, sub_team, team_role, attendance (*)')
