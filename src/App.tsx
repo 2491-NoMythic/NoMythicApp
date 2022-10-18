@@ -12,7 +12,7 @@ const Profile = lazy(() => import('./pages/Profile'))
 const AdminAccess = lazy(() => import('./pages/admin/AdminAccess'))
 const MasterTeamList = lazy(() => import('./pages/admin/MasterTeamList'))
 const MemberAccess = lazy(() => import('./pages/members/MemberAccess'))
-const Attendance = lazy(() => import('./pages/members/Attendance'))
+const AttendancePage = lazy(() => import('./pages/members/AttendancePage'))
 
 const App: Component = () => {
     const [
@@ -50,7 +50,7 @@ const App: Component = () => {
                 <Route path="/guest" component={Guest} />
                 <Route path="/profile" component={Profile} />
                 <Route path="/members" component={MemberAccess}>
-                    <Route path="/attendance" component={Attendance} />
+                    <Route path="/attendance" component={AttendancePage} />
                 </Route>
                 <Route path="/admin" component={AdminAccess}>
                     <Route path="/teamlist" component={MasterTeamList} />

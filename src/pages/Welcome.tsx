@@ -21,8 +21,8 @@ const Welcome: Component = () => {
     const handleLoadMember = async () => {
         // no point if not logged in
         if (isLoggedIn()) {
-            const member = await getMemberByEamil('veggie2u@gmail.com')
-            if (member !== null && member.id !== undefined) {
+            const member = await getMemberByEamil(googleUser().email)
+            if (member !== null && member.member_id !== undefined) {
                 loadMember(member)
             }
         }

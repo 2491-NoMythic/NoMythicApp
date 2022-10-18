@@ -1,13 +1,12 @@
-import { Component, createSignal } from 'solid-js'
-import { IoCalendarOutline } from 'solid-icons/io'
+import { Accessor, Component, Setter } from 'solid-js'
 
-const DatePicker: Component = () => {
-    const [show, setShow] = createSignal(false)
-    const toggle = () => {
-        setShow(!show())
-    }
-    const close = () => {
-        setShow(false)
+// relys on html5 date input field for popup
+const DatePicker: Component<{
+    selectedDate: Accessor<string>
+    setSelectedDate: Setter<string>
+}> = (props) => {
+    const changeHandler = (event) => {
+        props.setSelectedDate(event.target.value)
     }
     return (
         <>
@@ -18,29 +17,10 @@ const DatePicker: Component = () => {
                     </label>
                     <input
                         type="date"
-                        placeholder="mm/dd/yyyy"
+                        value={props.selectedDate()}
                         class="input input-bordered w-40"
+                        onChange={changeHandler}
                     />
-                </div>
-                {/* <label
-                    for="my-modal-6"
-                    class="btn bg-base-100 btn-outline modal-button"
-                >
-                    <IoCalendarOutline size={24} />
-                </label> */}
-            </div>
-            <input type="checkbox" id="my-modal-6" class="modal-toggle" />
-            <div class="modal modal-bottom sm:modal-middle">
-                <div class="modal-box">
-                    <h3 class="font-bold text-lg">
-                        Congratulations random Internet user!
-                    </h3>
-                    <p class="py-4">I pity the fool that has to pick a date.</p>
-                    <div class="modal-action">
-                        <label for="my-modal-6" class="btn">
-                            Yay!
-                        </label>
-                    </div>
                 </div>
             </div>
         </>

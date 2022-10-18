@@ -1,7 +1,10 @@
 const sortByFirstName = (teamMembers) => {
+    if (teamMembers === undefined) {
+        return []
+    }
     const sorted = teamMembers.sort((memberA, memberB) => {
-        const firstNameA = memberA.firstName.toLowerCase()
-        const firstNameB = memberB.firstName.toLowerCase()
+        const firstNameA = memberA.first_name.toLowerCase()
+        const firstNameB = memberB.first_name.toLowerCase()
 
         if (firstNameA < firstNameB) {
             return -1

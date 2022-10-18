@@ -1,6 +1,14 @@
 import { Member } from '../types/Api'
 import { supabase } from './SupabaseClient'
 
+const getMembers = async () => {
+    const { data, error } = await supabase.from('members').select()
+
+    if (error) throw error
+    console.log('members', data)
+    return data as Member[]
+}
+
 const getMemberByEamil = async (email: string) => {
     const { data, error } = await supabase
         .from('members')
@@ -15,4 +23,4 @@ const getMemberByEamil = async (email: string) => {
     return data[0] as Member
 }
 
-export { getMemberByEamil }
+export { getMembers, getMemberByEamil }
