@@ -1,9 +1,9 @@
 import { Component, Show } from 'solid-js'
 import { useMyUser } from '../contexts/UserContext'
+import { capitalizeWord } from '../utilities/formatters'
 
 const Profile: Component = () => {
-    const [authSession, googleUser, member, { isLoggedIn, isMember }] =
-        useMyUser()
+    const [authSession, googleUser, member, { isLoggedIn, isMember }] = useMyUser()
 
     return (
         <>
@@ -25,10 +25,7 @@ const Profile: Component = () => {
                                     d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
                                 />
                             </svg>
-                            <span>
-                                What are you doing here? There is no profile to
-                                see if you are not logged in.
-                            </span>
+                            <span>What are you doing here? There is no profile to see if you are not logged in.</span>
                         </div>
                     </div>
                 }
@@ -71,11 +68,11 @@ const Profile: Component = () => {
                                 </tr>
                                 <tr>
                                     <td>Sub Team</td>
-                                    <td>{member().sub_team}</td>
+                                    <td>{capitalizeWord(member().sub_team)}</td>
                                 </tr>
                                 <tr>
                                     <td>Team Role</td>
-                                    <td>{member().team_role}</td>
+                                    <td>{capitalizeWord(member().team_role)}</td>
                                 </tr>
                                 <tr>
                                     <td>Eamil</td>
@@ -88,10 +85,7 @@ const Profile: Component = () => {
                             </tbody>
                         </table>
                         <div class="card-actions justify-end">
-                            <label
-                                for="my-modal"
-                                class="btn btn-primary modal-button"
-                            >
+                            <label for="my-modal" class="btn btn-primary modal-button">
                                 Edit
                             </label>
                         </div>
@@ -104,8 +98,7 @@ const Profile: Component = () => {
                 <div class="modal-box">
                     <h3 class="font-bold text-lg">Made you look.</h3>
                     <p class="py-4">
-                        Editing isn't working yet, but you will be able to
-                        update your own profile record in the future.
+                        Editing isn't working yet, but you will be able to update your own profile record in the future.
                     </p>
                     <div class="modal-action">
                         <label for="my-modal" class="btn">

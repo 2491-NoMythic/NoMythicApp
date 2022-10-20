@@ -3,6 +3,8 @@ import DatePicker from '../../components/DatePicker'
 import SubTeamSelector from '../../components/SubTeamSelector'
 import { filterBySubTeam } from '../../utilities/filters'
 import { sortByFirstName } from '../../utilities/sorts'
+import { capitalizeWord } from '../../utilities/formatters'
+
 import SelectTeamInfoMessage from '../../components/SelectTeamInfoMessage'
 import { AttendanceType, MemberAttendance } from '../../types/Api'
 import { getMemberAttendance, insertAttendance, updateAttendance } from '../../api/attendance'
@@ -51,7 +53,7 @@ const AttendancePage: Component = () => {
                                     <td>
                                         {teamMember.first_name} {teamMember.last_name}
                                         <div>
-                                            {subTeam} - {teamMember.team_role}
+                                            {capitalizeWord(subTeam)} - {capitalizeWord(teamMember.team_role)}
                                         </div>
                                     </td>
                                     <td class="text-right">

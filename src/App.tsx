@@ -6,6 +6,7 @@ import { useMyUser } from './contexts/UserContext'
 import PersonMenu from './components/PersonMenu'
 import { HiOutlineMenu } from 'solid-icons/hi'
 import unicorn from './assets/2491_logo_disc_outline.png'
+import { capitalizeWord } from './utilities/formatters'
 
 const Home = lazy(() => import('./pages/Home'))
 const Welcome = lazy(() => import('./pages/Welcome'))
@@ -37,8 +38,7 @@ const App: Component = () => {
     const setPageNameFromPath = () => {
         const position = location.pathname.lastIndexOf('/') + 1
         const page = location.pathname.substring(position, location.pathname.length)
-        const formatted = page.charAt(0).toUpperCase() + page.slice(1)
-        setpath(formatted)
+        setpath(capitalizeWord(page))
     }
 
     createEffect(() => {
@@ -57,7 +57,7 @@ const App: Component = () => {
     }
 
     return (
-        <div class="bg-base-300">
+        <div class="bg-base-300 overscroll-contain">
             <div class="drawer drawer-mobile">
                 <input id="my-drawer-2" type="checkbox" checked={checked()} class="drawer-toggle" />
                 <div class="drawer-content flex flex-col m-4 lg:ml-0">
@@ -70,19 +70,21 @@ const App: Component = () => {
                             <PersonMenu />
                         </div>
                     </div>
-                    <Routes>
-                        <Route path="/home" component={Home} />
-                        <Route path="/welcome" component={Welcome} />
-                        <Route path="/guest" component={Guest} />
-                        <Route path="/profile" component={Profile} />
-                        <Route path="/members" component={MemberAccess}>
-                            <Route path="/attendance" component={AttendancePage} />
-                        </Route>
-                        <Route path="/admin" component={AdminAccess}>
-                            <Route path="/teamlist" component={MasterTeamList} />
-                        </Route>
-                        <Route path="*" component={Redirect} />
-                    </Routes>
+                    <div>
+                        <Routes>
+                            <Route path="/home" component={Home} />
+                            <Route path="/welcome" component={Welcome} />
+                            <Route path="/guest" component={Guest} />
+                            <Route path="/profile" component={Profile} />
+                            <Route path="/members" component={MemberAccess}>
+                                <Route path="/attendance" component={AttendancePage} />
+                            </Route>
+                            <Route path="/admin" component={AdminAccess}>
+                                <Route path="/teamlist" component={MasterTeamList} />
+                            </Route>
+                            <Route path="*" component={Redirect} />
+                        </Routes>
+                    </div>
                 </div>
                 <div class="drawer-side lg:m-4">
                     <label for="my-drawer-2" class="drawer-overlay"></label>
