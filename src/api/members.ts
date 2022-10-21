@@ -1,11 +1,13 @@
 import { Member } from '../types/Api'
 import { supabase } from './SupabaseClient'
 
-const getMembers = async () => {
-    const { data, error } = await supabase.from('members').select()
+const getMembers = async (year: string) => {
+    const { data, error } = await supabase
+        .from('members')
+        .select('member_id, first_name, last_name, pronouns, team_role, sub_team, email, phone')
 
     if (error) throw error
-    console.log('members', data)
+
     return data as Member[]
 }
 
