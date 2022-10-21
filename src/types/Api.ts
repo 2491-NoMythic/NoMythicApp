@@ -1,30 +1,35 @@
-enum SubTeam {
-    PROGRAMMING = 'programming',
-    BUILD = 'build',
-    OPERATIONS = 'operations',
-    CAPTAIN = 'captain',
-}
+import { TypeOf } from 'yup'
 
-enum TeamRole {
-    MEMBER = 'member',
-    CAPTAIN = 'captain',
-    MENTOR = 'mentor',
-    COACH = 'coach',
-}
+const SubTeam = {
+    PROGRAMMING: 'programming',
+    BUILD: 'build',
+    OPERATIONS: 'operations',
+    CAPTAIN: 'captain',
+} as const
+type SubTeamType = typeof SubTeam[keyof typeof SubTeam]
 
-enum AttendanceType {
-    FULL_TIME = 'full_time',
-    PART_TIME = 'part_time',
-    ABSENT = 'absent',
-}
+const TeamRole = {
+    MEMBER: 'member',
+    CAPTAIN: 'captain',
+    MENTOR: 'mentor',
+    COACH: 'coach',
+} as const
+type TeamRoleType = typeof TeamRole[keyof typeof TeamRole]
+
+const AttendanceTypes = {
+    FULL_TIME: 'full_time',
+    PART_TIME: 'part_time',
+    ABSENT: 'absent',
+} as const
+type AttendanceTypesType = typeof AttendanceTypes[keyof typeof AttendanceTypes]
 
 type MemberAttendance = {
     member_id: number
     first_name: string
     last_name: string
-    sub_team: SubTeam
-    team_role: TeamRole
-    attendance: Attendance[]
+    sub_team: SubTeamType
+    team_role: TeamRoleType
+    attendance: Attendance
 }
 
 // static json master team list
@@ -33,8 +38,8 @@ type TeamMember = {
     first_name: string
     last_name: string
     pronouns: string
-    sub_team: SubTeam
-    team_role: TeamRole
+    sub_team: SubTeamType
+    team_role: TeamRoleType
     school: string
     grade: number
     advisor: string
@@ -52,8 +57,8 @@ type Member = {
     first_name: string
     last_name: string
     pronouns?: string
-    sub_team: SubTeam
-    team_role: TeamRole
+    sub_team: SubTeamType
+    team_role: TeamRoleType
     school?: string
     grade?: number
     advisor?: string
@@ -86,9 +91,20 @@ type Attendance = {
     attendance_id: number
     member_id: number
     meeting_date: string
-    attendance: AttendanceType
+    attendance: AttendanceTypesType
 }
 
-export type { MemberAttendance, TeamMember, Member, AuthSession, GoogleUser, AuthUser, Attendance }
+export type {
+    MemberAttendance,
+    TeamMember,
+    Member,
+    AuthSession,
+    GoogleUser,
+    AuthUser,
+    SubTeamType,
+    TeamRoleType,
+    AttendanceTypesType,
+    Attendance,
+}
 
-export { SubTeam, TeamRole, AttendanceType }
+export { SubTeam, TeamRole, AttendanceTypes }

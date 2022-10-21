@@ -5,13 +5,14 @@ import { Component } from 'solid-js'
 import { useMyUser } from '../../contexts/UserContext'
 import { A } from '@solidjs/router'
 import { saveMemberFromProfile } from '../../api/members'
+import { SubTeam, SubTeamType, TeamRole, TeamRoleType } from '../../types/Api'
 
 type User = {
     first_name: string
     last_name: string
     pronouns?: string
-    team_role: string
-    sub_team: string
+    team_role: TeamRoleType
+    sub_team: SubTeamType
     email: string
     phone?: string
 }
@@ -20,8 +21,8 @@ export const userSchema: yup.SchemaOf<User> = yup.object({
     first_name: yup.string().required('Required field'),
     last_name: yup.string().required('Required field'),
     pronouns: yup.string().notRequired(),
-    sub_team: yup.string(),
-    team_role: yup.string(),
+    sub_team: yup.mixed<SubTeamType>(),
+    team_role: yup.mixed<TeamRoleType>(),
     email: yup.string().email('Invalid email').required('Required field'),
     phone: yup.string().notRequired(),
 })
@@ -81,28 +82,31 @@ const ProfileEdit: Component = () => {
                         />
                         <SelectableField
                             label="Team Role"
+                            altLabel="Readonly"
                             name="team_role"
                             options={[
-                                { value: 'member', label: 'Member' },
-                                { value: 'captain', label: 'Captain' },
-                                { value: 'mentor', label: 'Mentor' },
+                                { value: TeamRole.MEMBER, label: 'Member' },
+                                { value: TeamRole.CAPTAIN, label: 'Captain' },
+                                { value: TeamRole.MENTOR, label: 'Mentor' },
                             ]}
                             value={member().team_role}
                             formHandler={formHandler}
+                            disabled
                         />
                         <SelectableField
                             label="Sub Team"
                             name="sub_team"
                             options={[
-                                { value: 'build', label: 'Build' },
-                                { value: 'programming', label: 'Programming' },
-                                { value: 'operations', label: 'Operations' },
+                                { value: SubTeam.BUILD, label: 'Build' },
+                                { value: SubTeam.PROGRAMMING, label: 'Programming' },
+                                { value: SubTeam.OPERATIONS, label: 'Operations' },
                             ]}
                             value={member().sub_team}
                             formHandler={formHandler}
                         />
                         <TextField
                             label="Email Address"
+                            altLabel="Readonly"
                             name="email"
                             value={member().email}
                             readonly

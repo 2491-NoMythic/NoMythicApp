@@ -1,11 +1,8 @@
 import { createContext, createSignal, Accessor, useContext } from 'solid-js'
 import { Session } from '@supabase/supabase-js'
 
-import { AuthSession, GoogleUser, Member } from '../types/Api'
-import {
-    convertGoogleSessionToAuthSession,
-    convertGoogleSessionToGoogleUser,
-} from '../utilities/converters'
+import { AuthSession, GoogleUser, Member, TeamRole } from '../types/Api'
+import { convertGoogleSessionToAuthSession, convertGoogleSessionToGoogleUser } from '../utilities/converters'
 
 type UserStore = [
     Accessor<AuthSession>,
@@ -24,12 +21,8 @@ type UserStore = [
 const UserContext = createContext<UserStore>()
 
 export function UserProvider(props) {
-    const [authSession, setAuthSession] = createSignal<AuthSession>(
-        {} as AuthSession
-    )
-    const [googleUser, setGoogleUser] = createSignal<GoogleUser>(
-        {} as GoogleUser
-    )
+    const [authSession, setAuthSession] = createSignal<AuthSession>({} as AuthSession)
+    const [googleUser, setGoogleUser] = createSignal<GoogleUser>({} as GoogleUser)
     const [member, setMember] = createSignal<Member>({} as Member)
 
     const store: UserStore = [
@@ -38,10 +31,8 @@ export function UserProvider(props) {
         member,
         {
             loadUser(googleSession: Session) {
-                const authSession =
-                    convertGoogleSessionToAuthSession(googleSession)
-                const googleUser =
-                    convertGoogleSessionToGoogleUser(googleSession)
+                const authSession = convertGoogleSessionToAuthSession(googleSession)
+                const googleUser = convertGoogleSessionToGoogleUser(googleSession)
                 setAuthSession(authSession)
                 setGoogleUser(googleUser)
             },
@@ -54,10 +45,7 @@ export function UserProvider(props) {
                 setMember({} as Member)
             },
             isLoggedIn() {
-                return (
-                    authSession() !== null &&
-                    authSession().accessToken !== undefined
-                )
+                return authSession() !== null && authSession().accessToken !== undefined
             },
             isMember() {
                 return member() !== null && member().member_id !== undefined
@@ -65,18 +53,14 @@ export function UserProvider(props) {
             isAdmin() {
                 return (
                     member() != null &&
-                    (member().team_role === 'mentor' ||
-                        member().team_role === 'coach' ||
-                        member().team_role === 'captain')
+                    (member().team_role === TeamRole.MENTOR ||
+                        member().team_role === TeamRole.COACH ||
+                        member().team_role === TeamRole.CAPTAIN)
                 )
             },
         },
     ]
-    return (
-        <UserContext.Provider value={store}>
-            {props.children}
-        </UserContext.Provider>
-    )
+    return <UserContext.Provider value={store}>{props.children}</UserContext.Provider>
 }
 
 export function useMyUser() {

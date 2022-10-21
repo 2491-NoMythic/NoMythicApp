@@ -6,7 +6,7 @@ import { sortByFirstName } from '../../utilities/sorts'
 import { capitalizeWord } from '../../utilities/formatters'
 
 import SelectTeamInfoMessage from '../../components/SelectTeamInfoMessage'
-import { AttendanceType, MemberAttendance } from '../../types/Api'
+import { AttendanceTypes, AttendanceTypesType, MemberAttendance } from '../../types/Api'
 import { getMemberAttendance, insertAttendance, updateAttendance } from '../../api/attendance'
 
 const AttendancePage: Component = () => {
@@ -24,7 +24,7 @@ const AttendancePage: Component = () => {
         setFilteredTeam(sorted)
     })
 
-    type data = { memberId: number; attendanceType: AttendanceType; attendanceId: number }
+    type data = { memberId: number; attendanceType: AttendanceTypesType; attendanceId: number }
     const handleClick = async (data: data, _event) => {
         if (data.attendanceId === undefined) {
             await insertAttendance(meetingDate(), data.memberId, data.attendanceType)
@@ -64,13 +64,13 @@ const AttendancePage: Component = () => {
                                                 data-title="Ft"
                                                 class="btn"
                                                 checked={
-                                                    teamMember?.attendance[0]?.attendance === AttendanceType.FULL_TIME
+                                                    teamMember?.attendance[0]?.attendance === AttendanceTypes.FULL_TIME
                                                 }
                                                 onClick={[
                                                     handleClick,
                                                     {
                                                         memberId: teamMember.member_id,
-                                                        attendanceType: AttendanceType.FULL_TIME,
+                                                        attendanceType: AttendanceTypes.FULL_TIME,
                                                         attendanceId: teamMember?.attendance[0]?.attendance_id,
                                                     },
                                                 ]}
@@ -81,13 +81,13 @@ const AttendancePage: Component = () => {
                                                 data-title="Pt"
                                                 class="btn"
                                                 checked={
-                                                    teamMember?.attendance[0]?.attendance === AttendanceType.PART_TIME
+                                                    teamMember?.attendance[0]?.attendance === AttendanceTypes.PART_TIME
                                                 }
                                                 onClick={[
                                                     handleClick,
                                                     {
                                                         memberId: teamMember.member_id,
-                                                        attendanceType: AttendanceType.PART_TIME,
+                                                        attendanceType: AttendanceTypes.PART_TIME,
                                                         attendanceId: teamMember?.attendance[0]?.attendance_id,
                                                     },
                                                 ]}
@@ -98,13 +98,13 @@ const AttendancePage: Component = () => {
                                                 data-title="Ab"
                                                 class="btn"
                                                 checked={
-                                                    teamMember?.attendance[0]?.attendance === AttendanceType.ABSENT
+                                                    teamMember?.attendance[0]?.attendance === AttendanceTypes.ABSENT
                                                 }
                                                 onClick={[
                                                     handleClick,
                                                     {
                                                         memberId: teamMember.member_id,
-                                                        attendanceType: AttendanceType.ABSENT,
+                                                        attendanceType: AttendanceTypes.ABSENT,
                                                         attendanceId: teamMember?.attendance[0]?.attendance_id,
                                                     },
                                                 ]}
