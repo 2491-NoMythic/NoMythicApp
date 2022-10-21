@@ -12,6 +12,7 @@ const Home = lazy(() => import('./pages/Home'))
 const Welcome = lazy(() => import('./pages/Welcome'))
 const Guest = lazy(() => import('./pages/Guest'))
 const Profile = lazy(() => import('./pages/Profile'))
+const ProfileEdit = lazy(() => import('./pages/members/ProfileEdit'))
 const AdminAccess = lazy(() => import('./pages/admin/AdminAccess'))
 const MasterTeamList = lazy(() => import('./pages/admin/MasterTeamList'))
 const MemberAccess = lazy(() => import('./pages/members/MemberAccess'))
@@ -76,7 +77,9 @@ const App: Component = () => {
                             <Route path="/welcome" component={Welcome} />
                             <Route path="/guest" component={Guest} />
                             <Route path="/profile" component={Profile} />
+
                             <Route path="/members" component={MemberAccess}>
+                                <Route path="/profileEdit" component={ProfileEdit} />
                                 <Route path="/attendance" component={AttendancePage} />
                             </Route>
                             <Route path="/admin" component={AdminAccess}>

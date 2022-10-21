@@ -10,10 +10,7 @@ const getMembers = async () => {
 }
 
 const getMemberByEamil = async (email: string) => {
-    const { data, error } = await supabase
-        .from('members')
-        .select()
-        .eq('email', email)
+    const { data, error } = await supabase.from('members').select().eq('email', email)
 
     if (error) throw error
 
@@ -23,4 +20,21 @@ const getMemberByEamil = async (email: string) => {
     return data[0] as Member
 }
 
-export { getMembers, getMemberByEamil }
+const saveMemberFromProfile = async (member: Member) => {
+    const { error } = await supabase
+        .from('members')
+        .update({
+            first_name: member.first_name,
+            last_name: member.last_name,
+            pronouns: member.pronouns,
+            team_role: member.team_role,
+            sub_team: member.sub_team,
+            email: member.email,
+            phone: member.phone,
+        })
+        .eq('member_id', member.member_id)
+
+    if (error) throw error
+}
+
+export { getMembers, getMemberByEamil, saveMemberFromProfile }

@@ -1,4 +1,4 @@
-import { Attendance, AttendanceType, MemberAttendance } from '../types/Api'
+import { Attendance, AttendanceTypesType, MemberAttendance } from '../types/Api'
 import { supabase } from './SupabaseClient'
 
 const getMemberAttendance = async (meetingDate: string) => {
@@ -26,7 +26,7 @@ const getAttendance = async (meetingDate: string) => {
     return data as Attendance[]
 }
 
-const updateAttendance = async (attendanceId: number, attendanceType: AttendanceType) => {
+const updateAttendance = async (attendanceId: number, attendanceType: AttendanceTypesType) => {
     const { data, error } = await supabase
         .from('attendance')
         .update([{ attendance: attendanceType }])
@@ -35,7 +35,7 @@ const updateAttendance = async (attendanceId: number, attendanceType: Attendance
     if (error) throw error
 }
 
-const insertAttendance = async (meetingDate: string, memberId: number, attendanceType: AttendanceType) => {
+const insertAttendance = async (meetingDate: string, memberId: number, attendanceType: AttendanceTypesType) => {
     const { data, error } = await supabase
         .from('attendance')
         .insert([{ meeting_date: meetingDate, member_id: memberId, attendance: attendanceType }])
