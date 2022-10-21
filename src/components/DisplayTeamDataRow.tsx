@@ -5,7 +5,6 @@ import { capitalizeWord } from '../utilities/formatters'
 const DisplayTeamDataRow: Component<{ teamMember: TeamMember }> = (props) => {
     return (
         <tr>
-            <td>{props.teamMember.member_id}</td>
             <td>{props.teamMember.first_name + ' ' + props.teamMember.last_name}</td>
             <td>{props.teamMember.pronouns}</td>
             <td>{capitalizeWord(props.teamMember.sub_team)}</td>
