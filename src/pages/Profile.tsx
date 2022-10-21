@@ -1,3 +1,4 @@
+import { A } from '@solidjs/router'
 import { Component, Show } from 'solid-js'
 import { useMyUser } from '../contexts/UserContext'
 import { capitalizeWord } from '../utilities/formatters'
@@ -30,7 +31,7 @@ const Profile: Component = () => {
                     </div>
                 }
             >
-                <div class="card max-w-5xl bg-base-100 shadow-xl mt-10">
+                <div class="card max-w-5xl bg-base-100 shadow-xl mt-4">
                     <div class="card-body">
                         <h2 class="card-title">Google</h2>
                         <table class="table w-full">
@@ -49,7 +50,7 @@ const Profile: Component = () => {
                 </div>
             </Show>
             <Show when={isMember()}>
-                <div class="card max-w-5xl bg-base-100 shadow-xl mt-10">
+                <div class="card max-w-5xl bg-base-100 shadow-xl mt-4">
                     <div class="card-body">
                         <h2 class="card-title">NoMythic</h2>
                         <table class="table w-full">
@@ -86,27 +87,12 @@ const Profile: Component = () => {
                         </table>
                         <div class="card-actions justify-end">
                             <label for="my-modal" class="btn btn-primary modal-button">
-                                Edit
+                                <A href="/members/profileEdit">Edit</A>
                             </label>
                         </div>
                     </div>
                 </div>
             </Show>
-
-            <input type="checkbox" id="my-modal" class="modal-toggle" />
-            <div class="modal">
-                <div class="modal-box">
-                    <h3 class="font-bold text-lg">Made you look.</h3>
-                    <p class="py-4">
-                        Editing isn't working yet, but you will be able to update your own profile record in the future.
-                    </p>
-                    <div class="modal-action">
-                        <label for="my-modal" class="btn">
-                            Yay!
-                        </label>
-                    </div>
-                </div>
-            </div>
         </>
     )
 }
