@@ -7,6 +7,7 @@ import PersonMenu from './components/PersonMenu'
 import { HiOutlineMenu } from 'solid-icons/hi'
 import unicorn from './assets/2491_logo_disc_outline.png'
 import { capitalizeWord } from './utilities/formatters'
+import { getMemberByEamil } from './api/members'
 
 const Home = lazy(() => import('./pages/Home'))
 const Welcome = lazy(() => import('./pages/Welcome'))
@@ -20,7 +21,7 @@ const MemberAccess = lazy(() => import('./pages/members/MemberAccess'))
 const AttendancePage = lazy(() => import('./pages/members/AttendancePage'))
 
 const App: Component = () => {
-    const [authSession, googleUser, member, { removeUser, loadUser, isLoggedIn, isMember }] = useMyUser()
+    const [authSession, googleUser, member, { removeUser, loadUser, loadMember, isLoggedIn, isMember }] = useMyUser()
     const navigate = useNavigate()
     const location = useLocation()
     const [checked, setChecked] = createSignal(false)
@@ -45,6 +46,25 @@ const App: Component = () => {
 
     createEffect(() => {
         setPageNameFromPath()
+    })
+
+    const handleLoadMember = async () => {
+        // no point if not logged in
+
+        if (isLoggedIn() && !isMember()) {
+            console.log('handleLoadMember')
+            const member = await getMemberByEamil(googleUser().email)
+            if (member !== null && member.member_id !== undefined) {
+                loadMember(member)
+            }
+        }
+    }
+
+    createEffect(() => {
+        handleLoadMember()
+        console.log('location: ' + location.pathname)
+        console.log('isLoggedIn: ' + isLoggedIn())
+        console.log('isMember: ' + isMember())
     })
 
     const Redirect = () => {
