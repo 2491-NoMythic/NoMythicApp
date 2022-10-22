@@ -23,6 +23,13 @@ const AttendanceTypes = {
 } as const
 type AttendanceTypesType = typeof AttendanceTypes[keyof typeof AttendanceTypes]
 
+const School = {
+    AVALON: 'avalon',
+    GRS: 'grs',
+    OTHER: 'other',
+}
+type SchoolType = typeof School[keyof typeof School]
+
 type MemberAttendance = {
     member_id: number
     first_name: string
@@ -30,25 +37,6 @@ type MemberAttendance = {
     sub_team: SubTeamType
     team_role: TeamRoleType
     attendance: Attendance
-}
-
-// static json master team list
-type TeamMember = {
-    member_id: number
-    first_name: string
-    last_name: string
-    pronouns: string
-    sub_team: SubTeamType
-    team_role: TeamRoleType
-    school: string
-    grade: number
-    advisor: string
-    parent_names: string
-    parent_emails: string
-    phone: string
-    email: string
-    address: string
-    food_needs: string
 }
 
 type Member = {
@@ -59,10 +47,10 @@ type Member = {
     pronouns?: string
     sub_team: SubTeamType
     team_role: TeamRoleType
-    school?: string
+    school?: SchoolType
     grade?: number
     advisor?: string
-    phone: string
+    phone?: string
     email: string
     address?: string
     food_needs?: string
@@ -96,7 +84,6 @@ type Attendance = {
 
 export type {
     MemberAttendance,
-    TeamMember,
     Member,
     AuthSession,
     GoogleUser,
@@ -105,6 +92,7 @@ export type {
     TeamRoleType,
     AttendanceTypesType,
     Attendance,
+    SchoolType,
 }
 
-export { SubTeam, TeamRole, AttendanceTypes }
+export { SubTeam, TeamRole, AttendanceTypes, School }

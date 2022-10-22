@@ -4,7 +4,7 @@ import { supabase } from './SupabaseClient'
 const getMembers = async (year: string) => {
     const { data, error } = await supabase
         .from('members')
-        .select('member_id, first_name, last_name, pronouns, team_role, sub_team, email, phone')
+        .select('member_id, first_name, last_name, pronouns, team_role, sub_team, email, phone, food_needs')
 
     if (error) throw error
 
@@ -13,6 +13,17 @@ const getMembers = async (year: string) => {
 
 const getMemberByEamil = async (email: string) => {
     const { data, error } = await supabase.from('members').select().eq('email', email)
+
+    if (error) throw error
+
+    if (data.length === 0) {
+        return null
+    }
+    return data[0] as Member
+}
+
+const getMemberById = async (memberId: number) => {
+    const { data, error } = await supabase.from('members').select().eq('member_id', memberId)
 
     if (error) throw error
 
@@ -33,10 +44,11 @@ const saveMemberFromProfile = async (member: Member) => {
             sub_team: member.sub_team,
             email: member.email,
             phone: member.phone,
+            food_needs: member.food_needs,
         })
         .eq('member_id', member.member_id)
 
     if (error) throw error
 }
 
-export { getMembers, getMemberByEamil, saveMemberFromProfile }
+export { getMembers, getMemberByEamil, getMemberById, saveMemberFromProfile }

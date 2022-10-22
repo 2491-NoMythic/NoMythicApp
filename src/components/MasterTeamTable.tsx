@@ -1,8 +1,8 @@
 import { Accessor, Component, For, Show } from 'solid-js'
-import { TeamMember } from '../types/Api'
+import { Member } from '../types/Api'
 import DisplayTeamDataRow from './DisplayTeamDataRow'
 
-const MasterTeamTable: Component<{ teamMembers: Accessor<TeamMember[]> }> = (props) => {
+const MasterTeamTable: Component<{ teamMembers: Accessor<Member[]> }> = (props) => {
     return (
         <Show when={props.teamMembers().length > 0}>
             <table class="table table-zebra w-full mt-4">
