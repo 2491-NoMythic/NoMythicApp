@@ -23,7 +23,7 @@ const getMemberByEamil = async (email: string) => {
 }
 
 const getMemberById = async (memberId: number) => {
-    const { data, error } = await supabase.from('members').select().eq('email', memberId)
+    const { data, error } = await supabase.from('members').select().eq('member_id', memberId)
 
     if (error) throw error
 

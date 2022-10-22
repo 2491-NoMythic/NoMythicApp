@@ -5,18 +5,20 @@ import { filterBySubTeam } from '../../utilities/filters'
 import { sortByFirstName } from '../../utilities/sorts'
 import SelectTeamInfoMessage from '../../components/SelectTeamInfoMessage'
 import MasterTeamTable from '../../components/MasterTeamTable'
-import { TeamMember } from '../../types/Api'
+import { Member } from '../../types/Api'
 import { getMembers } from '../../api/members'
+import { useSearchParams } from '@solidjs/router'
+import SubTeamSelectorUrl from '../../components/SubTeamSelectorUrl'
 
 const MasterTeamList: Component = () => {
-    const [subTeam, setSubTeam] = createSignal('')
-    const [filteredTeam, setFilteredTeam] = createSignal<TeamMember[]>([])
+    const [filteredTeam, setFilteredTeam] = createSignal<Member[]>([])
     const [year, setYear] = createSignal('2023')
-    const [team, { mutate, refetch }] = createResource(year, getMembers)
+    const [team] = createResource(year, getMembers)
+    const [searchParams] = useSearchParams()
 
     // runs whenever team or subTeam are changed
     createEffect(() => {
-        const filtered = filterBySubTeam(team(), subTeam())
+        const filtered = filterBySubTeam(team(), searchParams.subteam)
         const sorted = sortByFirstName(filtered)
         setFilteredTeam(sorted)
     })
@@ -25,7 +27,7 @@ const MasterTeamList: Component = () => {
         <div class="overflow-x-auto">
             <div class="flex">
                 <div class="grow mr-2">
-                    <SubTeamSelector subTeam={subTeam} setSubTeam={setSubTeam} />
+                    <SubTeamSelectorUrl />
                 </div>
                 <YearPicker year={year} setYear={setYear} />
             </div>
