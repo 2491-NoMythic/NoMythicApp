@@ -1,13 +1,12 @@
 import { Component, createEffect, Switch, Match, createSignal, Show, onMount } from 'solid-js'
 import { useMyUser } from '../contexts/UserContext'
-import { getMemberByEamil } from '../api/members'
 import unicorn from '../assets/2491_logo_disc_outline.png'
 import { useNavigate } from '@solidjs/router'
 
 const Welcome: Component = () => {
     const [loading, setLoading] = createSignal(true)
 
-    const [authSession, googleUser, member, { loadMember, isLoggedIn, isMember }] = useMyUser()
+    const [authSession, googleUser, member, { isLoggedIn, isMember }] = useMyUser()
 
     const navigate = useNavigate()
 
@@ -17,21 +16,6 @@ const Welcome: Component = () => {
             setLoading(false)
         }, 500)
     })
-
-    createEffect(() => {
-        handleLoadMember()
-    })
-
-    const handleLoadMember = async () => {
-        // no point if not logged in
-        if (isLoggedIn()) {
-            const member = await getMemberByEamil(googleUser().email)
-            if (member !== null && member.member_id !== undefined) {
-                loadMember(member)
-                setLoading(false)
-            }
-        }
-    }
 
     const continueAsGuest = () => {
         navigate('/guest')
