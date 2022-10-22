@@ -83,6 +83,10 @@ const Profile: Component = () => {
                                     <td>Phone</td>
                                     <td>{member().phone}</td>
                                 </tr>
+                                <tr>
+                                    <td>Food Needs</td>
+                                    <td>{member().food_needs}</td>
+                                </tr>
                             </tbody>
                         </table>
                         <div class="card-actions justify-end">

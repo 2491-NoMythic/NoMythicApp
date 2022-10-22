@@ -15,6 +15,7 @@ const Profile = lazy(() => import('./pages/Profile'))
 const ProfileEdit = lazy(() => import('./pages/members/ProfileEdit'))
 const AdminAccess = lazy(() => import('./pages/admin/AdminAccess'))
 const MasterTeamList = lazy(() => import('./pages/admin/MasterTeamList'))
+const FullProfile = lazy(() => import('./pages/admin/FullProfile'))
 const MemberAccess = lazy(() => import('./pages/members/MemberAccess'))
 const AttendancePage = lazy(() => import('./pages/members/AttendancePage'))
 
@@ -84,6 +85,7 @@ const App: Component = () => {
                             </Route>
                             <Route path="/admin" component={AdminAccess}>
                                 <Route path="/teamlist" component={MasterTeamList} />
+                                <Route path="/member/:id" component={FullProfile} />
                             </Route>
                             <Route path="*" component={Redirect} />
                         </Routes>

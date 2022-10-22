@@ -15,6 +15,7 @@ type User = {
     sub_team: SubTeamType
     email: string
     phone?: string
+    food_needs?: string
 }
 
 export const userSchema: yup.SchemaOf<User> = yup.object({
@@ -25,6 +26,7 @@ export const userSchema: yup.SchemaOf<User> = yup.object({
     team_role: yup.mixed<TeamRoleType>(),
     email: yup.string().email('Invalid email').required('Required field'),
     phone: yup.string().notRequired(),
+    food_needs: yup.string().notRequired(),
 })
 
 const ProfileEdit: Component = () => {
@@ -113,6 +115,13 @@ const ProfileEdit: Component = () => {
                             formHandler={formHandler}
                         />
                         <TextField label="Phone Number" name="phone" value={member().phone} formHandler={formHandler} />
+                        <TextField
+                            label="Food needs"
+                            altLabel="vegan/gluten free"
+                            name="food_needs"
+                            value={member().food_needs}
+                            formHandler={formHandler}
+                        />
                     </div>
                     <div class="card-actions justify-end">
                         <A href="/profile">
