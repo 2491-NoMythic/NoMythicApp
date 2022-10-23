@@ -51,4 +51,45 @@ const saveMemberFromProfile = async (member: Member) => {
     if (error) throw error
 }
 
-export { getMembers, getMemberByEamil, getMemberById, saveMemberFromProfile }
+const saveMemberFromAdmin = async (member: Member) => {
+    const { error } = await supabase
+        .from('members')
+        .update({
+            first_name: member.first_name,
+            last_name: member.last_name,
+            pronouns: member.pronouns,
+            team_role: member.team_role,
+            sub_team: member.sub_team,
+            email: member.email,
+            phone: member.phone,
+            food_needs: member.food_needs,
+            address: member.address,
+            school: member.school,
+            advisor: member.advisor,
+            grade: member.grade,
+        })
+        .eq('member_id', member.member_id)
+
+    if (error) throw error
+}
+
+const newMemberFromAdmin = async (member: Member) => {
+    const { error } = await supabase.from('members').insert({
+        first_name: member.first_name,
+        last_name: member.last_name,
+        pronouns: member.pronouns,
+        team_role: member.team_role,
+        sub_team: member.sub_team,
+        email: member.email,
+        phone: member.phone,
+        food_needs: member.food_needs,
+        address: member.address,
+        school: member.school,
+        advisor: member.advisor,
+        grade: member.grade,
+    })
+
+    if (error) throw error
+}
+
+export { getMembers, getMemberByEamil, getMemberById, saveMemberFromProfile, saveMemberFromAdmin, newMemberFromAdmin }

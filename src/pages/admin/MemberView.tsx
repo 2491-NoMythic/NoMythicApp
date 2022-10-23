@@ -1,13 +1,14 @@
 import { A, useParams, useSearchParams } from '@solidjs/router'
-import { Component, createResource, Show } from 'solid-js'
+import { Component, createEffect, createResource, Show } from 'solid-js'
 import { getMemberById } from '../../api/members'
 
 import { capitalizeWord } from '../../utilities/formatters'
 
-const Profile: Component = () => {
+const MemberView: Component = () => {
     const params = useParams()
     const [member] = createResource(() => parseInt(params.id), getMemberById)
     const [searchParams] = useSearchParams()
+
     return (
         <>
             <div class="card max-w-5xl bg-base-100 shadow-xl mt-4">
@@ -70,7 +71,9 @@ const Profile: Component = () => {
                             <A href={'/admin/teamList?subteam=' + searchParams.subteam}>Back</A>
                         </label>
                         <label class="btn btn-primary modal-button">
-                            <A href="">Edit</A>
+                            <A href={'/admin/memberEdit/' + member()?.member_id + '?subteam=' + searchParams.subteam}>
+                                Edit
+                            </A>
                         </label>
                     </div>
                 </div>
@@ -79,4 +82,4 @@ const Profile: Component = () => {
     )
 }
 
-export default Profile
+export default MemberView
