@@ -3,7 +3,7 @@ import { SelectableField, TextField } from '../../components/forms'
 import * as yup from 'yup'
 import { Component } from 'solid-js'
 import { useMyUser } from '../../contexts/UserContext'
-import { A } from '@solidjs/router'
+import { A, useNavigate } from '@solidjs/router'
 import { saveMemberFromProfile } from '../../api/members'
 import { SubTeam, SubTeamType, TeamRole, TeamRoleType } from '../../types/Api'
 
@@ -32,7 +32,7 @@ export const userSchema: yup.SchemaOf<User> = yup.object({
 const ProfileEdit: Component = () => {
     const formHandler = useFormHandler(yupSchema(userSchema))
     const { formData } = formHandler
-
+    const navigate = useNavigate()
     const [authSession, googleUser, member] = useMyUser()
 
     const submit = async (event: Event) => {
@@ -40,6 +40,7 @@ const ProfileEdit: Component = () => {
         try {
             await formHandler.validateForm()
             const updatedMember = {
+                member_id: member().member_id,
                 first_name: formData().first_name,
                 last_name: formData().last_name,
                 pronouns: formData().pronouns,
@@ -47,9 +48,10 @@ const ProfileEdit: Component = () => {
                 sub_team: formData().sub_team,
                 email: formData().email,
                 phone: formData().phone,
+                food_needs: formData().food_needs,
             }
-            saveMemberFromProfile(updatedMember)
-            alert('Data sent with success: ' + JSON.stringify(formData()))
+            await saveMemberFromProfile(updatedMember)
+            navigate('/profile')
         } catch (error) {
             console.error(error)
         }
@@ -66,20 +68,20 @@ const ProfileEdit: Component = () => {
                             label="First Name"
                             altLabel="Required"
                             name="first_name"
-                            value={member().first_name}
+                            value={member()?.first_name}
                             formHandler={formHandler}
                         />
                         <TextField
                             label="First Name"
                             altLabel="Required"
                             name="last_name"
-                            value={member().last_name}
+                            value={member()?.last_name}
                             formHandler={formHandler}
                         />
                         <TextField
                             label="Pronouns"
                             name="pronouns"
-                            value={member().pronouns}
+                            value={member()?.pronouns}
                             formHandler={formHandler}
                         />
                         <SelectableField
@@ -91,7 +93,7 @@ const ProfileEdit: Component = () => {
                                 { value: TeamRole.CAPTAIN, label: 'Captain' },
                                 { value: TeamRole.MENTOR, label: 'Mentor' },
                             ]}
-                            value={member().team_role}
+                            value={member()?.team_role}
                             formHandler={formHandler}
                             disabled
                         />
@@ -103,14 +105,14 @@ const ProfileEdit: Component = () => {
                                 { value: SubTeam.PROGRAMMING, label: 'Programming' },
                                 { value: SubTeam.OPERATIONS, label: 'Operations' },
                             ]}
-                            value={member().sub_team}
+                            value={member()?.sub_team}
                             formHandler={formHandler}
                         />
                         <TextField
                             label="Email Address"
                             altLabel="Readonly"
                             name="email"
-                            value={member().email}
+                            value={member()?.email}
                             readonly
                             formHandler={formHandler}
                         />
@@ -119,7 +121,7 @@ const ProfileEdit: Component = () => {
                             label="Food needs"
                             altLabel="vegan/gluten free"
                             name="food_needs"
-                            value={member().food_needs}
+                            value={member()?.food_needs}
                             formHandler={formHandler}
                         />
                     </div>

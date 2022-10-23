@@ -24,6 +24,7 @@ const AttendanceTypes = {
 type AttendanceTypesType = typeof AttendanceTypes[keyof typeof AttendanceTypes]
 
 const School = {
+    NON_STUDENT: 'non_student',
     AVALON: 'avalon',
     GRS: 'grs',
     OTHER: 'other',

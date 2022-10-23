@@ -15,8 +15,9 @@ const Guest = lazy(() => import('./pages/Guest'))
 const Profile = lazy(() => import('./pages/Profile'))
 const ProfileEdit = lazy(() => import('./pages/members/ProfileEdit'))
 const AdminAccess = lazy(() => import('./pages/admin/AdminAccess'))
-const MasterTeamList = lazy(() => import('./pages/admin/MasterTeamList'))
-const FullProfile = lazy(() => import('./pages/admin/FullProfile'))
+const TeamList = lazy(() => import('./pages/admin/TeamList'))
+const MemberView = lazy(() => import('./pages/admin/MemberView'))
+const MemberEdit = lazy(() => import('./pages/admin/MemberEdit'))
 const MemberAccess = lazy(() => import('./pages/members/MemberAccess'))
 const AttendancePage = lazy(() => import('./pages/members/AttendancePage'))
 
@@ -52,7 +53,6 @@ const App: Component = () => {
         // no point if not logged in
 
         if (isLoggedIn() && !isMember()) {
-            console.log('handleLoadMember')
             const member = await getMemberByEamil(googleUser().email)
             if (member !== null && member.member_id !== undefined) {
                 loadMember(member)
@@ -62,9 +62,6 @@ const App: Component = () => {
 
     createEffect(() => {
         handleLoadMember()
-        console.log('location: ' + location.pathname)
-        console.log('isLoggedIn: ' + isLoggedIn())
-        console.log('isMember: ' + isMember())
     })
 
     const Redirect = () => {
@@ -94,18 +91,21 @@ const App: Component = () => {
                     </div>
                     <div>
                         <Routes>
+                            {/* any access level can view these pages */}
                             <Route path="/home" component={Home} />
                             <Route path="/welcome" component={Welcome} />
                             <Route path="/guest" component={Guest} />
                             <Route path="/profile" component={Profile} />
-
+                            {/* must be a member to view these pages */}
                             <Route path="/members" component={MemberAccess}>
                                 <Route path="/profileEdit" component={ProfileEdit} />
                                 <Route path="/attendance" component={AttendancePage} />
                             </Route>
+                            {/* must be an admin to view these pages */}
                             <Route path="/admin" component={AdminAccess}>
-                                <Route path="/teamlist" component={MasterTeamList} />
-                                <Route path="/member/:id" component={FullProfile} />
+                                <Route path="/teamlist" component={TeamList} />
+                                <Route path="/member/:id" component={MemberView} />
+                                <Route path="/memberEdit/:id" component={MemberEdit} />
                             </Route>
                             <Route path="*" component={Redirect} />
                         </Routes>
