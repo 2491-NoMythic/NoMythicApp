@@ -1,13 +1,27 @@
-import { A, useParams, useSearchParams } from '@solidjs/router'
-import { Component, createEffect, createResource, Show } from 'solid-js'
-import { getMemberById } from '../../api/members'
+import { A, useNavigate, useParams, useSearchParams } from '@solidjs/router'
+import { Component, createResource, createSignal, Show } from 'solid-js'
+import { deleteMember, getMemberById } from '../../api/members'
+import { HiOutlineTrash } from 'solid-icons/hi'
 
 import { capitalizeWord } from '../../utilities/formatters'
+import { addSubTeamToUrl } from '../../utilities/stringbuilders'
 
 const MemberView: Component = () => {
     const params = useParams()
     const [member] = createResource(() => parseInt(params.id), getMemberById)
     const [searchParams] = useSearchParams()
+    const [opened, setOpened] = createSignal(false)
+    const navigate = useNavigate()
+
+    const toggleModal = () => {
+        setOpened(!opened())
+    }
+
+    const handleDelete = async () => {
+        toggleModal()
+        await deleteMember(member().member_id)
+        navigate(addSubTeamToUrl('/admin/teamList', searchParams.subteam))
+    }
 
     return (
         <>
@@ -66,18 +80,48 @@ const MemberView: Component = () => {
                             </tr>
                         </tbody>
                     </table>
-                    <div class="card-actions justify-end">
-                        <label class="btn btn-secondary modal-button mr-4">
-                            <A href={'/admin/teamList?subteam=' + searchParams.subteam}>Back</A>
-                        </label>
-                        <label class="btn btn-primary modal-button">
-                            <A href={'/admin/memberEdit/' + member()?.member_id + '?subteam=' + searchParams.subteam}>
-                                Edit
-                            </A>
-                        </label>
+                    <div class="flex">
+                        <div class="flex-none">
+                            <button class="btn btn-warning inline-flex items-center" onClick={toggleModal}>
+                                <HiOutlineTrash fill="none" class="mb-3 mr-3" /> Delete
+                            </button>
+                        </div>
+                        <div class="flex flex-auto justify-end">
+                            <label class="btn btn-secondary modal-button mr-4">
+                                <A href={addSubTeamToUrl('/admin/teamList', searchParams.subteam)}>Back</A>
+                            </label>
+                            <label class="btn btn-primary modal-button">
+                                <A
+                                    href={addSubTeamToUrl(
+                                        '/admin/memberEdit/' + member()?.member_id,
+                                        searchParams.subteam
+                                    )}
+                                >
+                                    Edit
+                                </A>
+                            </label>
+                        </div>
                     </div>
                 </div>
             </div>
+            <Show when={opened()}>
+                <div class="modal modal-open">
+                    <div class="modal-box">
+                        <h3 class="font-bold text-lg">Are you sure you want to delete?</h3>
+                        <p class="py-4">
+                            You should only delete if the member was created in error, or didn't join the team.
+                        </p>
+                        <div class="modal-action">
+                            <button class="btn btn-secondary" onClick={toggleModal}>
+                                Cancel
+                            </button>
+                            <button class="btn btn-warning inline-flex items-center" onClick={handleDelete}>
+                                <HiOutlineTrash fill="none" class="mb-3 mr-3" /> Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </Show>
         </>
     )
 }

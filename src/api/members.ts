@@ -92,4 +92,18 @@ const newMemberFromAdmin = async (member: Member) => {
     if (error) throw error
 }
 
-export { getMembers, getMemberByEamil, getMemberById, saveMemberFromProfile, saveMemberFromAdmin, newMemberFromAdmin }
+const deleteMember = async (memberId: number) => {
+    const { error } = await supabase.from('members').delete().eq('member_id', memberId)
+
+    if (error) throw error
+}
+
+export {
+    getMembers,
+    getMemberByEamil,
+    getMemberById,
+    saveMemberFromProfile,
+    saveMemberFromAdmin,
+    newMemberFromAdmin,
+    deleteMember,
+}

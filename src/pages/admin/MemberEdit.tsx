@@ -5,6 +5,7 @@ import { Component, createEffect, createResource, Show } from 'solid-js'
 import { A, useNavigate, useParams, useSearchParams } from '@solidjs/router'
 import { getMemberById, newMemberFromAdmin, saveMemberFromAdmin, saveMemberFromProfile } from '../../api/members'
 import { SchoolType, SubTeam, SubTeamType, TeamRole, TeamRoleType } from '../../types/Api'
+import { addSubTeamToUrl } from '../../utilities/stringbuilders'
 
 type User = {
     first_name: string
@@ -73,7 +74,7 @@ const MemberEdit: Component = () => {
             } else {
                 await saveMemberFromAdmin(updatedMember)
             }
-            navigate('/admin/teamList?subteam=' + searchParams.subteam)
+            navigate(addSubTeamToUrl('/admin/teamList', searchParams.subteam))
         } catch (error) {
             console.error(error)
         }
@@ -132,7 +133,7 @@ const MemberEdit: Component = () => {
                             />
                             <TextField
                                 label="Email Address"
-                                altLabel="Only Google Email"
+                                altLabel="Google Email Required"
                                 name="email"
                                 value={member()?.email}
                                 formHandler={formHandler}
@@ -172,7 +173,7 @@ const MemberEdit: Component = () => {
                             <TextField label="Grade" name="grade" value={member()?.grade} formHandler={formHandler} />
                         </div>
                         <div class="card-actions justify-end">
-                            <A href={'/admin/teamList?subteam=' + searchParams.subteam}>
+                            <A href={addSubTeamToUrl('/admin/teamList', searchParams.subteam)}>
                                 <button class="btn btn-secondary modal-button mr-6">Cancel</button>
                             </A>
                             <button

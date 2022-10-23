@@ -8,6 +8,7 @@ import { Member } from '../../types/Api'
 import { getMembers } from '../../api/members'
 import { A, useSearchParams } from '@solidjs/router'
 import SubTeamSelectorUrl from '../../components/SubTeamSelectorUrl'
+import { addSubTeamToUrl } from '../../utilities/stringbuilders'
 
 const TeamList: Component = () => {
     const [filteredTeam, setFilteredTeam] = createSignal<Member[]>([])
@@ -30,8 +31,8 @@ const TeamList: Component = () => {
                 </div>
                 <YearPicker year={year} setYear={setYear} />
             </div>
-            <div class="flex flex row justify-end mt-4">
-                <A class="btn btn-primary" href="/admin/memberEdit">
+            <div class="flex flex-row justify-end mt-4">
+                <A class="btn btn-primary" href={addSubTeamToUrl('/admin/memberEdit/0', searchParams.subteam)}>
                     Add Member
                 </A>
             </div>
