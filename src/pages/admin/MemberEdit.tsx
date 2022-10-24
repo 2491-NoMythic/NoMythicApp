@@ -99,7 +99,7 @@ const MemberEdit: Component = () => {
                                 formHandler={formHandler}
                             />
                             <TextField
-                                label="First Name"
+                                label="Last Name"
                                 altLabel="Required"
                                 name="last_name"
                                 value={member()?.last_name}
