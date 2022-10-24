@@ -1,6 +1,6 @@
 import { useNavigate, useSearchParams } from '@solidjs/router'
 import { Component, Show } from 'solid-js'
-import { Member } from '../types/Api'
+import { Member, SubTeam, TeamRole } from '../types/Api'
 import { capitalizeWord } from '../utilities/formatters'
 import { addSubTeamToUrl } from '../utilities/stringbuilders'
 
@@ -57,8 +57,10 @@ const DisplayTeamDataRow: Component<{ teamMember: Member }> = (props) => {
                             </Show>
                             <div class="text-sm text-secondary align-bottom">
                                 {capitalizeWord(props.teamMember.team_role)}
-                                <span class="text-base-content"> of </span>
-                                {capitalizeWord(props.teamMember.sub_team)}
+                                <Show when={props.teamMember.sub_team !== SubTeam.UNASSIGNED}>
+                                    <span class="text-base-content"> of </span>
+                                    {capitalizeWord(props.teamMember.sub_team)}
+                                </Show>
                             </div>
                         </div>
                         <div class="flex flex row gap-6">
