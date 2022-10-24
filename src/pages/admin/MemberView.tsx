@@ -51,7 +51,7 @@ const MemberView: Component = () => {
                                 <td>{capitalizeWord(member()?.team_role)}</td>
                             </tr>
                             <tr>
-                                <td>Eamil</td>
+                                <td>Email</td>
                                 <td>{member()?.email}</td>
                             </tr>
                             <tr>
