@@ -31,7 +31,15 @@ const DisplayTeamDataRow: Component<{ teamMember: Member }> = (props) => {
                 <td>{props.teamMember.email}</td>
                 <td>{props.teamMember.phone}</td>
             </tr>
-            <tr class="hover cursor-pointer lg:hidden">
+            <tr
+                class="hover cursor-pointer lg:hidden"
+                onClick={[
+                    handleClick,
+                    {
+                        memberId: props.teamMember.member_id,
+                    },
+                ]}
+            >
                 <td>
                     <div class="flex flex-col">
                         <div class="flex flex-row gap-6 items-end">
