@@ -4,7 +4,7 @@ const SubTeam = {
     PROGRAMMING: 'programming',
     BUILD: 'build',
     OPERATIONS: 'operations',
-    CAPTAIN: 'captain',
+    UNASSIGNED: 'unassigned',
 } as const
 type SubTeamType = typeof SubTeam[keyof typeof SubTeam]
 

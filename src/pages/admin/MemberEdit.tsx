@@ -7,6 +7,7 @@ import { getMemberById, newMemberFromAdmin, saveMemberFromAdmin, saveMemberFromP
 import { SchoolType, SubTeam, SubTeamType, TeamRole, TeamRoleType } from '../../types/Api'
 import { addSubTeamToUrl } from '../../utilities/stringbuilders'
 
+// Definition of the fields we will do validatio on
 type User = {
     first_name: string
     last_name: string
@@ -22,12 +23,13 @@ type User = {
     grade: number
 }
 
+// These are the validation rules
 export const userSchema: yup.SchemaOf<User> = yup.object({
     first_name: yup.string().required('Required field'),
     last_name: yup.string().required('Required field'),
     pronouns: yup.string().notRequired(),
-    sub_team: yup.mixed<SubTeamType>(),
-    team_role: yup.mixed<TeamRoleType>(),
+    sub_team: yup.mixed<SubTeamType>().oneOf(['build', 'unassigned', 'operations', 'programming']),
+    team_role: yup.mixed<TeamRoleType>().oneOf(['member', 'captain', 'coach', 'mentor']),
     email: yup.string().email('Invalid email').required('Required field'),
     phone: yup.string().notRequired(),
     address: yup.string().notRequired(),
@@ -111,22 +113,26 @@ const MemberEdit: Component = () => {
                             />
                             <SelectableField
                                 label="Team Role"
+                                altLabel="Required"
                                 name="team_role"
                                 options={[
                                     { value: TeamRole.MEMBER, label: 'Member' },
                                     { value: TeamRole.CAPTAIN, label: 'Captain' },
                                     { value: TeamRole.MENTOR, label: 'Mentor' },
+                                    { value: TeamRole.COACH, label: 'Coach' },
                                 ]}
                                 value={member()?.team_role}
                                 formHandler={formHandler}
                             />
                             <SelectableField
                                 label="Sub Team"
+                                altLabel="Required"
                                 name="sub_team"
                                 options={[
                                     { value: SubTeam.BUILD, label: 'Build' },
                                     { value: SubTeam.PROGRAMMING, label: 'Programming' },
                                     { value: SubTeam.OPERATIONS, label: 'Operations' },
+                                    { value: SubTeam.UNASSIGNED, label: 'Unnassigned' },
                                 ]}
                                 value={member()?.sub_team}
                                 formHandler={formHandler}

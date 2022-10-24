@@ -161,6 +161,9 @@ export const SelectableField: Component<SelectableProps> = (props) => {
                     value={store.value}
                     class="select select-bordered"
                 >
+                    <option disabled value={''} selected={store.value === ''}>
+                        Select One
+                    </option>
                     <For each={options()}>{(option) => <option value={option.value}>{option.label}</option>}</For>
                 </select>
                 <label class="label">

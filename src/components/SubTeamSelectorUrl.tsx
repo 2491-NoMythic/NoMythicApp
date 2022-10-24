@@ -30,7 +30,7 @@ const SubTeamSelectorUrl: Component = () => {
             </label>
             <select class="select select-bordered" onChange={changeHandler}>
                 <option disabled selected={searchParams.subteam === undefined}>
-                    Pick one
+                    Select one
                 </option>
                 <For each={subTeams()}>
                     {(subTeam) => {
