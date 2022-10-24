@@ -2,11 +2,11 @@ import { Accessor, Component, For, Show } from 'solid-js'
 import { Member } from '../types/Api'
 import DisplayTeamDataRow from './DisplayTeamDataRow'
 
-const MasterTeamTable: Component<{ teamMembers: Accessor<Member[]> }> = (props) => {
+const TeamTable: Component<{ teamMembers: Accessor<Member[]> }> = (props) => {
     return (
         <Show when={props.teamMembers().length > 0}>
             <table class="table table-zebra w-full mt-4">
-                <thead>
+                <thead class="hidden lg:table-header-group">
                     <tr>
                         <td>Name</td>
                         <td>Pronouns</td>
@@ -28,4 +28,4 @@ const MasterTeamTable: Component<{ teamMembers: Accessor<Member[]> }> = (props) 
     )
 }
 
-export default MasterTeamTable
+export default TeamTable

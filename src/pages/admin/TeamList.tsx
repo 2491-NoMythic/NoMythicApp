@@ -3,7 +3,7 @@ import YearPicker from '../../components/YearPicker'
 import { filterBySubTeam } from '../../utilities/filters'
 import { sortByFirstName } from '../../utilities/sorts'
 import SelectTeamInfoMessage from '../../components/SelectTeamInfoMessage'
-import MasterTeamTable from '../../components/MasterTeamTable'
+import TeamTable from '../../components/TeamTable'
 import { Member } from '../../types/Api'
 import { getMembers } from '../../api/members'
 import { A, useSearchParams } from '@solidjs/router'
@@ -31,13 +31,16 @@ const TeamList: Component = () => {
                 </div>
                 <YearPicker year={year} setYear={setYear} />
             </div>
-            <div class="flex flex-row justify-end mt-4">
-                <A class="btn btn-primary" href={addSubTeamToUrl('/admin/memberEdit/0', searchParams.subteam)}>
-                    Add Member
-                </A>
+            <div class="flex mt-4 items-end inlign-flex">
+                <div class="flex-none">Click a row to view</div>
+                <div class="flex flex-auto justify-end">
+                    <A class="btn btn-primary" href={addSubTeamToUrl('/admin/memberEdit/0', searchParams.subteam)}>
+                        Add Member
+                    </A>
+                </div>
             </div>
             <SelectTeamInfoMessage show={filteredTeam().length === 0} extraMessage="Defaults to current season." />
-            <MasterTeamTable teamMembers={filteredTeam} />
+            <TeamTable teamMembers={filteredTeam} />
         </div>
     )
 }
