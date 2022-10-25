@@ -1,4 +1,4 @@
-import { Component, createEffect, Switch, Match, createSignal, Show, onMount } from 'solid-js'
+import { Component, Switch, Match, createSignal, Show, onMount } from 'solid-js'
 import { useMyUser } from '../contexts/UserContext'
 import unicorn from '../assets/2491_logo_disc_outline.png'
 import { useNavigate } from '@solidjs/router'
