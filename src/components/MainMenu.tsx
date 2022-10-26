@@ -34,11 +34,11 @@ const MainMenu: Component<{ children: JSX.Element }> = (props) => {
             <div class="drawer drawer-mobile">
                 <input id="my-drawer-2" type="checkbox" checked={checked()} class="drawer-toggle" />
                 <div class="drawer-content flex flex-col m-4 lg:ml-0">
-                    <div class="navbar bg-base-100 rounded-lg">
+                    <div class="navbar bg-primary rounded-lg">
                         <label for="my-drawer-2" class="btn btn-square btn-ghost drawer-button lg:hidden">
                             <HiOutlineMenu size={24} />
                         </label>
-                        <div class="flex-1 text-xl text-purple-600 font-semibold">NoMythic - {path()}</div>
+                        <div class="flex-1 text-xl text-white font-semibold">NoMythic - {path()}</div>
                         <div class="flex-none">
                             <PersonMenu />
                         </div>
@@ -68,6 +68,11 @@ const MainMenu: Component<{ children: JSX.Element }> = (props) => {
                                 <li>
                                     <A href="/admin/teamlist" onClick={closeMenu}>
                                         Team List
+                                    </A>
+                                </li>
+                                <li>
+                                    <A href="/admin/attendance" onClick={closeMenu}>
+                                        Admin Attendance
                                     </A>
                                 </li>
                             </Show>

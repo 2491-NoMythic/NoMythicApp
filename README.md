@@ -7,6 +7,7 @@ Since most students run their lives through their phones, the goal is to keep th
 ## Tech
 
 -   Typescript - A form of Javascript that can use Types
+-   [date-fns](https://date-fns.org) - Because dates are hard
 -   [SolidJS](https://www.solidjs.com) - React like framework
 -   [Solid Forms Handler](https://solid-form-handler.com/docs/introduction) - Provides form validation support
 -   [TailwindCSS](https://tailwindcss.com) - CSS framwork

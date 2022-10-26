@@ -83,6 +83,11 @@ type Attendance = {
     attendance: AttendanceTypesType
 }
 
+type MeetingCount = {
+    count: number
+    meeting_date: string
+}
+
 export type {
     MemberAttendance,
     Member,
@@ -94,6 +99,7 @@ export type {
     AttendanceTypesType,
     Attendance,
     SchoolType,
+    MeetingCount,
 }
 
 export { SubTeam, TeamRole, AttendanceTypes, School }
