@@ -30,10 +30,10 @@ const MainMenu: Component<{ children: JSX.Element }> = (props) => {
     }
 
     return (
-        <div class="bg-base-300 overscroll-contain">
+        <div class="bg-white overscroll-contain">
             <div class="drawer drawer-mobile">
                 <input id="my-drawer-2" type="checkbox" checked={checked()} class="drawer-toggle" />
-                <div class="drawer-content flex flex-col m-4 lg:ml-0">
+                <div class="drawer-content flex flex-col lg:m-4 lg:ml-0">
                     <div class="navbar bg-primary rounded-lg">
                         <label for="my-drawer-2" class="btn btn-square btn-ghost drawer-button lg:hidden">
                             <HiOutlineMenu size={24} />
