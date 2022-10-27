@@ -32,7 +32,9 @@ const TeamList: Component = () => {
                 <YearPicker year={year} setYear={setYear} />
             </div>
             <div class="flex mt-4 items-end inlign-flex">
-                <div class="flex-none">Click a row to view</div>
+                <Show when={filteredTeam().length !== 0}>
+                    <div class="flex-none ml-4">Click a row to view</div>
+                </Show>
                 <div class="flex flex-auto justify-end">
                     <A class="btn btn-primary" href={addSubTeamToUrl('/admin/memberEdit/0', searchParams.subteam)}>
                         Add Member
