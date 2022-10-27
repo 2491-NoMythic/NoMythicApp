@@ -32,7 +32,7 @@ const Profile: Component = () => {
                 }
             >
                 <div class="card max-w-5xl bg-base-100 shadow-xl mt-4">
-                    <div class="card-body">
+                    <div class="card-body pb-6 lg:pb-4">
                         <h2 class="card-title">Google</h2>
                         <table class="table w-full">
                             <tbody>

@@ -42,7 +42,7 @@ const DisplayTeamDataRow: Component<{ teamMember: Member }> = (props) => {
             >
                 <td>
                     <div class="flex flex-col">
-                        <div class="flex flex-row gap-6 items-end">
+                        <div class="flex flex-row gap-2 items-end">
                             <div class="text-xl">
                                 {props.teamMember.first_name} {props.teamMember.last_name}
                             </div>
@@ -53,9 +53,9 @@ const DisplayTeamDataRow: Component<{ teamMember: Member }> = (props) => {
                                     props.teamMember.pronouns !== ''
                                 }
                             >
-                                <div class="text-sm align-bottom">( {props.teamMember.pronouns} )</div>
+                                <div class="text-sm pb-1">({props.teamMember.pronouns})</div>
                             </Show>
-                            <div class="text-sm text-secondary align-bottom">
+                            <div class="text-sm text-secondary pb-1">
                                 {capitalizeWord(props.teamMember.team_role)}
                                 <Show when={props.teamMember.sub_team !== SubTeam.UNASSIGNED}>
                                     <span class="text-base-content"> of </span>
@@ -63,9 +63,9 @@ const DisplayTeamDataRow: Component<{ teamMember: Member }> = (props) => {
                                 </Show>
                             </div>
                         </div>
-                        <div class="flex flex row gap-6">
-                            <div class="text-sm">Email: {props.teamMember.email}</div>
-                            <div class="text-sm">Phone: {props.teamMember.phone}</div>
+                        <div class="flex flex row gap-2">
+                            <div class="text-sm">E: {props.teamMember.email}</div>
+                            <div class="text-sm">P: {props.teamMember.phone}</div>
                         </div>
                     </div>
                 </td>
