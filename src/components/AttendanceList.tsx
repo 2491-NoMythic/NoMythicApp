@@ -1,3 +1,4 @@
+import { useNavigate } from '@solidjs/router'
 import { Accessor, Component, For, Resource, Show } from 'solid-js'
 import { insertAttendance, updateAttendance } from '../api/attendance'
 import { AttendanceTypes, AttendanceTypesType, MemberAttendance, SubTeam } from '../types/Api'
@@ -7,7 +8,17 @@ const AttendanceList: Component<{
     meetingDate: string
     teamMembers: Accessor<MemberAttendance[]>
     refetch: Function
+    clickToMember?: boolean
 }> = (props) => {
+    const navigate = useNavigate()
+
+    type memberIdType = { memberId: number }
+    const handleNavToMember = (data: memberIdType, _event) => {
+        if (props.clickToMember) {
+            navigate('/admin/attendance/member/' + data.memberId + '?season=2023')
+        }
+    }
+
     type data = { memberId: number; attendanceType: AttendanceTypesType; attendanceId: number }
     const handleClick = async (data: data, _event) => {
         if (data.attendanceId === undefined) {
@@ -34,12 +45,14 @@ const AttendanceList: Component<{
                 <tbody>
                     <For each={props.teamMembers()}>
                         {(teamMember) => {
-                            const subTeam = teamMember.sub_team.charAt(0).toUpperCase() + teamMember.sub_team.slice(1)
                             return (
-                                <tr>
+                                <tr
+                                    onClick={[handleNavToMember, { memberId: teamMember.member_id }]}
+                                    class={`${props.clickToMember ? 'cursor-pointer' : ''}`}
+                                >
                                     <td class="hidden lg:table-cell">{teamMember.first_name}</td>
                                     <td class="hidden lg:table-cell">{teamMember.last_name}</td>
-                                    <td class="hidden lg:table-cell">{capitalizeWord(subTeam)}</td>
+                                    <td class="hidden lg:table-cell">{capitalizeWord(teamMember.sub_team)}</td>
                                     <td class="hidden lg:table-cell">{capitalizeWord(teamMember.team_role)}</td>
                                     <td class="lg:hidden">
                                         {teamMember.first_name} {teamMember.last_name}
@@ -56,7 +69,7 @@ const AttendanceList: Component<{
                                             <input
                                                 type="radio"
                                                 name={'options' + teamMember.member_id}
-                                                data-title="Ft"
+                                                data-title="FT"
                                                 class="btn lg:before:content-['Full_Time']"
                                                 checked={
                                                     teamMember?.attendance[0]?.attendance === AttendanceTypes.FULL_TIME
@@ -73,7 +86,7 @@ const AttendanceList: Component<{
                                             <input
                                                 type="radio"
                                                 name={'options' + teamMember.member_id}
-                                                data-title="Pt"
+                                                data-title="PT"
                                                 class="btn"
                                                 checked={
                                                     teamMember?.attendance[0]?.attendance === AttendanceTypes.PART_TIME
@@ -90,7 +103,7 @@ const AttendanceList: Component<{
                                             <input
                                                 type="radio"
                                                 name={'options' + teamMember.member_id}
-                                                data-title="Ab"
+                                                data-title="AB"
                                                 class="btn"
                                                 checked={
                                                     teamMember?.attendance[0]?.attendance === AttendanceTypes.ABSENT

@@ -1,4 +1,5 @@
 import { Attendance, AttendanceTypes, AttendanceTypesType, MeetingCount, MemberAttendance } from '../types/Api'
+import { getStartEndOfSeason } from '../utilities/converters'
 import { supabase } from './SupabaseClient'
 
 const makeCountsByMeetingDate = (records: MeetingCounts[]) => {
@@ -87,4 +88,48 @@ const insertAttendance = async (meetingDate: string, memberId: number, attendanc
     if (error) throw error
 }
 
-export { getMemberAttendance, getAttendance, updateAttendance, insertAttendance, getAttendanceCounts }
+/*
+ * Returns attendance for a member from June of previous season year, to end of May current season
+ * Season is the year the game comes out (in January)
+ * Can't figure out how to add types here
+ */
+const getAttendanceForMember = async ({ season, memberId }) => {
+    const { startDate, endDate } = getStartEndOfSeason(season)
+    const { data, error } = await supabase
+        .from('attendance')
+        .select()
+        .eq('member_id', memberId)
+        .gte('meeting_date', startDate)
+        .lte('meeting_date', endDate)
+
+    if (error) throw error
+
+    if (data.length === 0) {
+        return null
+    }
+    return data as Attendance[]
+}
+
+/*
+ *  Total number of meetings in season that attendance was taken
+ */
+const getNumberOfMeetings = async (season: string) => {
+    const { startDate, endDate } = getStartEndOfSeason(season)
+    const { data, error } = await supabase.rpc('number_of_meetings', { start_date: startDate, end_date: endDate })
+    if (error) throw error
+
+    if (data.length === 0) {
+        return null
+    }
+    return data as unknown as number
+}
+
+export {
+    getMemberAttendance,
+    getAttendance,
+    updateAttendance,
+    insertAttendance,
+    getAttendanceCounts,
+    getAttendanceForMember,
+    getNumberOfMeetings,
+}

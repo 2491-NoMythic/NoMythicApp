@@ -8,7 +8,7 @@ import AttendanceList from '../../components/AttendanceList'
 import { A, useSearchParams } from '@solidjs/router'
 import { calculateDay } from '../../utilities/formatters'
 
-const AttendanceForOneMeeting: Component = () => {
+const AttendanceForMeeting: Component = () => {
     const [searchParams] = useSearchParams()
     const [filteredTeam, setFilteredTeam] = createSignal<MemberAttendance[]>([])
     const [team, { mutate, refetch }] = createResource(searchParams.meetingDate, getMemberAttendance)
@@ -23,14 +23,19 @@ const AttendanceForOneMeeting: Component = () => {
     return (
         <div class="overflow-x-auto">
             <div class="mt-4 text-lg font-semibold">
-                <A class="btn btn-secondary mr-4" href="/admin/attendance">
-                    Back
+                <A class="btn btn-secondary mr-4" href="/admin/attendance?season=2023">
+                    Back to Season
                 </A>
                 {calculateDay(searchParams.meetingDate)} - {searchParams.meetingDate}
             </div>
-            <AttendanceList meetingDate={searchParams.meetingDate} teamMembers={filteredTeam} refetch={refetch} />
+            <AttendanceList
+                meetingDate={searchParams.meetingDate}
+                teamMembers={filteredTeam}
+                refetch={refetch}
+                clickToMember={true}
+            />
         </div>
     )
 }
 
-export default AttendanceForOneMeeting
+export default AttendanceForMeeting

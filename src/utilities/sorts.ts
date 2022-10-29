@@ -1,4 +1,4 @@
-import { MeetingCount } from '../types/Api'
+import { Attendance, MeetingCount } from '../types/Api'
 
 const sortByFirstName = (teamMembers) => {
     if (teamMembers === undefined) {
@@ -36,4 +36,21 @@ const sortMeetingCounts = (meetingCounts: MeetingCount[], direction?: 'ASC' | 'D
     return sorted
 }
 
-export { sortByFirstName, sortMeetingCounts }
+const sortAttendance = (attendance: Attendance[], direction?: 'ASC' | 'DESC') => {
+    if (attendance === undefined) {
+        return []
+    }
+    const dir = direction === 'DESC' ? -1 : 1
+    const sorted = attendance.sort((meetingA, meetingB) => {
+        if (meetingA.meeting_date < meetingB.meeting_date) {
+            return -1 * dir
+        }
+        if (meetingA.meeting_date > meetingB.meeting_date) {
+            return 1 * dir
+        }
+        return 0
+    })
+    return sorted
+}
+
+export { sortByFirstName, sortMeetingCounts, sortAttendance }
