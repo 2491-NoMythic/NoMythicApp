@@ -1,7 +1,8 @@
 import { useParams, useSearchParams } from '@solidjs/router'
-import { Component, createEffect, createResource, createSignal, For } from 'solid-js'
+import { Component, createEffect, createResource, createSignal, For, Suspense } from 'solid-js'
 import { getAttendanceForMember, getNumberOfMeetings } from '../../api/attendance'
 import { getMemberById } from '../../api/members'
+import PageLoading from '../../components/PageLoading'
 import TwoSideStatsBase from '../../components/TwoSideStatsBase'
 import { Attendance, AttendanceTypes } from '../../types/Api'
 import { seasonMonths } from '../../utilities/converters'
@@ -86,53 +87,55 @@ const AttendanceForMember: Component = () => {
     })
 
     return (
-        <div>
-            <div class="text-xl font-semibold mt-4">
-                Attendance for {member()?.first_name} {member()?.last_name}
-            </div>
-            <TwoSideStatsBase
-                leftText={searchParams.season + ' Season'}
-                leftValue={numberOfMeetings()?.toString() + ' Meetings'}
-                leftSubText={seasonMonths[0] + ' - ' + seasonMonths[11]}
-                rightText="Attendance"
-                rightValue={'At ' + memberAttended()?.toString()}
-                rightSubText={calculatePercent(memberAttended(), numberOfMeetings()) + '%'}
-                link={null}
-            />
+        <Suspense fallback={<PageLoading />}>
             <div>
-                <For each={byMonth()}>
-                    {(month) => {
-                        return (
-                            <div>
-                                <div class="text-xl font-semibold mt-4">
-                                    {month.month} : At {getMeetingsAttended(month.meetings)} Meetings
-                                </div>
+                <div class="text-xl font-semibold mt-4">
+                    Attendance for {member()?.first_name} {member()?.last_name}
+                </div>
+                <TwoSideStatsBase
+                    leftText={searchParams.season + ' Season'}
+                    leftValue={numberOfMeetings()?.toString() + ' Meetings'}
+                    leftSubText={seasonMonths[0] + ' - ' + seasonMonths[11]}
+                    rightText="Attendance"
+                    rightValue={'At ' + memberAttended()?.toString()}
+                    rightSubText={calculatePercent(memberAttended(), numberOfMeetings()) + '%'}
+                    link={null}
+                />
+                <div>
+                    <For each={byMonth()}>
+                        {(month) => {
+                            return (
                                 <div>
-                                    <For each={month.meetings}>
-                                        {(meeting) => {
-                                            return (
-                                                <TwoSideStatsBase
-                                                    leftText={calculateDay(meeting.meeting_date)}
-                                                    leftValue={meeting.meeting_date}
-                                                    leftSubText="Regular Meeting"
-                                                    rightText="Attendance"
-                                                    rightValue={formatEnumValue(meeting.attendance)}
-                                                    rightSubText={null}
-                                                    link={
-                                                        '/admin/attendance/meeting?subTeam=team&meetingDate=' +
-                                                        meeting.meeting_date
-                                                    }
-                                                />
-                                            )
-                                        }}
-                                    </For>
+                                    <div class="text-xl font-semibold mt-4">
+                                        {month.month} : At {getMeetingsAttended(month.meetings)} Meetings
+                                    </div>
+                                    <div>
+                                        <For each={month.meetings}>
+                                            {(meeting) => {
+                                                return (
+                                                    <TwoSideStatsBase
+                                                        leftText={calculateDay(meeting.meeting_date)}
+                                                        leftValue={meeting.meeting_date}
+                                                        leftSubText="Regular Meeting"
+                                                        rightText="Attendance"
+                                                        rightValue={formatEnumValue(meeting.attendance)}
+                                                        rightSubText={null}
+                                                        link={
+                                                            '/admin/attendance/meeting?subTeam=team&meetingDate=' +
+                                                            meeting.meeting_date
+                                                        }
+                                                    />
+                                                )
+                                            }}
+                                        </For>
+                                    </div>
                                 </div>
-                            </div>
-                        )
-                    }}
-                </For>
+                            )
+                        }}
+                    </For>
+                </div>
             </div>
-        </div>
+        </Suspense>
     )
 }
 
