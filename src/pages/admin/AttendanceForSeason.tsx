@@ -7,7 +7,7 @@ import { sortMeetingCounts } from '../../utilities/sorts'
 // TODO: we need to get this from somewhere
 const TEAM_SIZE = 30
 
-const AdminAttendance = () => {
+const AttendanceForSeason = () => {
     const today = new Date()
     const formatted = today.getFullYear() + ''
     const [season, setSeason] = createSignal<string>(formatted)
@@ -29,7 +29,7 @@ const AdminAttendance = () => {
                         return (
                             <>
                                 <Show when={showMonth}>
-                                    <div class="text-xl font-semibold md:col-span-2 2xl:col-span-3">{month}</div>
+                                    <div class="text-xl font-semibold md:col-span-2 2xl:col-span-3 -mb-4">{month}</div>
                                 </Show>
                                 <AttendanceStats
                                     meetingDate={meeting.meeting_date}
@@ -46,4 +46,4 @@ const AdminAttendance = () => {
     )
 }
 
-export default AdminAttendance
+export default AttendanceForSeason

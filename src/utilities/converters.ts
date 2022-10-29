@@ -18,4 +18,25 @@ const convertGoogleSessionToGoogleUser = (googleSession: Session) => {
     return googleUser
 }
 
-export { convertGoogleSessionToAuthSession, convertGoogleSessionToGoogleUser }
+const getStartEndOfSeason = (season: string) => {
+    const startDate = Number.parseInt(season) - 1 + '-06-01'
+    const endDate = season + '-05-31'
+    return { startDate, endDate }
+}
+
+const seasonMonths = [
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+]
+
+export { convertGoogleSessionToAuthSession, convertGoogleSessionToGoogleUser, getStartEndOfSeason, seasonMonths }

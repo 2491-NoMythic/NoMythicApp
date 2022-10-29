@@ -24,4 +24,12 @@ const calculateMonth = (aDate: string) => {
     return format(blah, 'MMMM')
 }
 
-export { capitalizeWord, calculateDay, calculatePercent, calculateMonth }
+const formatEnumValue = (value: string) => {
+    if (value === undefined || value === null) return ''
+    let words = value.split('_')
+    words = words.map((word) => capitalizeWord(word))
+    const word = words.reduce((prev, curr) => prev + ' ' + curr)
+    return word
+}
+
+export { capitalizeWord, calculateDay, calculatePercent, calculateMonth, formatEnumValue }
