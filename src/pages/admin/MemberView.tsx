@@ -1,10 +1,11 @@
 import { A, useNavigate, useParams, useSearchParams } from '@solidjs/router'
-import { Component, createResource, createSignal, Show } from 'solid-js'
+import { Component, createResource, createSignal, Show, Suspense } from 'solid-js'
 import { deleteMember, getMemberById } from '../../api/members'
 import { HiOutlineTrash } from 'solid-icons/hi'
 
 import { capitalizeWord } from '../../utilities/formatters'
 import { addSubTeamToUrl } from '../../utilities/stringbuilders'
+import PageLoading from '../../components/PageLoading'
 
 const MemberView: Component = () => {
     const params = useParams()
@@ -24,7 +25,7 @@ const MemberView: Component = () => {
     }
 
     return (
-        <>
+        <Suspense fallback={<PageLoading />}>
             <div class="card max-w-5xl bg-base-100 shadow-xl mt-4">
                 <div class="card-body">
                     <h2 class="card-title">Team Member</h2>
@@ -122,7 +123,7 @@ const MemberView: Component = () => {
                     </div>
                 </div>
             </Show>
-        </>
+        </Suspense>
     )
 }
 

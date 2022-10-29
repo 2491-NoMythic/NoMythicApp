@@ -1,4 +1,4 @@
-import { Component, createEffect, createResource, createSignal } from 'solid-js'
+import { Component, createEffect, createResource, createSignal, Suspense } from 'solid-js'
 import DatePicker from '../../components/DatePicker'
 import SubTeamSelector from '../../components/SubTeamSelector'
 import { filterBySubTeam } from '../../utilities/filters'
@@ -8,6 +8,7 @@ import SelectTeamInfoMessage from '../../components/SelectTeamInfoMessage'
 import { MemberAttendance } from '../../types/Api'
 import { getMemberAttendance } from '../../api/attendance'
 import AttendanceList from '../../components/AttendanceList'
+import PageLoading from '../../components/PageLoading'
 
 const AttendancePage: Component = () => {
     const [subTeam, setSubTeam] = createSignal('')
@@ -25,16 +26,18 @@ const AttendancePage: Component = () => {
     })
 
     return (
-        <div class="overflow-x-auto">
-            <div class="flex">
-                <div class="grow mr-2">
-                    <SubTeamSelector subTeam={subTeam} setSubTeam={setSubTeam} />
+        <Suspense fallback={<PageLoading />}>
+            <div class="overflow-x-auto">
+                <div class="flex">
+                    <div class="grow mr-2">
+                        <SubTeamSelector subTeam={subTeam} setSubTeam={setSubTeam} />
+                    </div>
+                    <DatePicker selectedDate={meetingDate} setSelectedDate={setMeetingDate} />
                 </div>
-                <DatePicker selectedDate={meetingDate} setSelectedDate={setMeetingDate} />
+                <SelectTeamInfoMessage show={filteredTeam().length === 0} extraMessage="Using current season." />
+                <AttendanceList meetingDate={meetingDate()} teamMembers={filteredTeam} refetch={refetch} />
             </div>
-            <SelectTeamInfoMessage show={filteredTeam().length === 0} extraMessage="Using current season." />
-            <AttendanceList meetingDate={meetingDate()} teamMembers={filteredTeam} refetch={refetch} />
-        </div>
+        </Suspense>
     )
 }
 
