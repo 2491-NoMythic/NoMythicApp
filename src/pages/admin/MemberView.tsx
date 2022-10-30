@@ -3,9 +3,10 @@ import { Component, createResource, createSignal, Show, Suspense } from 'solid-j
 import { deleteMember, getMemberById } from '../../api/members'
 import { HiOutlineTrash } from 'solid-icons/hi'
 
-import { calculateGrade, capitalizeWord } from '../../utilities/formatters'
+import { calculateGrade, capitalizeWord, formatEnumValue } from '../../utilities/formatters'
 import { addSubTeamToUrl } from '../../utilities/stringbuilders'
 import PageLoading from '../../components/PageLoading'
+import { School } from '../../types/Api'
 
 const MemberView: Component = () => {
     const params = useParams()
@@ -69,16 +70,18 @@ const MemberView: Component = () => {
                             </tr>
                             <tr>
                                 <td>School</td>
-                                <td>{member()?.school}</td>
+                                <td>{formatEnumValue(member()?.school)}</td>
                             </tr>
-                            <tr>
-                                <td>Advisor</td>
-                                <td>{member()?.advisor}</td>
-                            </tr>
-                            <tr>
-                                <td>Grade</td>
-                                <td>{calculateGrade(member()?.grad_year)}</td>
-                            </tr>
+                            <Show when={member()?.school !== School.NON_STUDENT}>
+                                <tr>
+                                    <td>Advisor</td>
+                                    <td>{member()?.advisor}</td>
+                                </tr>
+                                <tr>
+                                    <td>Grade</td>
+                                    <td>{calculateGrade(member()?.grad_year)}</td>
+                                </tr>
+                            </Show>
                         </tbody>
                     </table>
                     <div class="flex">
