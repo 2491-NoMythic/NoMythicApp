@@ -3,7 +3,7 @@ import { Component, createResource, createSignal, Show, Suspense } from 'solid-j
 import { deleteMember, getMemberById } from '../../api/members'
 import { HiOutlineTrash } from 'solid-icons/hi'
 
-import { capitalizeWord } from '../../utilities/formatters'
+import { calculateGrade, capitalizeWord } from '../../utilities/formatters'
 import { addSubTeamToUrl } from '../../utilities/stringbuilders'
 import PageLoading from '../../components/PageLoading'
 
@@ -77,7 +77,7 @@ const MemberView: Component = () => {
                             </tr>
                             <tr>
                                 <td>Grade</td>
-                                <td>{member()?.grade}</td>
+                                <td>{calculateGrade(member()?.grad_year)}</td>
                             </tr>
                         </tbody>
                     </table>

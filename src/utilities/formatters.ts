@@ -1,4 +1,4 @@
-import { parse, format } from 'date-fns'
+import { parse, format, isAfter, differenceInYears, differenceInCalendarYears } from 'date-fns'
 
 const capitalizeWord = (word: string): string => {
     if (word === undefined || word === null) {
@@ -14,16 +14,19 @@ const calculatePercent = (count: number, teamSize: number) => {
     return ((count / teamSize) * 100).toFixed(0)
 }
 
+// return a day of week string like 'Monday'
 const calculateDay = (meeting: string) => {
     const blah = parse(meeting, 'yyyy-MM-dd', new Date())
     return format(blah, 'EEEE')
 }
 
+// return a month string like 'February'
 const calculateMonth = (aDate: string) => {
     const blah = parse(aDate, 'yyyy-MM-dd', new Date())
     return format(blah, 'MMMM')
 }
 
+// remove _ and capitalize words
 const formatEnumValue = (value: string) => {
     if (value === undefined || value === null) return ''
     let words = value.split('_')
@@ -32,4 +35,22 @@ const formatEnumValue = (value: string) => {
     return word
 }
 
-export { capitalizeWord, calculateDay, calculatePercent, calculateMonth, formatEnumValue }
+/*
+ *  Return the grade of the student or 'Graduated'
+ *  - graduation considered last day of june
+ */
+const calculateGrade = (gradYear: number) => {
+    if (gradYear === null || gradYear === undefined) {
+        return ''
+    }
+    const today = new Date()
+    const gradDateString = gradYear.toString() + '-06-30'
+    const gradDate = parse(gradDateString, 'yyyy-MM-dd', new Date())
+    if (isAfter(today, gradDate)) {
+        return 'Graduated ' + gradYear
+    }
+    const diff = differenceInYears(gradDate, today)
+    return 12 - diff
+}
+
+export { capitalizeWord, calculateDay, calculatePercent, calculateMonth, formatEnumValue, calculateGrade }

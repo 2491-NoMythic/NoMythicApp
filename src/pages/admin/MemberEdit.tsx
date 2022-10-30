@@ -21,7 +21,7 @@ type User = {
     food_needs?: string
     school?: string
     advisor?: string
-    grade: number
+    grad_year: number
 }
 
 // These are the validation rules
@@ -37,12 +37,11 @@ export const userSchema: yup.SchemaOf<User> = yup.object({
     food_needs: yup.string().notRequired(),
     school: yup.mixed<SchoolType>(),
     advisor: yup.string().notRequired(),
-    grade: yup
+    grad_year: yup
         .number()
-        .min(0)
-        .max(13)
+        .min(2000)
         .nullable(true)
-        .transform((_, val) => (0 === Number(val) ? null : val)),
+        .transform((_, val) => (NaN === Number(val) ? null : Number(val))),
 })
 
 const MemberEdit: Component = () => {
@@ -70,7 +69,7 @@ const MemberEdit: Component = () => {
                 food_needs: formData().food_needs,
                 school: formData().school,
                 advisor: formData().advisor,
-                grade: Number(formData().grade) === 0 ? null : formData().grade,
+                grad_year: Number(formData().grad_year) === NaN ? null : formData().grad_year,
             }
             if (member()?.member_id === undefined) {
                 await newMemberFromAdmin(updatedMember)
@@ -179,9 +178,9 @@ const MemberEdit: Component = () => {
                                     formHandler={formHandler}
                                 />
                                 <TextField
-                                    label="Grade"
-                                    name="grade"
-                                    value={member()?.grade}
+                                    label="Graduation Year"
+                                    name="grad_year"
+                                    value={member()?.grad_year}
                                     formHandler={formHandler}
                                 />
                             </div>
