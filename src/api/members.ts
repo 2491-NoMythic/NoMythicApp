@@ -5,6 +5,7 @@ const getMembers = async (year: string) => {
     const { data, error } = await supabase
         .from('members')
         .select('member_id, first_name, last_name, pronouns, team_role, sub_team, email, phone, food_needs')
+        .eq('deleted', false)
 
     if (error) throw error
 
@@ -92,8 +93,14 @@ const newMemberFromAdmin = async (member: Member) => {
     if (error) throw error
 }
 
+// soft delete of member
 const deleteMember = async (memberId: number) => {
-    const { error } = await supabase.from('members').delete().eq('member_id', memberId)
+    const { error } = await supabase
+        .from('members')
+        .update({
+            deleted: true,
+        })
+        .eq('member_id', memberId)
 
     if (error) throw error
 }
