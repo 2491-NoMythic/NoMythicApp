@@ -49,7 +49,7 @@ type Member = {
     sub_team: SubTeamType
     team_role: TeamRoleType
     school?: SchoolType
-    grade?: number
+    grad_year?: number
     advisor?: string
     phone?: string
     email: string

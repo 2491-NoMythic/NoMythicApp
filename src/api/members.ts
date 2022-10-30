@@ -66,7 +66,7 @@ const saveMemberFromAdmin = async (member: Member) => {
             address: member.address,
             school: member.school,
             advisor: member.advisor,
-            grade: member.grade,
+            grad_year: member.grad_year,
         })
         .eq('member_id', member.member_id)
 
@@ -86,7 +86,7 @@ const newMemberFromAdmin = async (member: Member) => {
         address: member.address,
         school: member.school,
         advisor: member.advisor,
-        grade: member.grade,
+        grad_year: member.grad_year,
     })
 
     if (error) throw error
