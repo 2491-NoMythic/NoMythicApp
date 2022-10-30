@@ -55,7 +55,7 @@ type Member = {
     email: string
     address?: string
     food_needs?: string
-    deleted: boolean
+    deleted?: boolean
 }
 
 type AuthSession = {

@@ -4,7 +4,7 @@ import * as yup from 'yup'
 import { Component, createEffect, createResource, Show, Suspense } from 'solid-js'
 import { A, useNavigate, useParams, useSearchParams } from '@solidjs/router'
 import { getMemberById, newMemberFromAdmin, saveMemberFromAdmin, saveMemberFromProfile } from '../../api/members'
-import { SchoolType, SubTeam, SubTeamType, TeamRole, TeamRoleType } from '../../types/Api'
+import { School, SchoolType, SubTeam, SubTeamType, TeamRole, TeamRoleType } from '../../types/Api'
 import { addSubTeamToUrl } from '../../utilities/stringbuilders'
 import PageLoading from '../../components/PageLoading'
 
@@ -24,24 +24,35 @@ type User = {
     grad_year: number
 }
 
+// helper for yup transform function
+const emptyStringToNull = (value, originalValue) => {
+    if (typeof originalValue === 'string' && originalValue === '') {
+        return null
+    }
+    return value
+}
+
 // These are the validation rules
 export const userSchema: yup.SchemaOf<User> = yup.object({
-    first_name: yup.string().required('Required field'),
-    last_name: yup.string().required('Required field'),
-    pronouns: yup.string().notRequired(),
+    first_name: yup.string().required('Required field').max(40, 'Max 40 characters'),
+    last_name: yup.string().required('Required field').max(40, 'Max 40 characters'),
+    pronouns: yup.string().notRequired().max(20, 'Max 20 characters'),
     sub_team: yup.mixed<SubTeamType>().oneOf(['build', 'unassigned', 'operations', 'programming']),
     team_role: yup.mixed<TeamRoleType>().oneOf(['member', 'captain', 'coach', 'mentor']),
-    email: yup.string().email('Invalid email').required('Required field'),
-    phone: yup.string().notRequired(),
-    address: yup.string().notRequired(),
-    food_needs: yup.string().notRequired(),
-    school: yup.mixed<SchoolType>(),
-    advisor: yup.string().notRequired(),
+    email: yup.string().email('Invalid email').required('Required field').max(60, 'Max 60 characters'),
+    phone: yup.string().notRequired().max(14, 'Max 14 characters'),
+    address: yup.string().notRequired().max(100, 'Max 100 characters'),
+    food_needs: yup.string().notRequired().max(60, 'Max 60 characters'),
+    school: yup.mixed<SchoolType>().oneOf(['non_student', 'avalon', 'grs', 'other']),
+    advisor: yup.string().notRequired().max(40, 'Max 40 characters'),
     grad_year: yup
         .number()
-        .min(2000)
-        .nullable(true)
-        .transform((_, val) => (NaN === Number(val) ? null : Number(val))),
+        .typeError('Only numbers accepted')
+        .min(2000, 'Min value of 2000')
+        .max(2050, 'Max value of 2050')
+        .transform(emptyStringToNull)
+        .nullable(),
+    //.transform((_, val) => (NaN === Number(val) || null === Number(val) ? null : Number(val))),
 })
 
 const MemberEdit: Component = () => {
@@ -56,6 +67,8 @@ const MemberEdit: Component = () => {
         event.preventDefault()
         try {
             await formHandler.validateForm()
+            console.log('grad_year', formData().grad_year)
+            console.log('grad_number', Number(formData().grad_year))
             const updatedMember = {
                 member_id: member()?.member_id,
                 first_name: formData().first_name,
@@ -69,7 +82,7 @@ const MemberEdit: Component = () => {
                 food_needs: formData().food_needs,
                 school: formData().school,
                 advisor: formData().advisor,
-                grad_year: Number(formData().grad_year) === NaN ? null : formData().grad_year,
+                grad_year: Number(formData().grad_year) === 0 ? null : formData().grad_year,
             }
             if (member()?.member_id === undefined) {
                 await newMemberFromAdmin(updatedMember)
@@ -165,24 +178,39 @@ const MemberEdit: Component = () => {
                                     value={member()?.food_needs}
                                     formHandler={formHandler}
                                 />
-                                <TextField
+                                <SelectableField
                                     label="School"
+                                    altLabel="Required"
                                     name="school"
+                                    options={[
+                                        { value: School.NON_STUDENT, label: 'Non Student' },
+                                        { value: School.AVALON, label: 'Avalon' },
+                                        { value: School.GRS, label: 'GRS' },
+                                        { value: School.OTHER, label: 'Other' },
+                                    ]}
                                     value={member()?.school}
                                     formHandler={formHandler}
                                 />
-                                <TextField
-                                    label="Advisor"
-                                    name="advisor"
-                                    value={member()?.advisor}
-                                    formHandler={formHandler}
-                                />
-                                <TextField
-                                    label="Graduation Year"
-                                    name="grad_year"
-                                    value={member()?.grad_year}
-                                    formHandler={formHandler}
-                                />
+                                <Show
+                                    when={
+                                        formData().school === School.AVALON ||
+                                        formData().school === School.GRS ||
+                                        formData().school === School.OTHER
+                                    }
+                                >
+                                    <TextField
+                                        label="Advisor"
+                                        name="advisor"
+                                        value={member()?.advisor}
+                                        formHandler={formHandler}
+                                    />
+                                    <TextField
+                                        label="Graduation Year"
+                                        name="grad_year"
+                                        value={member()?.grad_year}
+                                        formHandler={formHandler}
+                                    />
+                                </Show>
                             </div>
                             <div class="card-actions justify-end">
                                 <A href={addSubTeamToUrl('/admin/teamList', searchParams.subteam)}>
