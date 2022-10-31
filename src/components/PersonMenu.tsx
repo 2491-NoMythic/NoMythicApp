@@ -3,32 +3,13 @@ import { HiOutlineUser } from 'solid-icons/hi'
 import { supabase } from '../api/SupabaseClient'
 import { useMyUser } from '../contexts/UserContext'
 import { useNavigate } from '@solidjs/router'
-import { themeChange } from 'theme-change'
-import { createStoredSignal } from '../utilities/StorageSignal'
+import Settings from './Settings'
 
 const PersonMenu: Component = () => {
     const [show, setShow] = createSignal(false)
     const [showSettings, setShowSettings] = createSignal(false)
-    const [theme, setTheme] = createStoredSignal<string>('theme', 'default')
-    const themes = [
-        { value: 'default', label: 'OS Default' },
-        { value: 'light', label: 'Light' },
-        { value: 'dark', label: 'Dark' },
-        { value: 'retro', label: 'Retro' },
-    ]
+
     const navigate = useNavigate()
-
-    createEffect(() => {
-        console.log('setting theme', theme())
-        const newTheme = theme() === 'default' ? '' : theme()
-        document.documentElement.setAttribute('data-theme', newTheme)
-    })
-
-    const handleThemeChange = (event) => {
-        const value = event.target.selectedOptions[0].value
-        console.log('theme change', value)
-        setTheme(value)
-    }
 
     const toggle = () => {
         setShow(!show())
@@ -42,7 +23,6 @@ const PersonMenu: Component = () => {
     const openSettings = () => {
         setShow(false)
         setShowSettings(true)
-        themeChange()
     }
 
     const closeSettings = () => {
@@ -97,44 +77,15 @@ const PersonMenu: Component = () => {
                     <li onClick={navToProfile}>
                         <p>Profile</p>
                     </li>
-                    <li onClick={signOut}>
-                        <p>Logout</p>
-                    </li>
                     <li onClick={openSettings}>
                         <p>Settings</p>
                     </li>
+                    <li onClick={signOut}>
+                        <p>Logout</p>
+                    </li>
                 </Show>
             </ul>
-            <Show when={showSettings()}>
-                <div class="modal modal-open">
-                    <div class="modal-box">
-                        <h3 class="font-bold text-lg">Settings</h3>
-                        <div class="py-4">
-                            <div class="form-control">
-                                <label class="label">
-                                    <span class="label-text">Select Theme</span>
-                                </label>
-                                <select class="select select-bordered" onChange={handleThemeChange}>
-                                    <For each={themes}>
-                                        {(aTheme) => {
-                                            return (
-                                                <option selected={aTheme.value === theme()} value={aTheme.value}>
-                                                    {aTheme.label}
-                                                </option>
-                                            )
-                                        }}
-                                    </For>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="modal-action">
-                            <button class="btn btn-secondary" onClick={closeSettings}>
-                                Close
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </Show>
+            <Settings show={showSettings()} closeFn={closeSettings} />
         </>
     )
 }

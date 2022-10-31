@@ -25,6 +25,7 @@ module.exports = {
             'aqua',
             'coffee',
             'retro',
+            'halloween',
         ],
     },
 }
