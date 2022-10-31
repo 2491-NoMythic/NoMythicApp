@@ -1,19 +1,18 @@
-import { Component, createSignal, Show, Switch, Match } from 'solid-js'
+import { Component, createSignal, Show, Switch, Match, createEffect, For } from 'solid-js'
 import { HiOutlineUser } from 'solid-icons/hi'
 import { supabase } from '../api/SupabaseClient'
 import { useMyUser } from '../contexts/UserContext'
 import { useNavigate } from '@solidjs/router'
+import Settings from './Settings'
 
 const PersonMenu: Component = () => {
     const [show, setShow] = createSignal(false)
+    const [showSettings, setShowSettings] = createSignal(false)
+
     const navigate = useNavigate()
 
     const toggle = () => {
         setShow(!show())
-    }
-
-    const close = () => {
-        setShow(false)
     }
 
     const signOut = async () => {
@@ -21,23 +20,27 @@ const PersonMenu: Component = () => {
         setShow(false)
     }
 
+    const openSettings = () => {
+        setShow(false)
+        setShowSettings(true)
+    }
+
+    const closeSettings = () => {
+        setShowSettings(false)
+    }
+
     const navToProfile = () => {
         setShow(false)
         navigate('/profile')
     }
 
-    const [authSession, googleUser, member, { isLoggedIn, isMember }] =
-        useMyUser()
+    const [authSession, googleUser, member, { isLoggedIn, isMember }] = useMyUser()
 
-    // avatarUrl doesn't show becuase of mixed http/https content
     return (
         <>
             <div class="dropdown" onClick={toggle}>
                 <label tabindex="0" class="btn btn-square btn-ghost">
-                    <Show
-                        when={isLoggedIn()}
-                        fallback={<HiOutlineUser size={24} />}
-                    >
+                    <Show when={isLoggedIn()} fallback={<HiOutlineUser size={24} />}>
                         <div class="avatar">
                             <div class="w-8 rounded-full">
                                 <img src={googleUser().avatarUrl} />
@@ -54,24 +57,18 @@ const PersonMenu: Component = () => {
                 <Switch
                     fallback={
                         <li>
-                            <p class="pointer-events-none text-purple-600">
-                                Guest
-                            </p>
+                            <p class="pointer-events-none text-purple-600">Guest</p>
                         </li>
                     }
                 >
                     <Match when={isLoggedIn() && !isMember()}>
                         <li>
-                            <p class="pointer-events-none text-purple-600">
-                                Non-Member
-                            </p>
+                            <p class="pointer-events-none text-purple-600">Non-Member</p>
                         </li>
                     </Match>
                     <Match when={isMember()}>
                         <li>
-                            <p class="pointer-events-none text-purple-600">
-                                Member
-                            </p>
+                            <p class="pointer-events-none text-purple-600">Member</p>
                         </li>
                     </Match>
                 </Switch>
@@ -80,11 +77,15 @@ const PersonMenu: Component = () => {
                     <li onClick={navToProfile}>
                         <p>Profile</p>
                     </li>
+                    <li onClick={openSettings}>
+                        <p>Settings</p>
+                    </li>
                     <li onClick={signOut}>
                         <p>Logout</p>
                     </li>
                 </Show>
             </ul>
+            <Settings show={showSettings()} closeFn={closeSettings} />
         </>
     )
 }
