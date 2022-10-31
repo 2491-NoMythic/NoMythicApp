@@ -67,8 +67,6 @@ const MemberEdit: Component = () => {
         event.preventDefault()
         try {
             await formHandler.validateForm()
-            console.log('grad_year', formData().grad_year)
-            console.log('grad_number', Number(formData().grad_year))
             const updatedMember = {
                 member_id: member()?.member_id,
                 first_name: formData().first_name,
