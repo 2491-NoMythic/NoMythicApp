@@ -8,7 +8,7 @@ import { addSubTeamToUrl } from '../../utilities/stringbuilders'
 import PageLoading from '../../components/PageLoading'
 import { School } from '../../types/Api'
 
-const MemberView: Component = () => {
+const ParentView: Component = () => {
     const params = useParams()
     const [member] = createResource(() => parseInt(params.id), getMemberById)
     const [searchParams] = useSearchParams()
@@ -30,6 +30,20 @@ const MemberView: Component = () => {
             <div class="card max-w-5xl bg-base-100 shadow-xl mt-4">
                 <div class="card-body">
                     <h2 class="card-title">Team Member</h2>
+                    <table class="table w-full">
+                        <tbody>
+                            <tr>
+                                <td>First Name</td>
+                                <td>{member()?.first_name}</td>
+                            </tr>
+                            <tr>
+                                <td>Last Name</td>
+                                <td>{member()?.last_name}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <h2 class="card-title">Parent / Guardians</h2>
+
                     <table class="table w-full">
                         <tbody>
                             <tr>
@@ -86,9 +100,8 @@ const MemberView: Component = () => {
                     </table>
                     <div class="flex">
                         <div class="flex-none">
-                            <button class="btn btn-error inline-flex items-center" onClick={toggleModal}>
-                                <HiOutlineTrash fill="none" class="mb-3 mr-3" />
-                                Delete
+                            <button class="btn btn-warning inline-flex items-center" onClick={toggleModal}>
+                                <HiOutlineTrash fill="none" class="mb-3 mr-3" /> Delete
                             </button>
                         </div>
                         <div class="flex flex-auto justify-end">
@@ -131,4 +144,4 @@ const MemberView: Component = () => {
     )
 }
 
-export default MemberView
+export default ParentView

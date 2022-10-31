@@ -11,6 +11,7 @@ const TeamList = lazy(() => import('../pages/admin/TeamList'))
 const MemberView = lazy(() => import('../pages/admin/MemberView'))
 const MemberEdit = lazy(() => import('../pages/admin/MemberEdit'))
 const MemberAccess = lazy(() => import('../pages/members/MemberAccess'))
+const Parents = lazy(() => import('../pages/admin/Parents'))
 const AttendancePage = lazy(() => import('../pages/members/AttendancePage'))
 const AttendanceForSeason = lazy(() => import('../pages/admin/AttendanceForSeason'))
 const AttendanceForMeeting = lazy(() => import('../pages/admin/AttendanceForMeeting'))
@@ -41,6 +42,7 @@ const AppRouting = () => {
                 <Route path="/teamlist" component={TeamList} />
                 <Route path="/member/:id" component={MemberView} />
                 <Route path="/memberEdit/:id" component={MemberEdit} />
+                <Route path="/member/:mid/parent" component={Parents} />
                 <Route path="/attendance" component={AttendanceForSeason} />
                 <Route path="/attendance/member/:id" component={AttendanceForMember} />
                 <Route path="/attendance/meeting" component={AttendanceForMeeting} />
