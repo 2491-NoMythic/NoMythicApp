@@ -70,7 +70,7 @@ const AttendanceList: Component<{
                                                 type="radio"
                                                 name={'options' + teamMember.member_id}
                                                 data-title="FT"
-                                                class="btn lg:before:content-['Full_Time']"
+                                                class="btn [.btn-group>input[type='radio']&]:lg:before:content-['Full_Time']"
                                                 checked={
                                                     teamMember?.attendance[0]?.attendance === AttendanceTypes.FULL_TIME
                                                 }
@@ -87,7 +87,7 @@ const AttendanceList: Component<{
                                                 type="radio"
                                                 name={'options' + teamMember.member_id}
                                                 data-title="PT"
-                                                class="btn"
+                                                class="btn [.btn-group>input[type='radio']&]:lg:before:content-['Part_Time']"
                                                 checked={
                                                     teamMember?.attendance[0]?.attendance === AttendanceTypes.PART_TIME
                                                 }
@@ -104,7 +104,7 @@ const AttendanceList: Component<{
                                                 type="radio"
                                                 name={'options' + teamMember.member_id}
                                                 data-title="AB"
-                                                class="btn"
+                                                class="btn [.btn-group>input[type='radio']&]:lg:before:content-['Absent']"
                                                 checked={
                                                     teamMember?.attendance[0]?.attendance === AttendanceTypes.ABSENT
                                                 }
