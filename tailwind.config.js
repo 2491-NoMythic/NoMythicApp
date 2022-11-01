@@ -6,4 +6,26 @@ module.exports = {
         extend: {},
     },
     plugins: [require('@tailwindcss/typography'), require('daisyui')],
+    daisyui: {
+        themes: [
+            {
+                light: {
+                    ...require('daisyui/src/colors/themes')['[data-theme=light]'],
+                    error: '#CB4335',
+                    'error-content': 'white',
+                },
+                dark: {
+                    ...require('daisyui/src/colors/themes')['[data-theme=dark]'],
+                    error: '#CB4335',
+                    'error-content': 'white',
+                },
+            },
+            'cyberpunk',
+            'synthwave',
+            'aqua',
+            'coffee',
+            'retro',
+            'halloween',
+        ],
+    },
 }
