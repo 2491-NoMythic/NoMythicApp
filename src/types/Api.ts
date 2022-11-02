@@ -89,6 +89,21 @@ type MeetingCount = {
     meeting_date: string
 }
 
+type Parent = {
+    parent_id?: number
+    member_id: number
+    first_name: string
+    last_name: string
+    pronouns?: string
+    email: string
+    phone?: string
+    addr1?: string
+    addr2?: string
+    city?: string
+    state?: string
+    zip?: string
+}
+
 export type {
     MemberAttendance,
     Member,
@@ -101,6 +116,7 @@ export type {
     Attendance,
     SchoolType,
     MeetingCount,
+    Parent,
 }
 
 export { SubTeam, TeamRole, AttendanceTypes, School }
