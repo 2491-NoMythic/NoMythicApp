@@ -94,7 +94,8 @@ type Parent = {
     member_id: number
     first_name: string
     last_name: string
-    eamil: string
+    pronouns?: string
+    email: string
     phone?: string
     addr1?: string
     addr2?: string

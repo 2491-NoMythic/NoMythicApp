@@ -26,7 +26,6 @@
         "solid-form-handler": "^1.0.0-alpha.2",
         "solid-icons": "^1.0.1",
         "solid-js": "^1.5.1",
-        "theme-change": "^2.2.0",
         "yup": "^0.32.11"
     }
 }

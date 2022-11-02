@@ -1,16 +1,15 @@
 import { A, useNavigate, useParams, useSearchParams } from '@solidjs/router'
 import { Component, createResource, createSignal, Show, Suspense } from 'solid-js'
-import { deleteMember, getMemberById } from '../../api/members'
+import { getMemberById } from '../../api/members'
 import { HiOutlineTrash } from 'solid-icons/hi'
-
-import { calculateGrade, capitalizeWord, formatEnumValue } from '../../utilities/formatters'
 import { addSubTeamToUrl } from '../../utilities/stringbuilders'
 import PageLoading from '../../components/PageLoading'
-import { School } from '../../types/Api'
+import { deleteParent, getParentById } from '../../api/parents'
 
 const ParentView: Component = () => {
     const params = useParams()
-    const [member] = createResource(() => parseInt(params.id), getMemberById)
+    const [member] = createResource(() => parseInt(params.mid), getMemberById)
+    const [parent] = createResource(() => parseInt(params.pid), getParentById)
     const [searchParams] = useSearchParams()
     const [opened, setOpened] = createSignal(false)
     const navigate = useNavigate()
@@ -21,97 +20,97 @@ const ParentView: Component = () => {
 
     const handleDelete = async () => {
         toggleModal()
-        await deleteMember(member().member_id)
-        navigate(addSubTeamToUrl('/admin/teamList', searchParams.subteam))
+        await deleteParent(parent().parent_id)
+        navigate('/admin/member/' + member()?.member_id + '/parent')
     }
 
     return (
         <Suspense fallback={<PageLoading />}>
             <div class="card max-w-5xl bg-base-100 shadow-xl mt-4">
                 <div class="card-body">
-                    <h2 class="card-title">Team Member</h2>
-                    <table class="table w-full">
+                    <div class="flex flex-auto">
+                        <div class="grow">
+                            <div class="card-title">Team Member</div>
+                            <div class="mb-4">
+                                {member()?.first_name} {member()?.last_name}
+                            </div>
+                        </div>
+                        <div class="w-50">
+                            <A class="btn btn-secondary" href={'/admin/member/' + member()?.member_id}>
+                                Back to Member
+                            </A>
+                        </div>
+                    </div>
+                    <h2 class="card-title">Parent / Guardian</h2>
+                    <table class="table table-compact w-full">
                         <tbody>
                             <tr>
                                 <td>First Name</td>
-                                <td>{member()?.first_name}</td>
+                                <td>{parent()?.first_name}</td>
                             </tr>
                             <tr>
                                 <td>Last Name</td>
-                                <td>{member()?.last_name}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <h2 class="card-title">Parent / Guardians</h2>
-
-                    <table class="table w-full">
-                        <tbody>
-                            <tr>
-                                <td>First Name</td>
-                                <td>{member()?.first_name}</td>
-                            </tr>
-                            <tr>
-                                <td>Last Name</td>
-                                <td>{member()?.last_name}</td>
+                                <td>{parent()?.last_name}</td>
                             </tr>
                             <tr>
                                 <td>Pronouns</td>
-                                <td>{member()?.pronouns}</td>
-                            </tr>
-                            <tr>
-                                <td>Sub Team</td>
-                                <td>{capitalizeWord(member()?.sub_team)}</td>
-                            </tr>
-                            <tr>
-                                <td>Team Role</td>
-                                <td>{capitalizeWord(member()?.team_role)}</td>
+                                <td>{parent()?.pronouns}</td>
                             </tr>
                             <tr>
                                 <td>Email</td>
-                                <td>{member()?.email}</td>
+                                <td>{parent()?.email}</td>
                             </tr>
                             <tr>
                                 <td>Phone</td>
-                                <td>{member()?.phone}</td>
+                                <td>{parent()?.phone}</td>
                             </tr>
                             <tr>
-                                <td>Address</td>
-                                <td>{member()?.address}</td>
+                                <td>Address Line 1</td>
+                                <td>{parent()?.addr1}</td>
                             </tr>
                             <tr>
-                                <td>Food Needs</td>
-                                <td>{member()?.food_needs}</td>
+                                <td>Address Line 2</td>
+                                <td>{parent()?.addr2}</td>
                             </tr>
                             <tr>
-                                <td>School</td>
-                                <td>{formatEnumValue(member()?.school)}</td>
+                                <td>City</td>
+                                <td>{parent()?.city}</td>
                             </tr>
-                            <Show when={member()?.school !== School.NON_STUDENT}>
-                                <tr>
-                                    <td>Advisor</td>
-                                    <td>{member()?.advisor}</td>
-                                </tr>
-                                <tr>
-                                    <td>Grade</td>
-                                    <td>{calculateGrade(member()?.grad_year)}</td>
-                                </tr>
-                            </Show>
+                            <tr>
+                                <td>State</td>
+                                <td>{parent()?.state}</td>
+                            </tr>
+                            <tr>
+                                <td>Zip</td>
+                                <td>{parent()?.zip}</td>
+                            </tr>
                         </tbody>
                     </table>
                     <div class="flex">
                         <div class="flex-none">
-                            <button class="btn btn-warning inline-flex items-center" onClick={toggleModal}>
+                            <button class="btn btn-error inline-flex items-center" onClick={toggleModal}>
                                 <HiOutlineTrash fill="none" class="mb-3 mr-3" /> Delete
                             </button>
                         </div>
                         <div class="flex flex-auto justify-end">
                             <label class="btn btn-secondary modal-button mr-4">
-                                <A href={addSubTeamToUrl('/admin/teamList', searchParams.subteam)}>Back</A>
+                                <A
+                                    href={addSubTeamToUrl(
+                                        '/admin/member/' + member()?.member_id + '/parent',
+                                        searchParams.subteam
+                                    )}
+                                >
+                                    Back
+                                </A>
                             </label>
                             <label class="btn btn-primary modal-button">
                                 <A
                                     href={addSubTeamToUrl(
-                                        '/admin/memberEdit/' + member()?.member_id,
+                                        '/admin/member/' +
+                                            member()?.member_id +
+                                            '/parent/' +
+                                            parent()?.parent_id +
+                                            '/edit',
                                         searchParams.subteam
                                     )}
                                 >
@@ -126,14 +125,11 @@ const ParentView: Component = () => {
                 <div class="modal modal-open">
                     <div class="modal-box">
                         <h3 class="font-bold text-lg">Are you sure you want to delete?</h3>
-                        <p class="py-4">
-                            You should only delete if the member was created in error, or didn't join the team.
-                        </p>
                         <div class="modal-action">
                             <button class="btn btn-secondary" onClick={toggleModal}>
                                 Cancel
                             </button>
-                            <button class="btn btn-warning inline-flex items-center" onClick={handleDelete}>
+                            <button class="btn btn-error inline-flex items-center" onClick={handleDelete}>
                                 <HiOutlineTrash fill="none" class="mb-3 mr-3" /> Delete
                             </button>
                         </div>

@@ -1,22 +1,20 @@
-import { A, useNavigate, useParams, useSearchParams } from '@solidjs/router'
+import { A, useParams, useSearchParams } from '@solidjs/router'
 import { Component, createEffect, createResource, createSignal, For, Show, Suspense } from 'solid-js'
 import { getMemberById } from '../../api/members'
-import { getParents } from '../../api/parents'
+import { deleteParent, getParents } from '../../api/parents'
 import { HiOutlineEye, HiOutlinePencilAlt, HiOutlinePlusCircle, HiOutlineTrash } from 'solid-icons/hi'
-import HiEyeIcon from '../../components/HiEyeIcon'
-import { addSubTeamToUrl } from '../../utilities/stringbuilders'
 import PageLoading from '../../components/PageLoading'
-import HamburgerMenu from '../../components/HamburgerMenu'
 import ViewEditDeleteMenu from '../../components/ViewEditDeleteMenu'
 
 const Parents: Component = () => {
     const params = useParams()
-    console.log('mid', params.mid)
-    const [parents] = createResource(parseInt(params.mid), getParents)
+    const [parents, { refetch }] = createResource(parseInt(params.mid), getParents)
     const [member] = createResource(parseInt(params.mid), getMemberById)
 
     const [searchParams] = useSearchParams()
+    // used for are you sure dialog
     const [opened, setOpened] = createSignal(false)
+    // parentId used for delete
     const [parentId, setParentId] = createSignal<number>(null)
     //const navigate = useNavigate()
 
@@ -26,23 +24,20 @@ const Parents: Component = () => {
     }
 
     const doDelete = async () => {
-        // call to to delete
-        console.log('deleted', parentId())
+        deleteParent(parentId())
+        setParentId(null)
         setOpened(false)
+        refetch()
     }
 
     // this is callback from ViewEditDeleteMenu with the correct parentId
     // but we don't delete until 'doDelete'
     // this shows the "are you sure?"
-    const handleDelete = async (parentId: number) => {
+    const handleDeleteDialog = async (parentId: number) => {
         setParentId(parentId)
         setOpened(true)
-        console.log('getting', parentId)
     }
 
-    createEffect(() => {
-        console.log('parents', parents())
-    })
     return (
         <Suspense fallback={<PageLoading />}>
             <div class="card max-w-5xl bg-base-100 shadow-xl mt-4">
@@ -56,7 +51,9 @@ const Parents: Component = () => {
                         </div>
 
                         <div class="w-50">
-                            <button class="btn btn-secondary">Back to Member</button>
+                            <A class="btn btn-secondary" href={'/admin/member/' + member()?.member_id}>
+                                Back to Member
+                            </A>
                         </div>
                     </div>
                     <h2 class="card-title">Parent / Guardians</h2>
@@ -66,20 +63,23 @@ const Parents: Component = () => {
                                 <th>First Name</th>
                                 <th>Last Name</th>
                                 <th class="text-right">
-                                    <button class="btn inline-flex items-center">
+                                    <A
+                                        href={'/admin/member/' + member()?.member_id + '/parent/0/edit'}
+                                        class="btn btn-primary inline-flex items-center"
+                                    >
                                         <HiOutlinePlusCircle fill="none" class="mb-3 mr-4" />
                                         Add Parent
-                                    </button>
+                                    </A>
                                 </th>
                             </tr>
                         </thead>
                         <tbody>
                             <For each={parents()}>
                                 {(parent) => {
-                                    const viewParent = '/viewParent'
-                                    const editParent = '/editParent'
+                                    const viewParent = '/admin/member/' + params.mid + '/parent/' + parent.parent_id
+                                    const editParent = viewParent + '/edit'
                                     const deleteFn = () => {
-                                        handleDelete(parent.parent_id)
+                                        handleDeleteDialog(parent.parent_id)
                                     }
                                     return (
                                         <tr>
@@ -93,22 +93,22 @@ const Parents: Component = () => {
                                                 />
                                             </td>
                                             <td class="hidden md:block text-right">
-                                                <a href={viewParent} class="btn inline-flex items-center mr-2">
+                                                <A href={viewParent} class="btn inline-flex items-center mr-2">
                                                     <HiOutlineEye fill="none" class="mb-3 mr-2" />
                                                     <span class="hidden lg:inline ml-2">View</span>
-                                                </a>
-                                                <a href={editParent} class="btn inline-flex items-center mr-2">
+                                                </A>
+                                                <A href={editParent} class="btn inline-flex items-center mr-2">
                                                     <HiOutlinePencilAlt fill="none" class="mb-3 mr-2" />
                                                     <span class="hidden lg:inline ml-2">Edit</span>
-                                                </a>
-                                                <a
+                                                </A>
+                                                <A
                                                     href="#"
                                                     onClick={() => deleteFn()}
                                                     class="btn btn-error inline-flex items-center"
                                                 >
                                                     <HiOutlineTrash fill="none" class="mb-3 mr-2" />
                                                     <span class="hidden lg:inline ml-2">Delete</span>
-                                                </a>
+                                                </A>
                                             </td>
                                         </tr>
                                     )
@@ -126,7 +126,7 @@ const Parents: Component = () => {
                             <button class="btn btn-secondary" onClick={doCancel}>
                                 Cancel
                             </button>
-                            <button class="btn btn-warning inline-flex items-center" onClick={doDelete}>
+                            <button class="btn btn-error inline-flex items-center" onClick={doDelete}>
                                 <HiOutlineTrash fill="none" class="mb-3 mr-3" /> Delete
                             </button>
                         </div>

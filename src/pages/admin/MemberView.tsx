@@ -1,18 +1,22 @@
 import { A, useNavigate, useParams, useSearchParams } from '@solidjs/router'
-import { Component, createResource, createSignal, Show, Suspense } from 'solid-js'
+import { Component, createEffect, createResource, createSignal, For, Show, Suspense } from 'solid-js'
 import { deleteMember, getMemberById } from '../../api/members'
-import { HiOutlineTrash } from 'solid-icons/hi'
+import { HiOutlineEye, HiOutlineTrash } from 'solid-icons/hi'
 
 import { calculateGrade, capitalizeWord, formatEnumValue } from '../../utilities/formatters'
 import { addSubTeamToUrl } from '../../utilities/stringbuilders'
 import PageLoading from '../../components/PageLoading'
 import { School } from '../../types/Api'
+import { getParents } from '../../api/parents'
 
 const MemberView: Component = () => {
     const params = useParams()
     const [member] = createResource(() => parseInt(params.id), getMemberById)
+    const [parents] = createResource(() => parseInt(params.id), getParents)
     const [searchParams] = useSearchParams()
     const [opened, setOpened] = createSignal(false)
+    const [parentNames, setParentNames] = createSignal([] as string[])
+
     const navigate = useNavigate()
 
     const toggleModal = () => {
@@ -24,6 +28,18 @@ const MemberView: Component = () => {
         await deleteMember(member().member_id)
         navigate(addSubTeamToUrl('/admin/teamList', searchParams.subteam))
     }
+
+    createEffect(() => {
+        if (member()?.member_id && parents()?.length > 0) {
+            let names = [] as string[]
+            parents().forEach((parent, index) => {
+                names.push(parent.first_name + ' ' + parent.last_name)
+            })
+            setParentNames(names)
+        } else {
+            setParentNames(['Not entered'])
+        }
+    })
 
     return (
         <Suspense fallback={<PageLoading />}>
@@ -81,13 +97,34 @@ const MemberView: Component = () => {
                                     <td>Grade</td>
                                     <td>{calculateGrade(member()?.grad_year)}</td>
                                 </tr>
+                                <tr>
+                                    <td class="align-top">Parent / Guardians</td>
+                                    <td class="flex flex-wrap">
+                                        <For each={parentNames()}>
+                                            {(parentName) => {
+                                                return <div class="mr-8">{parentName}</div>
+                                            }}
+                                        </For>
+
+                                        <A
+                                            href={addSubTeamToUrl(
+                                                '/admin/member/' + member()?.member_id + '/parent',
+                                                searchParams.subteam
+                                            )}
+                                            class="inline-flex items-center mr-2 text-secondary"
+                                        >
+                                            <HiOutlineEye fill="none" class="mb-3 mr-2" />
+                                            <span class="hidden lg:inline ml-2 mb-1">View / Edit</span>
+                                        </A>
+                                    </td>
+                                </tr>
                             </Show>
                         </tbody>
                     </table>
                     <div class="flex">
                         <div class="flex-none">
                             <button class="btn btn-error inline-flex items-center" onClick={toggleModal}>
-                                <HiOutlineTrash fill="none" class="mb-3 mr-3" />
+                                <HiOutlineTrash fill="none" class="mr-3 mb-3" />
                                 Delete
                             </button>
                         </div>
@@ -98,7 +135,7 @@ const MemberView: Component = () => {
                             <label class="btn btn-primary modal-button">
                                 <A
                                     href={addSubTeamToUrl(
-                                        '/admin/memberEdit/' + member()?.member_id,
+                                        '/admin/member/' + member()?.member_id + '/edit',
                                         searchParams.subteam
                                     )}
                                 >
@@ -120,7 +157,7 @@ const MemberView: Component = () => {
                             <button class="btn btn-secondary" onClick={toggleModal}>
                                 Cancel
                             </button>
-                            <button class="btn btn-warning inline-flex items-center" onClick={handleDelete}>
+                            <button class="btn btn-error inline-flex items-center" onClick={handleDelete}>
                                 <HiOutlineTrash fill="none" class="mb-3 mr-3" /> Delete
                             </button>
                         </div>
