@@ -9,18 +9,19 @@ import { MemberAttendance } from '../../types/Api'
 import { getMemberAttendance } from '../../api/attendance'
 import AttendanceList from '../../components/AttendanceList'
 import PageLoading from '../../components/PageLoading'
+import { useSessionContext } from '../../contexts/SessionContext'
 
 const AttendancePage: Component = () => {
-    const [subTeam, setSubTeam] = createSignal('')
     const [filteredTeam, setFilteredTeam] = createSignal<MemberAttendance[]>([])
     const today = new Date()
     const formatted = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate()
     const [meetingDate, setMeetingDate] = createSignal<string>(formatted)
     const [team, { mutate, refetch }] = createResource(meetingDate, getMemberAttendance)
+    const [sessionValues] = useSessionContext()
 
     // runs whenever team or subTeam are changed
     createEffect(() => {
-        const filtered = filterBySubTeam(team(), subTeam())
+        const filtered = filterBySubTeam(team(), sessionValues.subTeam)
         const sorted = sortByFirstName(filtered)
         setFilteredTeam(sorted)
     })
@@ -30,7 +31,7 @@ const AttendancePage: Component = () => {
             <div class="overflow-x-auto">
                 <div class="flex">
                     <div class="grow mr-2">
-                        <SubTeamSelector subTeam={subTeam} setSubTeam={setSubTeam} />
+                        <SubTeamSelector />
                     </div>
                     <DatePicker selectedDate={meetingDate} setSelectedDate={setMeetingDate} />
                 </div>

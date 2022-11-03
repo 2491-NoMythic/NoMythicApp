@@ -4,7 +4,6 @@ import { deleteMember, getMemberById } from '../../api/members'
 import { HiOutlineEye, HiOutlineTrash } from 'solid-icons/hi'
 
 import { calculateGrade, capitalizeWord, formatEnumValue } from '../../utilities/formatters'
-import { addSubTeamToUrl } from '../../utilities/stringbuilders'
 import PageLoading from '../../components/PageLoading'
 import { School } from '../../types/Api'
 import { getParents } from '../../api/parents'
@@ -26,7 +25,7 @@ const MemberView: Component = () => {
     const handleDelete = async () => {
         toggleModal()
         await deleteMember(member().member_id)
-        navigate(addSubTeamToUrl('/admin/teamList', searchParams.subteam))
+        navigate('/admin/teamList')
     }
 
     createEffect(() => {
@@ -107,10 +106,7 @@ const MemberView: Component = () => {
                                         </For>
 
                                         <A
-                                            href={addSubTeamToUrl(
-                                                '/admin/member/' + member()?.member_id + '/parent',
-                                                searchParams.subteam
-                                            )}
+                                            href={'/admin/member/' + member()?.member_id + '/parent'}
                                             class="inline-flex items-center mr-2 text-secondary"
                                         >
                                             <HiOutlineEye fill="none" class="mb-3 mr-2" />
@@ -130,17 +126,10 @@ const MemberView: Component = () => {
                         </div>
                         <div class="flex flex-auto justify-end">
                             <label class="btn btn-secondary modal-button mr-4">
-                                <A href={addSubTeamToUrl('/admin/teamList', searchParams.subteam)}>Back</A>
+                                <A href="/admin/teamList">Back</A>
                             </label>
                             <label class="btn btn-primary modal-button">
-                                <A
-                                    href={addSubTeamToUrl(
-                                        '/admin/member/' + member()?.member_id + '/edit',
-                                        searchParams.subteam
-                                    )}
-                                >
-                                    Edit
-                                </A>
+                                <A href={'/admin/member/' + member()?.member_id + '/edit'}>Edit</A>
                             </label>
                         </div>
                     </div>

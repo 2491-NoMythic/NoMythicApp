@@ -1,4 +1,5 @@
-import { Accessor, Component, createEffect, createSignal, For, Setter } from 'solid-js'
+import { Component, createSignal, For } from 'solid-js'
+import { SessionValueKeys, useSessionContext } from '../contexts/SessionContext'
 
 const subTeamList = [
     { value: 'team', display: 'Whole Team' },
@@ -10,18 +11,16 @@ const subTeamList = [
 ]
 
 /*
- *  This version takes the signal for subTeam and setSubTeam as props from its parent
- */
-const SubTeamSelector: Component<{
-    subTeam: Accessor<string>
-    setSubTeam: Setter<string>
-}> = (props) => {
+ This version only sets / reads the search params for subteam
+*/
+const SubTeamSelectorUrl: Component = () => {
     const [subTeams, setSubTeams] = createSignal([])
-
     setSubTeams(subTeamList)
 
+    const [sessionValues, { updateSessionValue }] = useSessionContext()
+
     const changeHandler = (event) => {
-        props.setSubTeam(event.target.selectedOptions[0].value)
+        updateSessionValue(SessionValueKeys.SUBTEAM, event.target.selectedOptions[0].value)
     }
 
     return (
@@ -30,13 +29,13 @@ const SubTeamSelector: Component<{
                 <span class="label-text">Select sub-team</span>
             </label>
             <select class="select select-bordered" onChange={changeHandler}>
-                <option disabled selected={props.subTeam() === ''}>
-                    Pick one
+                <option disabled selected={sessionValues.subTeam === null}>
+                    Select one
                 </option>
                 <For each={subTeams()}>
                     {(subTeam) => {
                         return (
-                            <option value={subTeam.value} selected={subTeam.value === props.subTeam}>
+                            <option value={subTeam.value} selected={subTeam.value === sessionValues.subTeam}>
                                 {subTeam.display}
                             </option>
                         )
@@ -47,4 +46,4 @@ const SubTeamSelector: Component<{
     )
 }
 
-export default SubTeamSelector
+export default SubTeamSelectorUrl

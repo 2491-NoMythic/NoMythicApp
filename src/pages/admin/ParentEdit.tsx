@@ -4,7 +4,6 @@ import * as yup from 'yup'
 import { Component, createResource, Show, Suspense } from 'solid-js'
 import { A, useNavigate, useParams, useSearchParams } from '@solidjs/router'
 import { getMemberById } from '../../api/members'
-import { addSubTeamToUrl } from '../../utilities/stringbuilders'
 import PageLoading from '../../components/PageLoading'
 import { getParentById, saveParent, updateParent } from '../../api/parents'
 
@@ -68,7 +67,7 @@ const ParentEdit: Component = () => {
             } else {
                 await updateParent(updatedParent)
             }
-            navigate(addSubTeamToUrl('/admin/member/' + member()?.member_id + '/parent', searchParams.subteam))
+            navigate('/admin/member/' + member()?.member_id + '/parent')
         } catch (error) {
             console.error(error)
         }
@@ -144,12 +143,7 @@ const ParentEdit: Component = () => {
                                 />
                             </div>
                             <div class="card-actions justify-end">
-                                <A
-                                    href={addSubTeamToUrl(
-                                        '/admin/member/' + member().member_id + '/parent',
-                                        searchParams.subteam
-                                    )}
-                                >
+                                <A href={'/admin/member/' + member().member_id + '/parent'}>
                                     <button class="btn btn-secondary modal-button mr-6">Cancel</button>
                                 </A>
                                 <button

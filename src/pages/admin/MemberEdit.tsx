@@ -5,7 +5,6 @@ import { Component, createEffect, createResource, Show, Suspense } from 'solid-j
 import { A, useNavigate, useParams, useSearchParams } from '@solidjs/router'
 import { getMemberById, newMemberFromAdmin, saveMemberFromAdmin, saveMemberFromProfile } from '../../api/members'
 import { School, SchoolType, SubTeam, SubTeamType, TeamRole, TeamRoleType } from '../../types/Api'
-import { addSubTeamToUrl } from '../../utilities/stringbuilders'
 import PageLoading from '../../components/PageLoading'
 
 // Definition of the fields we will do validatio on
@@ -87,7 +86,7 @@ const MemberEdit: Component = () => {
             } else {
                 await saveMemberFromAdmin(updatedMember)
             }
-            navigate(addSubTeamToUrl('/admin/teamList', searchParams.subteam))
+            navigate('/admin/teamList')
         } catch (error) {
             console.error(error)
         }
@@ -211,7 +210,7 @@ const MemberEdit: Component = () => {
                                 </Show>
                             </div>
                             <div class="card-actions justify-end">
-                                <A href={addSubTeamToUrl('/admin/teamList', searchParams.subteam)}>
+                                <A href="/admin/teamList">
                                     <button class="btn btn-secondary modal-button mr-6">Cancel</button>
                                 </A>
                                 <button
