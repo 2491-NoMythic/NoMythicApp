@@ -2,7 +2,6 @@ import { A, useNavigate, useParams, useSearchParams } from '@solidjs/router'
 import { Component, createResource, createSignal, Show, Suspense } from 'solid-js'
 import { getMemberById } from '../../api/members'
 import { HiOutlineTrash } from 'solid-icons/hi'
-import { addSubTeamToUrl } from '../../utilities/stringbuilders'
 import PageLoading from '../../components/PageLoading'
 import { deleteParent, getParentById } from '../../api/parents'
 
@@ -94,25 +93,17 @@ const ParentView: Component = () => {
                         </div>
                         <div class="flex flex-auto justify-end">
                             <label class="btn btn-secondary modal-button mr-4">
-                                <A
-                                    href={addSubTeamToUrl(
-                                        '/admin/member/' + member()?.member_id + '/parent',
-                                        searchParams.subteam
-                                    )}
-                                >
-                                    Back
-                                </A>
+                                <A href={'/admin/member/' + member()?.member_id + '/parent'}>Back</A>
                             </label>
                             <label class="btn btn-primary modal-button">
                                 <A
-                                    href={addSubTeamToUrl(
+                                    href={
                                         '/admin/member/' +
-                                            member()?.member_id +
-                                            '/parent/' +
-                                            parent()?.parent_id +
-                                            '/edit',
-                                        searchParams.subteam
-                                    )}
+                                        member()?.member_id +
+                                        '/parent/' +
+                                        parent()?.parent_id +
+                                        '/edit'
+                                    }
                                 >
                                     Edit
                                 </A>

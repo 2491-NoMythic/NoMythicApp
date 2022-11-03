@@ -1,4 +1,4 @@
-import { Component, createEffect, createResource, createSignal, For, Show, Suspense } from 'solid-js'
+import { Component, createEffect, createResource, createSignal, Show, Suspense } from 'solid-js'
 import YearPicker from '../../components/YearPicker'
 import { filterBySubTeam } from '../../utilities/filters'
 import { sortByFirstName } from '../../utilities/sorts'
@@ -6,20 +6,20 @@ import SelectTeamInfoMessage from '../../components/SelectTeamInfoMessage'
 import TeamTable from '../../components/TeamTable'
 import { Member } from '../../types/Api'
 import { getMembers } from '../../api/members'
-import { A, useSearchParams } from '@solidjs/router'
-import SubTeamSelectorUrl from '../../components/SubTeamSelectorUrl'
-import { addSubTeamToUrl } from '../../utilities/stringbuilders'
+import { A } from '@solidjs/router'
 import PageLoading from '../../components/PageLoading'
+import SubTeamSelector from '../../components/SubTeamSelector'
+import { useSessionContext } from '../../contexts/SessionContext'
 
 const TeamList: Component = () => {
     const [filteredTeam, setFilteredTeam] = createSignal<Member[]>([])
     const [year, setYear] = createSignal('2023')
     const [team] = createResource(year, getMembers)
-    const [searchParams] = useSearchParams()
+    const [sessionValues] = useSessionContext()
 
     // runs whenever team or subTeam are changed
     createEffect(() => {
-        const filtered = filterBySubTeam(team(), searchParams.subteam)
+        const filtered = filterBySubTeam(team(), sessionValues.subTeam)
         const sorted = sortByFirstName(filtered)
         setFilteredTeam(sorted)
     })
@@ -29,7 +29,7 @@ const TeamList: Component = () => {
             <div class="overflow-x-auto">
                 <div class="flex">
                     <div class="grow mr-2">
-                        <SubTeamSelectorUrl />
+                        <SubTeamSelector />
                     </div>
                     <YearPicker year={year} setYear={setYear} />
                 </div>
@@ -38,7 +38,7 @@ const TeamList: Component = () => {
                         <div class="flex-none ml-4">Click a row to view</div>
                     </Show>
                     <div class="flex flex-auto justify-end">
-                        <A class="btn btn-primary" href={addSubTeamToUrl('/admin/member/0/edit', searchParams.subteam)}>
+                        <A class="btn btn-primary" href="/admin/member/0/edit">
                             Add Member
                         </A>
                     </div>
