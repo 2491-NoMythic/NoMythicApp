@@ -5,12 +5,15 @@ import { render } from 'solid-js/web'
 import App from './App'
 import { Router } from '@solidjs/router'
 import { UserProvider } from './contexts/UserContext'
+import { SessionProvider } from './contexts/SessionContext'
 
 render(
     () => (
         <Router>
             <UserProvider>
-                <App />
+                <SessionProvider>
+                    <App />
+                </SessionProvider>
             </UserProvider>
         </Router>
     ),
