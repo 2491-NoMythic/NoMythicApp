@@ -49,7 +49,7 @@ const MemberView: Component = () => {
                     <table class="table w-full">
                         <tbody>
                             <tr>
-                                <td>First Name</td>
+                                <td class="w-3 md:w-auto">First Name</td>
                                 <td>{member()?.first_name}</td>
                             </tr>
                             <tr>
@@ -98,7 +98,7 @@ const MemberView: Component = () => {
                                     <td>{calculateGrade(member()?.grad_year)}</td>
                                 </tr>
                                 <tr>
-                                    <td class="align-top">Parent / Guardians</td>
+                                    <td class="align-top">Parent(s)</td>
                                     <td class="flex flex-wrap">
                                         <For each={parentNames()}>
                                             {(parentName) => {

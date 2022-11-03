@@ -38,7 +38,7 @@ const TeamList: Component = () => {
                         <div class="flex-none ml-4">Click a row to view</div>
                     </Show>
                     <div class="flex flex-auto justify-end">
-                        <A class="btn btn-primary" href={addSubTeamToUrl('/admin/memberEdit/0', searchParams.subteam)}>
+                        <A class="btn btn-primary" href={addSubTeamToUrl('/admin/member/0/edit', searchParams.subteam)}>
                             Add Member
                         </A>
                     </div>

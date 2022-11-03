@@ -67,8 +67,8 @@ const Parents: Component = () => {
                                         href={'/admin/member/' + member()?.member_id + '/parent/0/edit'}
                                         class="btn btn-primary inline-flex items-center"
                                     >
-                                        <HiOutlinePlusCircle fill="none" class="mb-3 mr-4" />
-                                        Add Parent
+                                        <HiOutlinePlusCircle fill="none" class="mb-3 mr-2" />
+                                        <span class="hidden md:inline ml-2">Add Parent</span>
                                     </A>
                                 </th>
                             </tr>
