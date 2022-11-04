@@ -6,6 +6,8 @@ import { A, useNavigate, useParams, useSearchParams } from '@solidjs/router'
 import { getMemberById } from '../../api/members'
 import PageLoading from '../../components/PageLoading'
 import { getParentById, saveParent, updateParent } from '../../api/parents'
+import { formatUrl } from '../../utilities/formatters'
+import { RouteKeys } from '../../components/AppRouting'
 
 // Definition of the fields we will do validatio on
 type Parent = {
@@ -67,7 +69,7 @@ const ParentEdit: Component = () => {
             } else {
                 await updateParent(updatedParent)
             }
-            navigate('/admin/member/' + member()?.member_id + '/parent')
+            navigate(formatUrl(RouteKeys.PARENT_VIEW.nav, { mid: member()?.member_id }))
         } catch (error) {
             console.error(error)
         }
@@ -143,7 +145,7 @@ const ParentEdit: Component = () => {
                                 />
                             </div>
                             <div class="card-actions justify-end">
-                                <A href={'/admin/member/' + member().member_id + '/parent'}>
+                                <A href={formatUrl(RouteKeys.PARENT_LIST.nav, { mid: member().member_id })}>
                                     <button class="btn btn-secondary modal-button mr-6">Cancel</button>
                                 </A>
                                 <button

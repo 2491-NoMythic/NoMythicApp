@@ -1,4 +1,5 @@
 import { parse, format, isAfter, differenceInYears, differenceInCalendarYears } from 'date-fns'
+import { mixed } from 'yup'
 
 const capitalizeWord = (word: string): string => {
     if (word === undefined || word === null) {
@@ -53,4 +54,30 @@ const calculateGrade = (gradYear: number) => {
     return 12 - diff
 }
 
-export { capitalizeWord, calculateDay, calculatePercent, calculateMonth, formatEnumValue, calculateGrade }
+type props = { mid?: number | string; pid?: number | string }
+/**
+ * Formats a URL with id values and query string
+ *
+ * @param url the RouterKeys.nav url with :mid or :pid in it
+ * @param props the mid or pid values to insert into the url
+ * @param params the query string parameters to add to the end
+ * @returns
+ */
+const formatUrl = (url: string, props?: props, params?: {}) => {
+    let newUrl = url
+    if (props) {
+        if (props.mid !== undefined) {
+            newUrl = newUrl.replace(':mid', props.mid.toString())
+        }
+        if (props.pid !== undefined) {
+            newUrl = newUrl.replace(':pid', props.pid.toString())
+        }
+    }
+    if (params) {
+        const searchParams = new URLSearchParams(params)
+        newUrl = newUrl + '?' + searchParams.toString()
+    }
+    return newUrl
+}
+
+export { capitalizeWord, calculateDay, calculatePercent, calculateMonth, formatEnumValue, calculateGrade, formatUrl }

@@ -2,6 +2,7 @@ import { Component, createEffect } from 'solid-js'
 import { useNavigate } from '@solidjs/router'
 import { supabase } from '../api/SupabaseClient'
 import { useMyUser } from '../contexts/UserContext'
+import { RouteKeys } from '../components/AppRouting'
 
 const redirectUrl = import.meta.env.VITE_REDIRECT_URL
 
@@ -20,12 +21,12 @@ const Home: Component = () => {
     }
 
     const continueAsGuest = () => {
-        navigate('/guest')
+        navigate(RouteKeys.GUEST.nav)
     }
 
     createEffect(() => {
         if (isLoggedIn() && isMember()) {
-            navigate('/welcome')
+            navigate(RouteKeys.WELCOME.nav)
         }
     })
     return (

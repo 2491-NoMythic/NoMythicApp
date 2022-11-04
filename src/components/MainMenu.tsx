@@ -1,27 +1,23 @@
-import { A, useLocation } from '@solidjs/router'
+import { A } from '@solidjs/router'
 import { HiOutlineMenu } from 'solid-icons/hi'
 import { children, Component, createEffect, createSignal, ErrorBoundary, JSX, Show } from 'solid-js'
 import PersonMenu from './PersonMenu'
 import unicorn from '../assets/2491_logo_disc_outline.png'
 import { useMyUser } from '../contexts/UserContext'
-import { capitalizeWord } from '../utilities/formatters'
+import PageTitle from './PageTitle'
+import { RouteKeys } from './AppRouting'
 
+/**
+ * Provides the menu for the app, in either mobile or desktop view.
+ * Also the PersonMenu in the top right corner
+ * The solidjs A tag hilights the page you are on automatically
+ *
+ * @param props the content for each page as children - from AppRouting
+ */
 const MainMenu: Component<{ children: JSX.Element }> = (props) => {
     const content = children(() => props.children)
     const [authSession, googleUser, member, { isMember, isAdmin }] = useMyUser()
     const [checked, setChecked] = createSignal(false)
-    const location = useLocation()
-    const [path, setpath] = createSignal('')
-
-    const setPageNameFromPath = () => {
-        const position = location.pathname.lastIndexOf('/') + 1
-        const page = location.pathname.substring(position, location.pathname.length)
-        setpath(capitalizeWord(page))
-    }
-
-    createEffect(() => {
-        setPageNameFromPath()
-    })
 
     // the state is changed in the dom, so solid doesn't know it changed, so we need to switch it twice
     const closeMenu = () => {
@@ -38,7 +34,7 @@ const MainMenu: Component<{ children: JSX.Element }> = (props) => {
                         <label for="my-drawer-2" class="btn btn-square btn-ghost drawer-button lg:hidden">
                             <HiOutlineMenu size={24} />
                         </label>
-                        <div class="flex-1 text-xl text-white font-semibold">NoMythic - {path()}</div>
+                        <PageTitle />
                         <div class="flex-none">
                             <PersonMenu />
                         </div>
@@ -53,31 +49,31 @@ const MainMenu: Component<{ children: JSX.Element }> = (props) => {
                         </div>
                         <ul>
                             <li>
-                                <A href="/home" onClick={closeMenu}>
+                                <A href={RouteKeys.HOME.nav} onClick={closeMenu}>
                                     Home
                                 </A>
                             </li>
                             <Show when={isMember()}>
                                 <li>
-                                    <A href="/members/attendance" onClick={closeMenu}>
-                                        Attendance
+                                    <A href={RouteKeys.TAKE_ATTENDANCE.nav} onClick={closeMenu}>
+                                        Take Attendance
                                     </A>
                                 </li>
                             </Show>
                             <Show when={isAdmin()}>
                                 <li>
-                                    <A href="/admin/teamlist" onClick={closeMenu}>
+                                    <A href={RouteKeys.TEAM_LIST.nav} onClick={closeMenu}>
                                         Team List
                                     </A>
                                 </li>
                                 <li>
-                                    <A href="/admin/attendance" onClick={closeMenu}>
+                                    <A href={RouteKeys.ATTENDANCE_SEASON.nav} onClick={closeMenu}>
                                         Admin Attendance
                                     </A>
                                 </li>
                             </Show>
                             <li>
-                                <A href="/guest" onClick={closeMenu}>
+                                <A href={RouteKeys.GUEST.nav} onClick={closeMenu}>
                                     Guest Area
                                 </A>
                             </li>

@@ -4,7 +4,7 @@ import { supabase } from './api/SupabaseClient'
 import { AuthChangeEvent, Session } from '@supabase/supabase-js'
 import { useMyUser } from './contexts/UserContext'
 import { getMemberByEamil } from './api/members'
-import AppRouting from './components/AppRouting'
+import AppRouting, { RouteKeys } from './components/AppRouting'
 import ErrorAlert from './components/ErrorAlert'
 import MainMenu from './components/MainMenu'
 
@@ -18,7 +18,7 @@ const App: Component = () => {
                 loadUser(session)
             } else if (event === 'SIGNED_OUT' || event === 'USER_DELETED') {
                 removeUser()
-                navigate('/home')
+                navigate(RouteKeys.HOME.nav)
             }
         })
     })

@@ -5,6 +5,8 @@ import { deleteParent, getParents } from '../../api/parents'
 import { HiOutlineEye, HiOutlinePencilAlt, HiOutlinePlusCircle, HiOutlineTrash } from 'solid-icons/hi'
 import PageLoading from '../../components/PageLoading'
 import ViewEditDeleteMenu from '../../components/ViewEditDeleteMenu'
+import { formatUrl } from '../../utilities/formatters'
+import { RouteKeys } from '../../components/AppRouting'
 
 const Parents: Component = () => {
     const params = useParams()
@@ -51,7 +53,10 @@ const Parents: Component = () => {
                         </div>
 
                         <div class="w-50">
-                            <A class="btn btn-secondary" href={'/admin/member/' + member()?.member_id}>
+                            <A
+                                class="btn btn-secondary"
+                                href={formatUrl(RouteKeys.MEMBER_VIEW.nav, { mid: member()?.member_id })}
+                            >
                                 Back to Member
                             </A>
                         </div>
@@ -64,7 +69,10 @@ const Parents: Component = () => {
                                 <th>Last Name</th>
                                 <th class="text-right">
                                     <A
-                                        href={'/admin/member/' + member()?.member_id + '/parent/0/edit'}
+                                        href={formatUrl(RouteKeys.PARENT_EDIT.nav, {
+                                            mid: member()?.member_id,
+                                            pid: 0,
+                                        })}
                                         class="btn btn-primary inline-flex items-center"
                                     >
                                         <HiOutlinePlusCircle fill="none" class="mb-3 mr-2" />
@@ -76,7 +84,10 @@ const Parents: Component = () => {
                         <tbody>
                             <For each={parents()}>
                                 {(parent) => {
-                                    const viewParent = '/admin/member/' + params.mid + '/parent/' + parent.parent_id
+                                    const viewParent = formatUrl(RouteKeys.PARENT_VIEW.nav, {
+                                        mid: params.mid,
+                                        pid: parent.parent_id,
+                                    })
                                     const editParent = viewParent + '/edit'
                                     const deleteFn = () => {
                                         handleDeleteDialog(parent.parent_id)

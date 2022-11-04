@@ -1,4 +1,10 @@
-import { TypeOf } from 'yup'
+/**
+ * Typescript types for objects coming back from the API, like a Member. All api calls will
+ * need to have a type defined here. The db types like integer and varchar are seen here
+ * as number and string.
+ *
+ * Also types to limit selections like SubTeam
+ */
 
 const SubTeam = {
     PROGRAMMING: 'programming',

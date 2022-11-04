@@ -10,6 +10,8 @@ import { A } from '@solidjs/router'
 import PageLoading from '../../components/PageLoading'
 import SubTeamSelector from '../../components/SubTeamSelector'
 import { useSessionContext } from '../../contexts/SessionContext'
+import { RouteKeys } from '../../components/AppRouting'
+import { formatUrl } from '../../utilities/formatters'
 
 const TeamList: Component = () => {
     const [filteredTeam, setFilteredTeam] = createSignal<Member[]>([])
@@ -38,7 +40,7 @@ const TeamList: Component = () => {
                         <div class="flex-none ml-4">Click a row to view</div>
                     </Show>
                     <div class="flex flex-auto justify-end">
-                        <A class="btn btn-primary" href="/admin/member/0/edit">
+                        <A class="btn btn-primary" href={formatUrl(RouteKeys.MEMBER_EDIT.nav, { mid: 0 })}>
                             Add Member
                         </A>
                     </div>

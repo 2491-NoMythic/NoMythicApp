@@ -4,6 +4,7 @@ import { lazy } from 'solid-js'
 import MemberAccess from '../pages/members/MemberAccess'
 import AdminAccess from '../pages/admin/AdminAccess'
 
+/* By initializing this way, the pages are lazy loaded - not loaded to the browser until they are used */
 const Home = lazy(() => import('../pages/Home'))
 const Welcome = lazy(() => import('../pages/Welcome'))
 const Guest = lazy(() => import('../pages/Guest'))
@@ -20,37 +21,118 @@ const AttendanceForSeason = lazy(() => import('../pages/admin/AttendanceForSeaso
 const AttendanceForMeeting = lazy(() => import('../pages/admin/AttendanceForMeeting'))
 const AttendanceForMember = lazy(() => import('../pages/admin/AttendanceForMember'))
 
+/**
+ * route: the path to give in the <Route> tags - no prefix like /admin or /members
+ * nav: the path to use to nav to a new page - includes prefix like /admin or /members
+ * regex: the regex test to apply to see if the current path matches the route
+ * display: the title of the page you are on - see <PageTitle>
+ *
+ * For regex help see
+ * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions
+ * https://www.regexpal.com
+ */
+export const RouteKeys = {
+    HOME: { route: '/home', nav: '/home', regex: /\/home$/, display: 'Home' },
+    WELCOME: { route: '/welcome', nav: '/welcome', regex: /\/welcome$/, display: 'Welcome' },
+    GUEST: { route: '/guest', nav: '/guest', regex: /\/guest$/, display: 'Guest' },
+    PROFILE: { route: '/profile', nav: '/profile', regex: /\/profile$/, display: 'Member Profile' },
+    PROFILE_EDIT: {
+        route: '/profileedit',
+        nav: '/members/profileedit',
+        regex: /\/members\/profileedit$/,
+        display: 'Profile Edit',
+    },
+    TAKE_ATTENDANCE: {
+        route: '/attendance',
+        nav: '/members/attendance',
+        regex: /\/members\/attendance$/,
+        display: 'Take Attendance',
+    },
+    TEAM_LIST: { route: '/teamlist', nav: '/admin/teamlist', regex: /\/admin\/teamlist$/, display: 'Team List' },
+    MEMBER_VIEW: {
+        route: '/member/:mid',
+        nav: '/admin/member/:mid',
+        regex: /\/admin\/member\/[0-9]+$/,
+        display: 'Member View',
+    },
+    MEMBER_EDIT: {
+        route: '/member/:mid/edit',
+        nav: '/admin/member/:mid/edit',
+        regex: /\/admin\/member\/[0-9]+\/edit$/,
+        display: 'Member Edit',
+    },
+    PARENT_LIST: {
+        route: '/member/:mid/parent',
+        nav: '/admin/member/:mid/parent',
+        regex: /\/admin\/member\/[0-9]+\/parent$/,
+        display: 'Parent List',
+    },
+    PARENT_VIEW: {
+        route: '/member/:mid/parent/:pid',
+        nav: '/member/:mid/parent/:pid',
+        regex: /\/admin\/member\/[0-9]+\/parent\/[0-9]+$/,
+        display: 'View Parent',
+    },
+    PARENT_EDIT: {
+        route: '/member/:mid/parent/:pid/edit',
+        nav: '/admin/member/:mid/parent/:pid/edit',
+        regex: /\/admin\/member\/[0-9]+\/parent\/[0-9]+\/edit$/,
+        display: 'Edit Parent',
+    },
+    ATTENDANCE_SEASON: {
+        route: '/attendance',
+        nav: '/admin/attendance',
+        regex: /\/admin\/attendance$/,
+        display: 'Season Attendance',
+    },
+    ATTENDANCE_MEMBER: {
+        route: '/attendance/member/:mid',
+        nav: '/admin/attendance/member/:mid',
+        regex: /\/admin\/attendance\/member\/[0-9]+$/,
+        display: 'Member Attendance',
+    },
+    ATTENDANCE_MEETING: {
+        route: '/attendance/meeting',
+        nav: '/admin/attendance/meeting',
+        regex: /\/admin\/attendance\/meeting$/,
+        display: 'Meeting Attendance',
+    },
+} as const
+
+/**
+ * This defines the routes, or indiidual pages that we can get to based on the url path in the browser
+ */
 const AppRouting = () => {
     const navigate = useNavigate()
 
     const Redirect = () => {
-        navigate('/home')
+        navigate(RouteKeys.HOME.nav)
         return <></>
     }
 
     return (
         <Routes>
             {/* any access level can view these pages */}
-            <Route path="/home" component={Home} />
-            <Route path="/welcome" component={Welcome} />
-            <Route path="/guest" component={Guest} />
-            <Route path="/profile" component={Profile} />
+            <Route path={RouteKeys.HOME.route} component={Home} />
+            <Route path={RouteKeys.WELCOME.route} component={Welcome} />
+            <Route path={RouteKeys.GUEST.route} component={Guest} />
+            <Route path={RouteKeys.PROFILE.route} component={Profile} />
             {/* must be a member to view these pages */}
             <Route path="/members" component={MemberAccess}>
-                <Route path="/profileEdit" component={ProfileEdit} />
-                <Route path="/attendance" component={AttendancePage} />
+                <Route path={RouteKeys.PROFILE_EDIT.route} component={ProfileEdit} />
+                <Route path={RouteKeys.TAKE_ATTENDANCE.route} component={AttendancePage} />
             </Route>
             {/* must be an admin to view these pages */}
             <Route path="/admin" component={AdminAccess}>
-                <Route path="/teamlist" component={TeamList} />
-                <Route path="/member/:id" component={MemberView} />
-                <Route path="/member/:id/edit" component={MemberEdit} />
-                <Route path="/member/:mid/parent" component={Parents} />
-                <Route path="/member/:mid/parent/:pid" component={ParentView} />
-                <Route path="/member/:mid/parent/:pid/edit" component={ParentEdit} />
-                <Route path="/attendance" component={AttendanceForSeason} />
-                <Route path="/attendance/member/:id" component={AttendanceForMember} />
-                <Route path="/attendance/meeting" component={AttendanceForMeeting} />
+                <Route path={RouteKeys.TEAM_LIST.route} component={TeamList} />
+                <Route path={RouteKeys.MEMBER_VIEW.route} component={MemberView} />
+                <Route path={RouteKeys.MEMBER_EDIT.route} component={MemberEdit} />
+                <Route path={RouteKeys.PARENT_LIST.route} component={Parents} />
+                <Route path={RouteKeys.PARENT_VIEW.route} component={ParentView} />
+                <Route path={RouteKeys.PARENT_EDIT.route} component={ParentEdit} />
+                <Route path={RouteKeys.ATTENDANCE_SEASON.route} component={AttendanceForSeason} />
+                <Route path={RouteKeys.ATTENDANCE_MEMBER.route} component={AttendanceForMember} />
+                <Route path={RouteKeys.ATTENDANCE_MEETING.route} component={AttendanceForMeeting} />
             </Route>
             <Route path="*" component={Redirect} />
         </Routes>

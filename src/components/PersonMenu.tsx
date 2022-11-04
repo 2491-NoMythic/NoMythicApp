@@ -4,6 +4,7 @@ import { supabase } from '../api/SupabaseClient'
 import { useMyUser } from '../contexts/UserContext'
 import { useNavigate } from '@solidjs/router'
 import Settings from './Settings'
+import { RouteKeys } from './AppRouting'
 
 const PersonMenu: Component = () => {
     const [show, setShow] = createSignal(false)
@@ -31,7 +32,7 @@ const PersonMenu: Component = () => {
 
     const navToProfile = () => {
         setShow(false)
-        navigate('/profile')
+        navigate(RouteKeys.PROFILE.nav)
     }
 
     const [authSession, googleUser, member, { isLoggedIn, isMember }] = useMyUser()

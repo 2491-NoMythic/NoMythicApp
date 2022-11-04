@@ -1,7 +1,8 @@
 import { useNavigate, useSearchParams } from '@solidjs/router'
 import { Component, Show } from 'solid-js'
 import { Member, SubTeam, TeamRole } from '../types/Api'
-import { capitalizeWord } from '../utilities/formatters'
+import { capitalizeWord, formatUrl } from '../utilities/formatters'
+import { RouteKeys } from './AppRouting'
 
 const DisplayTeamDataRow: Component<{ teamMember: Member }> = (props) => {
     const navigate = useNavigate()
@@ -9,7 +10,7 @@ const DisplayTeamDataRow: Component<{ teamMember: Member }> = (props) => {
 
     type data = { memberId: number }
     const handleClick = async (data: data, _event) => {
-        navigate('/admin/member/' + data.memberId)
+        navigate(formatUrl(RouteKeys.MEMBER_VIEW.nav, { mid: data.memberId }))
     }
 
     return (
