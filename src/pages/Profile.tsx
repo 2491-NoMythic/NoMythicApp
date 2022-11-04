@@ -1,5 +1,6 @@
 import { A } from '@solidjs/router'
 import { Component, Show } from 'solid-js'
+import { RouteKeys } from '../components/AppRouting'
 import { useMyUser } from '../contexts/UserContext'
 import { capitalizeWord } from '../utilities/formatters'
 
@@ -91,7 +92,7 @@ const Profile: Component = () => {
                         </table>
                         <div class="card-actions justify-end">
                             <label for="my-modal" class="btn btn-primary modal-button">
-                                <A href="/members/profileEdit">Edit</A>
+                                <A href={RouteKeys.PROFILE_EDIT.nav}>Edit</A>
                             </label>
                         </div>
                     </div>

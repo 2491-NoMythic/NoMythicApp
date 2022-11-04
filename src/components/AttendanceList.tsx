@@ -2,7 +2,8 @@ import { useNavigate } from '@solidjs/router'
 import { Accessor, Component, For, Resource, Show } from 'solid-js'
 import { insertAttendance, updateAttendance } from '../api/attendance'
 import { AttendanceTypes, AttendanceTypesType, MemberAttendance, SubTeam } from '../types/Api'
-import { capitalizeWord } from '../utilities/formatters'
+import { capitalizeWord, formatUrl } from '../utilities/formatters'
+import { RouteKeys } from './AppRouting'
 
 const AttendanceList: Component<{
     meetingDate: string
@@ -15,7 +16,7 @@ const AttendanceList: Component<{
     type memberIdType = { memberId: number }
     const handleNavToMember = (data: memberIdType, _event) => {
         if (props.clickToMember) {
-            navigate('/admin/attendance/member/' + data.memberId + '?season=2023')
+            navigate(formatUrl(RouteKeys.ATTENDANCE_MEMBER.nav, { mid: data.memberId }, { season: '2023' }))
         }
     }
 

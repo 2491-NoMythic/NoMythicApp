@@ -8,6 +8,7 @@ import AttendanceList from '../../components/AttendanceList'
 import { A, useSearchParams } from '@solidjs/router'
 import { calculateDay } from '../../utilities/formatters'
 import PageLoading from '../../components/PageLoading'
+import { RouteKeys } from '../../components/AppRouting'
 
 const AttendanceForMeeting: Component = () => {
     const [searchParams] = useSearchParams()
@@ -16,7 +17,7 @@ const AttendanceForMeeting: Component = () => {
 
     // runs whenever team or subTeam are changed
     createEffect(() => {
-        const filtered = filterBySubTeam(team(), searchParams.subTeam)
+        const filtered = filterBySubTeam(team(), searchParams.subTeam || 'team')
         const sorted = sortByFirstName(filtered)
         setFilteredTeam(sorted)
     })
@@ -25,7 +26,7 @@ const AttendanceForMeeting: Component = () => {
         <Suspense fallback={<PageLoading />}>
             <div class="overflow-x-auto">
                 <div class="mt-4 text-lg font-semibold">
-                    <A class="btn btn-secondary mr-4" href="/admin/attendance?season=2023">
+                    <A class="btn btn-secondary mr-4" href={RouteKeys.ATTENDANCE_SEASON.nav}>
                         Back to Season
                     </A>
                     {calculateDay(searchParams.meetingDate)} - {searchParams.meetingDate}

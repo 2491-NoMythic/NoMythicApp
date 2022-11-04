@@ -6,6 +6,7 @@ import { A, useNavigate, useParams, useSearchParams } from '@solidjs/router'
 import { getMemberById, newMemberFromAdmin, saveMemberFromAdmin, saveMemberFromProfile } from '../../api/members'
 import { School, SchoolType, SubTeam, SubTeamType, TeamRole, TeamRoleType } from '../../types/Api'
 import PageLoading from '../../components/PageLoading'
+import { RouteKeys } from '../../components/AppRouting'
 
 // Definition of the fields we will do validatio on
 type User = {
@@ -58,7 +59,7 @@ const MemberEdit: Component = () => {
     const formHandler = useFormHandler(yupSchema(userSchema))
     const { formData } = formHandler
     const params = useParams()
-    const [member] = createResource(() => parseInt(params.id), getMemberById)
+    const [member] = createResource(() => parseInt(params.mid), getMemberById)
     const [searchParams] = useSearchParams()
     const navigate = useNavigate()
 
@@ -86,7 +87,7 @@ const MemberEdit: Component = () => {
             } else {
                 await saveMemberFromAdmin(updatedMember)
             }
-            navigate('/admin/teamList')
+            navigate(RouteKeys.TEAM_LIST.nav)
         } catch (error) {
             console.error(error)
         }
@@ -210,7 +211,7 @@ const MemberEdit: Component = () => {
                                 </Show>
                             </div>
                             <div class="card-actions justify-end">
-                                <A href="/admin/teamList">
+                                <A href={RouteKeys.TEAM_LIST.nav}>
                                     <button class="btn btn-secondary modal-button mr-6">Cancel</button>
                                 </A>
                                 <button

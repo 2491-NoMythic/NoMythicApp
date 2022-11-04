@@ -4,6 +4,8 @@ import { getMemberById } from '../../api/members'
 import { HiOutlineTrash } from 'solid-icons/hi'
 import PageLoading from '../../components/PageLoading'
 import { deleteParent, getParentById } from '../../api/parents'
+import { formatUrl } from '../../utilities/formatters'
+import { RouteKeys } from '../../components/AppRouting'
 
 const ParentView: Component = () => {
     const params = useParams()
@@ -20,7 +22,7 @@ const ParentView: Component = () => {
     const handleDelete = async () => {
         toggleModal()
         await deleteParent(parent().parent_id)
-        navigate('/admin/member/' + member()?.member_id + '/parent')
+        navigate(formatUrl(RouteKeys.PARENT_VIEW.nav, { mid: member()?.member_id }))
     }
 
     return (
@@ -35,7 +37,10 @@ const ParentView: Component = () => {
                             </div>
                         </div>
                         <div class="w-50">
-                            <A class="btn btn-secondary" href={'/admin/member/' + member()?.member_id}>
+                            <A
+                                class="btn btn-secondary"
+                                href={formatUrl(RouteKeys.MEMBER_VIEW.nav, { mid: member()?.member_id })}
+                            >
                                 Back to Member
                             </A>
                         </div>
@@ -93,17 +98,14 @@ const ParentView: Component = () => {
                         </div>
                         <div class="flex flex-auto justify-end">
                             <label class="btn btn-secondary modal-button mr-4">
-                                <A href={'/admin/member/' + member()?.member_id + '/parent'}>Back</A>
+                                <A href={formatUrl(RouteKeys.PARENT_LIST.nav, { mid: member()?.member_id })}>Back</A>
                             </label>
                             <label class="btn btn-primary modal-button">
                                 <A
-                                    href={
-                                        '/admin/member/' +
-                                        member()?.member_id +
-                                        '/parent/' +
-                                        parent()?.parent_id +
-                                        '/edit'
-                                    }
+                                    href={formatUrl(RouteKeys.PARENT_EDIT.nav, {
+                                        mid: member()?.member_id,
+                                        pid: parent()?.parent_id,
+                                    })}
                                 >
                                     Edit
                                 </A>

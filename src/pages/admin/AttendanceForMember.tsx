@@ -2,11 +2,12 @@ import { useParams, useSearchParams } from '@solidjs/router'
 import { Component, createEffect, createResource, createSignal, For, Suspense } from 'solid-js'
 import { getAttendanceForMember, getNumberOfMeetings } from '../../api/attendance'
 import { getMemberById } from '../../api/members'
+import { RouteKeys } from '../../components/AppRouting'
 import PageLoading from '../../components/PageLoading'
 import TwoSideStatsBase from '../../components/TwoSideStatsBase'
 import { Attendance, AttendanceTypes } from '../../types/Api'
 import { seasonMonths } from '../../utilities/converters'
-import { calculateMonth, calculatePercent, calculateDay, formatEnumValue } from '../../utilities/formatters'
+import { calculateMonth, calculatePercent, calculateDay, formatEnumValue, formatUrl } from '../../utilities/formatters'
 import { sortAttendance } from '../../utilities/sorts'
 
 const AttendanceForMember: Component = () => {
@@ -14,12 +15,12 @@ const AttendanceForMember: Component = () => {
     const [searchParams] = useSearchParams()
 
     const [attendance] = createResource(
-        () => ({ season: searchParams.season, memberId: params.id }),
+        () => ({ season: searchParams.season, memberId: params.mid }),
         getAttendanceForMember
     )
     const [memberAttended, setMemberAttended] = createSignal(0)
     const [numberOfMeetings] = createResource(searchParams.season, getNumberOfMeetings)
-    const [member] = createResource(() => parseInt(params.id), getMemberById)
+    const [member] = createResource(() => parseInt(params.mid), getMemberById)
 
     type AttendanceByMonth = { month: string; meetings: Attendance[] }
     const [byMonth, setByMonth] = createSignal([] as AttendanceByMonth[])
@@ -120,10 +121,9 @@ const AttendanceForMember: Component = () => {
                                                         rightText="Attendance"
                                                         rightValue={formatEnumValue(meeting.attendance)}
                                                         rightSubText={null}
-                                                        link={
-                                                            '/admin/attendance/meeting?subTeam=team&meetingDate=' +
-                                                            meeting.meeting_date
-                                                        }
+                                                        link={formatUrl(RouteKeys.ATTENDANCE_MEETING.nav, null, {
+                                                            meetingDate: meeting.meeting_date,
+                                                        })}
                                                     />
                                                 )
                                             }}

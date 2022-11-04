@@ -3,15 +3,16 @@ import { Component, createEffect, createResource, createSignal, For, Show, Suspe
 import { deleteMember, getMemberById } from '../../api/members'
 import { HiOutlineEye, HiOutlineTrash } from 'solid-icons/hi'
 
-import { calculateGrade, capitalizeWord, formatEnumValue } from '../../utilities/formatters'
+import { calculateGrade, capitalizeWord, formatEnumValue, formatUrl } from '../../utilities/formatters'
 import PageLoading from '../../components/PageLoading'
 import { School } from '../../types/Api'
 import { getParents } from '../../api/parents'
+import { RouteKeys } from '../../components/AppRouting'
 
 const MemberView: Component = () => {
     const params = useParams()
-    const [member] = createResource(() => parseInt(params.id), getMemberById)
-    const [parents] = createResource(() => parseInt(params.id), getParents)
+    const [member] = createResource(() => parseInt(params.mid), getMemberById)
+    const [parents] = createResource(() => parseInt(params.mid), getParents)
     const [searchParams] = useSearchParams()
     const [opened, setOpened] = createSignal(false)
     const [parentNames, setParentNames] = createSignal([] as string[])
@@ -25,7 +26,7 @@ const MemberView: Component = () => {
     const handleDelete = async () => {
         toggleModal()
         await deleteMember(member().member_id)
-        navigate('/admin/teamList')
+        navigate(RouteKeys.TEAM_LIST.nav)
     }
 
     createEffect(() => {
@@ -106,7 +107,7 @@ const MemberView: Component = () => {
                                         </For>
 
                                         <A
-                                            href={'/admin/member/' + member()?.member_id + '/parent'}
+                                            href={formatUrl(RouteKeys.PARENT_LIST.nav, { mid: member()?.member_id })}
                                             class="inline-flex items-center mr-2 text-secondary"
                                         >
                                             <HiOutlineEye fill="none" class="mb-3 mr-2" />
@@ -126,10 +127,10 @@ const MemberView: Component = () => {
                         </div>
                         <div class="flex flex-auto justify-end">
                             <label class="btn btn-secondary modal-button mr-4">
-                                <A href="/admin/teamList">Back</A>
+                                <A href={RouteKeys.TEAM_LIST.nav}>Back</A>
                             </label>
                             <label class="btn btn-primary modal-button">
-                                <A href={'/admin/member/' + member()?.member_id + '/edit'}>Edit</A>
+                                <A href={formatUrl(RouteKeys.MEMBER_EDIT.nav, { mid: member()?.member_id })}>Edit</A>
                             </label>
                         </div>
                     </div>

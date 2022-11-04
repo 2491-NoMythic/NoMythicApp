@@ -3,6 +3,7 @@ import { useMyUser } from '../contexts/UserContext'
 import unicorn from '../assets/2491_logo_disc_outline.png'
 import { useNavigate } from '@solidjs/router'
 import PageLoading from '../components/PageLoading'
+import { RouteKeys } from '../components/AppRouting'
 
 const Welcome: Component = () => {
     const [authSession, googleUser, member, { isLoggedIn, isMember }] = useMyUser()
@@ -15,7 +16,7 @@ const Welcome: Component = () => {
     const [time] = createResource('time', createDelay)
 
     const continueAsGuest = () => {
-        navigate('/guest')
+        navigate(RouteKeys.GUEST.nav)
     }
 
     // note: switch will pick the first Match found. if none found, then fallback

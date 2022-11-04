@@ -6,6 +6,7 @@ import { useMyUser } from '../../contexts/UserContext'
 import { A, useNavigate } from '@solidjs/router'
 import { saveMemberFromProfile } from '../../api/members'
 import { SubTeam, SubTeamType, TeamRole, TeamRoleType } from '../../types/Api'
+import { RouteKeys } from '../../components/AppRouting'
 
 type User = {
     first_name: string
@@ -51,7 +52,7 @@ const ProfileEdit: Component = () => {
                 food_needs: formData().food_needs,
             }
             await saveMemberFromProfile(updatedMember)
-            navigate('/profile')
+            navigate(RouteKeys.PROFILE.nav)
         } catch (error) {
             console.error(error)
         }
@@ -126,7 +127,7 @@ const ProfileEdit: Component = () => {
                         />
                     </div>
                     <div class="card-actions justify-end">
-                        <A href="/profile">
+                        <A href={RouteKeys.PROFILE.nav}>
                             <button class="btn btn-secondary modal-button mr-6">Cancel</button>
                         </A>
                         <button

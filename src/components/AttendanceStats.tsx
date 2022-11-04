@@ -1,5 +1,6 @@
 import { Component } from 'solid-js'
-import { calculateDay, calculatePercent } from '../utilities/formatters'
+import { calculateDay, calculatePercent, formatUrl } from '../utilities/formatters'
+import { RouteKeys } from './AppRouting'
 import TwoSideStatsBase from './TwoSideStatsBase'
 
 const AttendanceStats: Component<{
@@ -16,7 +17,7 @@ const AttendanceStats: Component<{
             rightText="Attended"
             rightValue={props.meetingCount?.toString()}
             rightSubText={calculatePercent(props.meetingCount, props.teamSize) + '%'}
-            link={'/admin/attendance/meeting?subTeam=team&meetingDate=' + props.meetingDate}
+            link={formatUrl(RouteKeys.ATTENDANCE_MEETING.nav, null, { meetingDate: props.meetingDate })}
         />
     )
 }

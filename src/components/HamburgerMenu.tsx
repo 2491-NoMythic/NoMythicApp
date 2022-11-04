@@ -2,6 +2,7 @@ import { Component, createSignal, Show } from 'solid-js'
 import { A } from '@solidjs/router'
 import { HiOutlineMenu } from 'solid-icons/hi'
 import { useMyUser } from '../contexts/UserContext'
+import { RouteKeys } from './AppRouting'
 
 const HamburgerMenu: Component = () => {
     const [show, setShow] = createSignal(false)
@@ -14,8 +15,7 @@ const HamburgerMenu: Component = () => {
         setShow(false)
     }
 
-    const [authSession, googleUser, member, { isLoggedIn, isMember }] =
-        useMyUser()
+    const [authSession, googleUser, member, { isLoggedIn, isMember }] = useMyUser()
 
     return (
         <>
@@ -30,27 +30,27 @@ const HamburgerMenu: Component = () => {
                 classList={{ hidden: !show() }}
             >
                 <li>
-                    <A href="/home" onClick={close}>
+                    <A href={RouteKeys.HOME.nav} onClick={close}>
                         Home
                     </A>
                 </li>
                 <Show when={isMember()}>
                     <li>
-                        <A href="/members/attendance" onClick={close}>
-                            Attendance
+                        <A href={RouteKeys.TAKE_ATTENDANCE.nav} onClick={close}>
+                            Take Attendance
                         </A>
                     </li>
                 </Show>
                 {/* Need check for team role or something */}
                 <Show when={isMember()}>
                     <li>
-                        <A href="/admin/teamlist" onClick={close}>
+                        <A href={RouteKeys.TEAM_LIST.nav} onClick={close}>
                             Team List
                         </A>
                     </li>
                 </Show>
                 <li>
-                    <A href="/guest" onClick={close}>
+                    <A href={RouteKeys.GUEST.nav} onClick={close}>
                         Guest
                     </A>
                 </li>
