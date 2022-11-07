@@ -2,7 +2,7 @@ import { Component, createEffect, createSignal, For, onMount, Show } from 'solid
 import { add, format, parse, sub } from 'date-fns'
 import DayOfMonth from './DayOfMonth'
 import { Month, MonthValues, Week } from '../types'
-import { getCalendar, getMonthValues } from '../utilities'
+import { getCalendar, getMonthValues, getToday, toDate, toYMD } from '../utilities'
 import { useSearchParams } from '@solidjs/router'
 
 const FullCalendar: Component = () => {
@@ -12,17 +12,17 @@ const FullCalendar: Component = () => {
 
     onMount(() => {
         if (searchParams.date === undefined) {
-            const today = new Date()
-            const formatted = format(today, 'yyyy-MM-dd')
-            setSearchParams({ date: formatted })
+            const today = toYMD(getToday())
+            setSearchParams({ date: today })
         }
     })
 
     createEffect(() => {
         if (searchParams.date !== undefined) {
-            const aDate = parse(searchParams.date, 'yyyy-MM-dd', new Date())
+            const aDate = toDate(searchParams.date)
             const monthValues = getMonthValues(aDate)
             setMonth(monthValues)
+            console.log(monthValues)
             const aCalendar = getCalendar(monthValues)
             setCalendar(aCalendar)
         }
@@ -30,13 +30,13 @@ const FullCalendar: Component = () => {
 
     const prevMonth = () => {
         const newMonth = sub(month().beginOfMonthDate, { months: 1 })
-        const formatted = format(newMonth, 'yyyy-MM-dd')
+        const formatted = toYMD(newMonth)
         setSearchParams({ date: formatted })
     }
 
     const nextMonth = () => {
         const newMonth = add(month().beginOfMonthDate, { months: 1 })
-        const formatted = format(newMonth, 'yyyy-MM-dd')
+        const formatted = toYMD(newMonth)
         setSearchParams({ date: formatted })
     }
 
