@@ -10,6 +10,7 @@ import {
     isEqual,
     format,
     parse,
+    getDate,
 } from 'date-fns'
 import { MonthValues, Month, Week } from './types'
 
@@ -23,9 +24,9 @@ const getMonthValues = (aDate: Date): MonthValues => {
     const justDate = stripTime(aDate)
     const weekStartsOn = 0
     const year = getYear(justDate)
-    const month = getMonth(justDate) // why 0 based?
+    const month = getMonth(justDate) // this is 0 based?
     const justToday = getToday()
-    const beginOfMonthDate = new Date(year, month, 1)
+    const beginOfMonthDate = new Date(year, month)
     const startOfCalMonth = startOfWeek(beginOfMonthDate, { weekStartsOn })
     const startDayOfCal = getDay(startOfCalMonth)
     const endOfMonthDate = endOfMonth(justDate)
@@ -76,7 +77,7 @@ const getCalendar = (monthValues: MonthValues) => {
  * @returns type Date
  */
 const stripTime = (aDate: Date) => {
-    return new Date(getYear(aDate), getMonth(aDate), getDay(aDate))
+    return new Date(getYear(aDate), getMonth(aDate), getDate(aDate))
 }
 
 /**
