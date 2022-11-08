@@ -34,8 +34,17 @@ const School = {
     AVALON: 'avalon',
     GRS: 'grs',
     OTHER: 'other',
-}
+} as const
 type SchoolType = typeof School[keyof typeof School]
+
+const EventTypes = {
+    REGULAR_PRACTICE: 'regular_practice',
+    EXTRA_PRACTICE: 'extra_practice',
+    MEETING: 'meeting',
+    EVENT: 'event',
+    COMPETITION: 'competition',
+} as const
+type EventTypesType = typeof EventTypes[keyof typeof EventTypes]
 
 type MemberAttendance = {
     member_id: number
@@ -110,6 +119,13 @@ type Parent = {
     zip?: string
 }
 
+type RobotEvent = {
+    event_id?: number
+    event_date: string
+    event_type: EventTypesType
+    description: string
+}
+
 export type {
     MemberAttendance,
     Member,
@@ -123,6 +139,8 @@ export type {
     SchoolType,
     MeetingCount,
     Parent,
+    RobotEvent,
+    EventTypesType,
 }
 
-export { SubTeam, TeamRole, AttendanceTypes, School }
+export { SubTeam, TeamRole, AttendanceTypes, School, EventTypes }

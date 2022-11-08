@@ -27,16 +27,30 @@ const DatePicker: Component<inputs> = (props) => {
         setMonthDate(newMonth)
     }
 
+    type Data = { date: Date }
+    const handleClose = (data: Data, event) => {
+        event.preventDefault()
+        props.handleSelect(data.date)
+    }
+
     return (
         <>
             <Show when={calendar() && month()}>
-                <div class="w-56 border rounded-md p-2">
+                <div class="w-72 lg:w-1/4 border-2 rounded-xl p-2 bg-base-300 relative">
+                    <div
+                        class="btn btn-md btn-circle bg-secondary text-accent-content absolute -right-6 -top-6"
+                        onClick={[handleClose, { date: monthDate() }]}
+                    >
+                        ✕
+                    </div>
                     <div class="flex">
-                        <div onClick={prevMonth} class="cursor-pointer">
+                        <div onClick={prevMonth} class="cursor-pointer ml-5 hover:text-accent-content">
                             {format(sub(month().beginOfMonthDate, { months: 1 }), 'LLL')}
                         </div>
-                        <div class="grow text-center font-bold">{format(month().beginOfMonthDate, 'LLLL')}</div>
-                        <div onClick={nextMonth} class="cursor-pointer">
+                        <div class="grow text-center font-bold text-accent-content">
+                            {format(month().beginOfMonthDate, 'LLLL')}
+                        </div>
+                        <div onClick={nextMonth} class="cursor-pointer mr-5 hover:text-accent-content">
                             {format(add(month().beginOfMonthDate, { months: 1 }), 'LLL')}
                         </div>
                     </div>
@@ -61,6 +75,10 @@ const DatePicker: Component<inputs> = (props) => {
                                 )
                             }}
                         </For>
+                    </div>
+                    <div class="flex mt-2">
+                        <div class="bg-secondary text-accent-content mr-4 rounded-full pl-4 pr-4">Today</div>
+                        <div class="bg-primary text-accent-content rounded-full pl-4 pr-4">Selected</div>
                     </div>
                 </div>
             </Show>

@@ -1,8 +1,8 @@
 import { useFormHandler, yupSchema } from 'solid-form-handler'
 import { SelectableField, TextField } from '../../components/forms'
 import * as yup from 'yup'
-import { Component, createEffect, createResource, Show, Suspense } from 'solid-js'
-import { A, useNavigate, useParams, useSearchParams } from '@solidjs/router'
+import { Component, createResource, Show, Suspense } from 'solid-js'
+import { A, useNavigate, useParams } from '@solidjs/router'
 import { getMemberById, newMemberFromAdmin, saveMemberFromAdmin, saveMemberFromProfile } from '../../api/members'
 import { School, SchoolType, SubTeam, SubTeamType, TeamRole, TeamRoleType } from '../../types/Api'
 import PageLoading from '../../components/PageLoading'
@@ -19,7 +19,7 @@ type User = {
     phone?: string
     address?: string
     food_needs?: string
-    school?: string
+    school?: SchoolType
     advisor?: string
     grad_year: number
 }
@@ -52,7 +52,6 @@ export const userSchema: yup.SchemaOf<User> = yup.object({
         .max(2050, 'Max value of 2050')
         .transform(emptyStringToNull)
         .nullable(),
-    //.transform((_, val) => (NaN === Number(val) || null === Number(val) ? null : Number(val))),
 })
 
 const MemberEdit: Component = () => {
@@ -60,7 +59,6 @@ const MemberEdit: Component = () => {
     const { formData } = formHandler
     const params = useParams()
     const [member] = createResource(() => parseInt(params.mid), getMemberById)
-    const [searchParams] = useSearchParams()
     const navigate = useNavigate()
 
     const submit = async (event: Event) => {

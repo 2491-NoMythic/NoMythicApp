@@ -54,7 +54,7 @@ const calculateGrade = (gradYear: number) => {
     return 12 - diff
 }
 
-type props = { mid?: number | string; pid?: number | string }
+type props = { mid?: number | string; pid?: number | string; id?: number | string }
 /**
  * Formats a URL with id values and query string
  *
@@ -71,6 +71,9 @@ const formatUrl = (url: string, props?: props, params?: {}) => {
         }
         if (props.pid !== undefined) {
             newUrl = newUrl.replace(':pid', props.pid.toString())
+        }
+        if (props.id !== undefined) {
+            newUrl = newUrl.replace(':id', props.id.toString())
         }
     }
     if (params) {
