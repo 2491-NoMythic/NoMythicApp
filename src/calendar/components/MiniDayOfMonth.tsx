@@ -1,25 +1,32 @@
 import { getDate } from 'date-fns'
-import { Component } from 'solid-js'
+import { Component, createEffect, createSignal } from 'solid-js'
 import { Day } from '../types'
 
 type inputs = { day: Day; handleSelect: (aDate: Date) => void }
 
 const MiniDayOfMonth: Component<inputs> = (props) => {
+    const [color, setColor] = createSignal('bg-base-100')
+
+    createEffect(() => {
+        if (props?.day?.isSelected) {
+            setColor('bg-primary')
+        } else if (!props?.day?.inMonth) {
+            setColor('bg-base-300')
+        }
+    })
+
     type Data = { date: Date }
-    const handleClick = (data: Data, _event) => {
+    const handleClick = (data: Data, event) => {
+        event.preventDefault()
         props.handleSelect(data.date)
     }
 
     return (
         <div
-            class={`aspect-square border-t border-r ${props?.day?.inMonth ? 'bg-base-100' : 'bg-base-300'}`}
-            onClick={[handleClick, { date: props?.day }]}
+            class={`aspect-square border-t border-r cursor-pointer hover:text-accent-content ${color()}`}
+            onClick={[handleClick, { date: props?.day?.date }]}
         >
-            <div
-                class={`text-center text-sm cursor-pointer hover:text-accent-content ${
-                    props?.day?.isToday ? 'bg-secondary' : ''
-                }`}
-            >
+            <div class={`text-center text-sm  ${props?.day?.isToday ? 'bg-secondary' : ''}`}>
                 {getDate(props?.day?.date)}
             </div>
         </div>

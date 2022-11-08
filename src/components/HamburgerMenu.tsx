@@ -40,6 +40,11 @@ const HamburgerMenu: Component = () => {
                             Take Attendance
                         </A>
                     </li>
+                    <li>
+                        <A href={RouteKeys.FULL_CALENDAR.nav} onClick={close}>
+                            Team Calendar
+                        </A>
+                    </li>
                 </Show>
                 {/* Need check for team role or something */}
                 <Show when={isMember()}>

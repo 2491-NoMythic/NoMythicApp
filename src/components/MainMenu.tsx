@@ -59,6 +59,11 @@ const MainMenu: Component<{ children: JSX.Element }> = (props) => {
                                         Take Attendance
                                     </A>
                                 </li>
+                                <li>
+                                    <A href={RouteKeys.FULL_CALENDAR.nav} onClick={closeMenu}>
+                                        Team Calendar
+                                    </A>
+                                </li>
                             </Show>
                             <Show when={isAdmin()}>
                                 <li>

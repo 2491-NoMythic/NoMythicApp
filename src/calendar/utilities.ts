@@ -12,6 +12,7 @@ import {
     parse,
     getDate,
 } from 'date-fns'
+import { RobotEvent } from '../types/Api'
 import { MonthValues, Month, Week } from './types'
 
 /**
@@ -36,6 +37,7 @@ const getMonthValues = (aDate: Date): MonthValues => {
     return {
         weekStartsOn,
         today: justToday,
+        baseDate: justDate,
         year,
         month,
         beginOfMonthDate,
@@ -62,7 +64,49 @@ const getCalendar = (monthValues: MonthValues) => {
             const theDate = addDays(weekStart, didx)
             const inMonth = getMonth(theDate) === monthValues.month
             const isToday = isEqual(theDate, monthValues.today)
-            aWeek[didx] = { date: theDate, inMonth, isToday }
+            const isSelected = isEqual(theDate, monthValues.baseDate)
+            aWeek[didx] = { date: theDate, inMonth, isToday, isSelected }
+        }
+        weekStart = addDays(aWeek[6].date, 1)
+        aMonth[widx] = aWeek
+    }
+    return aMonth
+}
+
+/**
+ * Get array of events for a given date
+ *
+ * @param aDate type Date in the calendar
+ * @param eventData Array of events for that date
+ * @returns
+ */
+const getSelectedEvents = (aDate: Date, eventData: RobotEvent[]) => {
+    if (!eventData) return null
+    const dateStr = toYMD(aDate)
+    return eventData.filter((aEvent) => dateStr === aEvent.event_date) || []
+}
+
+/**
+ * Returns a canendar merged with events for display in ui
+ * can we just use one version of these getCalendar methods??
+ *
+ * @param monthValues type MonthValues
+ * @param eventData Array of event data
+ * @returns
+ */
+
+const getCalendarMerged = (monthValues: MonthValues, eventData: RobotEvent[]) => {
+    let weekStart = monthValues.startOfCalMonth
+    const aMonth = [] as Month
+    for (let widx = 0; widx < monthValues.weeks; widx++) {
+        const aWeek = [] as Week
+        for (let didx = 0; didx < 7; didx++) {
+            const theDate = addDays(weekStart, didx)
+            const inMonth = getMonth(theDate) === monthValues.month
+            const isToday = isEqual(theDate, monthValues.today)
+            const isSelected = isEqual(theDate, monthValues.baseDate)
+            const data = getSelectedEvents(theDate, eventData)
+            aWeek[didx] = { date: theDate, inMonth, isToday, isSelected, data }
         }
         weekStart = addDays(aWeek[6].date, 1)
         aMonth[widx] = aWeek
@@ -96,6 +140,9 @@ const getToday = () => {
  * @returns string 'yyyy-MM-dd'
  */
 const toYMD = (aDate: Date) => {
+    if (aDate === undefined || aDate === null) {
+        return null
+    }
     return format(aDate, 'yyyy-MM-dd')
 }
 /**
@@ -105,6 +152,9 @@ const toYMD = (aDate: Date) => {
  * @returns string 'MM/dd/yyyy'
  */
 const toMDY = (aDate: Date) => {
+    if (aDate === undefined || aDate === null) {
+        return null
+    }
     return format(aDate, 'MM/dd/yyyy')
 }
 
@@ -115,7 +165,10 @@ const toMDY = (aDate: Date) => {
  * @returns type Date
  */
 const toDate = (aDate: string) => {
+    if (aDate === undefined || aDate === null) {
+        return null
+    }
     return parse(aDate, 'yyyy-MM-dd', new Date())
 }
 
-export { getMonthValues, getCalendar, toYMD, toMDY, stripTime, getToday, toDate }
+export { getMonthValues, getCalendar, getCalendarMerged, getSelectedEvents, toYMD, toMDY, stripTime, getToday, toDate }

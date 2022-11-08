@@ -6,6 +6,9 @@ const ErrorAlert: Component<{ error: any; reset: Function }> = (props) => {
 
     const toggleError = () => {
         setShowError(!showError())
+        if (showError() === true) {
+            console.log(props.error)
+        }
     }
 
     const close = () => {
