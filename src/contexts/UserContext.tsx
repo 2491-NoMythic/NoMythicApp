@@ -55,7 +55,8 @@ export function UserProvider(props) {
                     member() !== null &&
                     (member().team_role === TeamRole.MENTOR ||
                         member().team_role === TeamRole.COACH ||
-                        member().team_role === TeamRole.CAPTAIN)
+                        member().team_role === TeamRole.CAPTAIN ||
+                        member().admin_tester === true)
                 )
             },
         },
