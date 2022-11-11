@@ -123,7 +123,12 @@ type RobotEvent = {
     event_id?: number
     event_date: string
     event_type: EventTypesType
-    description: string
+    description?: string
+    start_time?: string
+    end_time?: string
+    all_day?: boolean
+    virtual?: boolean
+    title?: string
 }
 
 export type {

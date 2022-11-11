@@ -4,6 +4,7 @@ import { Accessor, Component, Setter } from 'solid-js'
 const DatePicker: Component<{
     selectedDate: Accessor<string>
     setSelectedDate: Setter<string>
+    readonly?: boolean
 }> = (props) => {
     const changeHandler = (event) => {
         props.setSelectedDate(event.target.value)
@@ -20,6 +21,7 @@ const DatePicker: Component<{
                         value={props.selectedDate()}
                         class="input input-bordered w-40"
                         onChange={changeHandler}
+                        readonly={props.readonly}
                     />
                 </div>
             </div>

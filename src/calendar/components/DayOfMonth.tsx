@@ -1,5 +1,5 @@
 import { getDate } from 'date-fns'
-import { Component, createEffect, createSignal, For, Show } from 'solid-js'
+import { Component, Show } from 'solid-js'
 import { formatEnumValue } from '../../utilities/formatters'
 import { Day } from '../types'
 
@@ -14,15 +14,6 @@ const eventColors = {
 
 type inputs = { day: Day; handleSelect: (aDate: Date) => void }
 const DayOfMonth: Component<inputs> = (props) => {
-    const [color, setColor] = createSignal('bg-base-100')
-    createEffect(() => {
-        if (props?.day?.isSelected) {
-            setColor('bg-primary')
-        } else if (!props?.day?.inMonth) {
-            setColor('bg-base-300')
-        }
-    })
-
     const handleSelect = (event) => {
         event.preventDefault()
         props.handleSelect(props?.day?.date)
@@ -48,9 +39,9 @@ const DayOfMonth: Component<inputs> = (props) => {
                 <>
                     {props.day.data.map((robotEvent) => (
                         <div class={`mt-0.5 text-accent-content ${eventColors[robotEvent.event_type]}`}>
-                            <div class="p-0.5 hidden lg:flex text-xs xl:text-base">
-                                {formatEnumValue(robotEvent.event_type)}
-                            </div>
+                            <p class="p-0.5 hidden lg:flex text-xs xl:text-base break-all overflow-hidden h-7">
+                                {robotEvent.title ? robotEvent.title : formatEnumValue(robotEvent.event_type)}
+                            </p>
                             <div class="h-2 md:h-4 lg:hidden"></div>
                         </div>
                     ))}

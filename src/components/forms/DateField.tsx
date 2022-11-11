@@ -43,6 +43,8 @@ export const DateField: Component<DateFieldProps> = (props) => {
         id: '',
     })
 
+    let inputRef: HTMLInputElement
+
     /**
      * Show the calendar picker
      */
@@ -56,7 +58,6 @@ export const DateField: Component<DateFieldProps> = (props) => {
         local.formHandler?.setFieldValue?.(rest.name, event.currentTarget.value, {
             htmlElement: event.currentTarget,
         })
-
         //onInput prop is preserved
         if (typeof local.onInput === 'function') {
             local.onInput(event)
@@ -144,6 +145,14 @@ export const DateField: Component<DateFieldProps> = (props) => {
 
     const doSelect = (selectedDate: Date) => {
         local.formHandler?.setFieldValue(rest.name, toYMD(selectedDate))
+        /* this is a bit interresting. we need the html field to register a change after the date
+            was picked in the picker. so we construct an input event an call onInput */
+        const inputevent = new InputEvent('input', { data: toYMD(selectedDate) })
+        const bigEvent = { inputevent, currentTarget: inputRef } as unknown as InputEvent & {
+            currentTarget: HTMLInputElement
+            target: Element
+        }
+        onInput(bigEvent)
         setOpen(false)
     }
 
@@ -163,10 +172,13 @@ export const DateField: Component<DateFieldProps> = (props) => {
                             onBlur={onBlur}
                             value={store.value}
                             class="input input-bordered w-full max-w-xs"
+                            ref={inputRef}
                         />
-                        <button onClick={showCalendar} class="-m-9">
-                            <IoCalendarOutline />
-                        </button>
+                        <Show when={!rest.readonly}>
+                            <button onClick={showCalendar} class="-m-9">
+                                <IoCalendarOutline />
+                            </button>
+                        </Show>
                     </div>
                     <label class="label">
                         {store.error && <span class="label-text-alt text-error">{store.errorMessage}</span>}
