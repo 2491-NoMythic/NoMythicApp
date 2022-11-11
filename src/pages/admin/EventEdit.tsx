@@ -58,6 +58,7 @@ const EventEdit: Component = () => {
 
     const submit = async (event: Event) => {
         try {
+            event.preventDefault()
             await formHandler.validateForm()
             const updatedEvent = {
                 event_id: robotEvent()?.event_id,
