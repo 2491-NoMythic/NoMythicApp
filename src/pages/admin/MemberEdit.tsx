@@ -72,7 +72,7 @@ const MemberEdit: Component = () => {
                 pronouns: formData().pronouns,
                 team_role: formData().team_role,
                 sub_team: formData().sub_team,
-                email: formData().email,
+                email: formData().email.toLowerCase(),
                 phone: formData().phone,
                 address: formData().address,
                 food_needs: formData().food_needs,

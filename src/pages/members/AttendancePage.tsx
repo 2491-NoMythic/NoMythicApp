@@ -67,10 +67,13 @@ const AttendancePage: Component = () => {
                         formHandler={formHandler}
                         onInput={handleDateChange}
                         onBlur={handleDateChange}
-                        readonly
+                        readonly={!isAdmin()}
                     />
                 </div>
-                <SelectTeamInfoMessage show={filteredTeam().length === 0} extraMessage="Using current season." />
+                <SelectTeamInfoMessage
+                    show={filteredTeam().length === 0}
+                    extraMessage="Using current season. NOTE: YOU ARE ONLY TAKING ATTENDANCE FOR A PARTICULAR DAY. In the future you will pick the event."
+                />
                 <AttendanceList meetingDate={meetingDate()} teamMembers={filteredTeam} refetch={refetch} />
             </div>
         </Suspense>
