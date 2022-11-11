@@ -39,9 +39,9 @@ export const eventSchema: yup.SchemaOf<RobotEvent> = yup.object({
         .mixed<EventTypesType>()
         .oneOf(['regular_practice', 'extra_practice', 'competition', 'event', 'meeting'], 'Please select'),
     description: yup.string().notRequired().max(300, 'Max 300 characters'),
-    title: yup.string().notRequired().max(50),
-    start_time: yup.string().notRequired(),
-    end_time: yup.string().notRequired(),
+    title: yup.string().notRequired().max(50).nullable(),
+    start_time: yup.string().notRequired().nullable(),
+    end_time: yup.string().notRequired().nullable(),
     virtual: yup.boolean().required().default(false),
     all_day: yup.boolean().required().default(false),
 })
