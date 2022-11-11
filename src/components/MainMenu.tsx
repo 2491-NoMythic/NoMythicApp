@@ -43,11 +43,11 @@ const MainMenu: Component<{ children: JSX.Element }> = (props) => {
                 </div>
                 <div class="drawer-side lg:m-4">
                     <label for="my-drawer-2" class="drawer-overlay"></label>
-                    <div class="menu overflow-y-auto w-80 bg-base-100 text-base-content rounded-lg">
+                    <div class="overflow-y-auto w-80 bg-base-100 text-base-content rounded-lg">
                         <div class="mt-4 mb-8 flex justify-center">
                             <img src={unicorn} class="w-60 h-60"></img>
                         </div>
-                        <ul>
+                        <ul class="menu">
                             <li>
                                 <A href={RouteKeys.HOME.nav} onClick={closeMenu}>
                                     Home
