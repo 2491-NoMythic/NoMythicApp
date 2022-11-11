@@ -139,7 +139,7 @@ export const TextField: Component<TextFieldProps> = (props) => {
                     onInput={onInput}
                     onBlur={onBlur}
                     value={store.value}
-                    class="input input-bordered w-full max-w-xs"
+                    class="input input-bordered w-full max-w-xs placeholder-neutral"
                 />
                 <label class="label">
                     {store.error && <span class="label-text-alt text-error">{store.errorMessage}</span>}

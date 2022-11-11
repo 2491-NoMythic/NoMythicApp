@@ -19,6 +19,7 @@
         "vite-plugin-solid": "^2.3.0"
     },
     "dependencies": {
+        "@solid-primitives/input-mask": "^0.1.4",
         "@solidjs/router": "^0.5.0",
         "@supabase/supabase-js": "^2.0.0",
         "daisyui": "^2.31.0",

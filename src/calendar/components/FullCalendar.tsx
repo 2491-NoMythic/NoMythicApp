@@ -11,6 +11,8 @@ import { RouteKeys } from '../../components/AppRouting'
 import { formatEnumValue, formatUrl } from '../../utilities/formatters'
 import IoCalendarOutline from '../../components/icons/IoCalendarOutline'
 import { useMyUser } from '../../contexts/UserContext'
+import EventMenu from '../../components/EventMenu'
+import BsCalendarPlus from '../../components/icons/BsCalendarPlus'
 
 const FullCalendar: Component = () => {
     const [month, setMonth] = createSignal<MonthValues>()
@@ -73,62 +75,78 @@ const FullCalendar: Component = () => {
     return (
         <Suspense fallback={<PageLoading />}>
             <Show when={calendar() && month()}>
-                <div>
-                    <div class="mt-8">
-                        <div class="flex mb-4">
-                            <div onClick={prevMonth} class="cursor-pointer hover:text-accent-content">
-                                {format(sub(month().beginOfMonthDate, { months: 1 }), 'LLLL')}
+                <div class="mt-4 flex flex-col xl:flex-row">
+                    <div class="w-full">
+                        <div>
+                            <div class="flex mb-4">
+                                <div onClick={prevMonth} class="cursor-pointer hover:text-accent-content">
+                                    {format(sub(month().beginOfMonthDate, { months: 1 }), 'LLLL')}
+                                </div>
+                                <div class="grow text-center text-2xl text-accent-content">
+                                    {format(month().beginOfMonthDate, 'LLLL yyyy')}
+                                </div>
+                                <div onClick={nextMonth} class="cursor-pointer hover:text-accent-content">
+                                    {format(add(month().beginOfMonthDate, { months: 1 }), 'LLLL')}
+                                </div>
                             </div>
-                            <div class="grow text-center text-2xl text-accent-content">
-                                {format(month().beginOfMonthDate, 'LLLL')}
+                            <div class="grid grid-cols-7">
+                                <For each={calendar()[0]}>
+                                    {(day) => <div class="text-center">{format(day.date, 'EEE')}</div>}
+                                </For>
                             </div>
-                            <div onClick={nextMonth} class="cursor-pointer hover:text-accent-content">
-                                {format(add(month().beginOfMonthDate, { months: 1 }), 'LLLL')}
+                            <div class="grid grid-cols-7 border-l border-b">
+                                <For each={calendar()}>
+                                    {(week) => {
+                                        return (
+                                            <>
+                                                <DayOfMonth day={week[0]} handleSelect={selectDay} />
+                                                <DayOfMonth day={week[1]} handleSelect={selectDay} />
+                                                <DayOfMonth day={week[2]} handleSelect={selectDay} />
+                                                <DayOfMonth day={week[3]} handleSelect={selectDay} />
+                                                <DayOfMonth day={week[4]} handleSelect={selectDay} />
+                                                <DayOfMonth day={week[5]} handleSelect={selectDay} />
+                                                <DayOfMonth day={week[6]} handleSelect={selectDay} />
+                                            </>
+                                        )
+                                    }}
+                                </For>
                             </div>
                         </div>
-                        <div class="grid grid-cols-7">
-                            <For each={calendar()[0]}>
-                                {(day) => <div class="text-center">{format(day.date, 'EEE')}</div>}
-                            </For>
-                        </div>
-                        <div class="grid grid-cols-7 border-l border-b">
-                            <For each={calendar()}>
-                                {(week) => {
-                                    return (
-                                        <>
-                                            <DayOfMonth day={week[0]} handleSelect={selectDay} />
-                                            <DayOfMonth day={week[1]} handleSelect={selectDay} />
-                                            <DayOfMonth day={week[2]} handleSelect={selectDay} />
-                                            <DayOfMonth day={week[3]} handleSelect={selectDay} />
-                                            <DayOfMonth day={week[4]} handleSelect={selectDay} />
-                                            <DayOfMonth day={week[5]} handleSelect={selectDay} />
-                                            <DayOfMonth day={week[6]} handleSelect={selectDay} />
-                                        </>
-                                    )
-                                }}
-                            </For>
+                        <div class="flex mt-2 text-sm lg:hidden">
+                            <div class="flex-auto text-center bg-info text-accent-content rounded-full pl-3 pr-3 mr-2">
+                                Meeting
+                            </div>
+                            <div class="flex-auto text-center bg-accent text-accent-content rounded-full pl-3 pr-3 mr-2">
+                                Practice
+                            </div>
+                            <div class="flex-auto text-center bg-warning text-accent-content rounded-full pl-3 pr-3 mr-2">
+                                Extra
+                            </div>
+                            <div class="flex-auto text-center bg-primary text-accent-content rounded-full pl-3 pr-3 mr-2">
+                                Comp
+                            </div>
+                            <div class="flex-auto text-center bg-error text-accent-content rounded-full pl-3 pr-3">
+                                Event
+                            </div>
                         </div>
                     </div>
-                    <div class="flex mt-2 text-sm lg:hidden">
-                        <div class="flex-auto text-center bg-info text-accent-content rounded-full pl-3 pr-3 mr-2">
-                            Meeting
-                        </div>
-                        <div class="flex-auto text-center bg-accent text-accent-content rounded-full pl-3 pr-3 mr-2">
-                            Practice
-                        </div>
-                        <div class="flex-auto text-center bg-warning text-accent-content rounded-full pl-3 pr-3 mr-2">
-                            Extra
-                        </div>
-                        <div class="flex-auto text-center bg-primary text-accent-content rounded-full pl-3 pr-3 mr-2">
-                            Comp
-                        </div>
-                        <div class="flex-auto text-center bg-error text-accent-content rounded-full pl-3 pr-3">
-                            Event
-                        </div>
-                    </div>
-                    <div class="card w-full bg-base-100 shadow-xl mt-4">
-                        <div class="card-body">
-                            <h2 class="card-title">{format(toDate(searchParams.date), 'MMMM d yyyy')}</h2>
+                    <div class="card w-full xl:w-96 xl:ml-4 bg-base-100 shadow-xl mt-4 xl:mt-0">
+                        <div class="card-body p-4 flex">
+                            <div class="flex">
+                                <div class="card-title grow">{format(toDate(searchParams.date), 'MMMM d')}</div>
+                                <Show when={isAdmin()}>
+                                    <a
+                                        class="btn btn-primary gap-2"
+                                        href={formatUrl(
+                                            RouteKeys.EVENT_EDIT.nav,
+                                            { id: 0 },
+                                            { date: searchParams?.date }
+                                        )}
+                                    >
+                                        New <BsCalendarPlus />
+                                    </a>
+                                </Show>
+                            </div>
                             <Show when={selectedEvents()?.length === 0}>
                                 <p>No Events Today</p>
                             </Show>
@@ -141,27 +159,37 @@ const FullCalendar: Component = () => {
                                                     <div class={eventColors[robotEvent.event_type]}>
                                                         <IoCalendarOutline />
                                                     </div>
-                                                    <div class="ml-4">{formatEnumValue(robotEvent.event_type)}</div>
+                                                    <div class="ml-4 grow">
+                                                        <div>
+                                                            {formatEnumValue(robotEvent.event_type)}{' '}
+                                                            {robotEvent.virtual && <span> - Virtual</span>}
+                                                        </div>
+
+                                                        <div>{robotEvent.title}</div>
+                                                        <div>
+                                                            {robotEvent.all_day === true ? (
+                                                                'All Day'
+                                                            ) : robotEvent.start_time ? (
+                                                                <span>
+                                                                    {robotEvent.start_time} to {robotEvent.end_time}
+                                                                </span>
+                                                            ) : (
+                                                                ''
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                    <EventMenu eventId={robotEvent.event_id} />
                                                 </div>
-                                                <div>{robotEvent.description}</div>
+                                                <Show when={robotEvent.description}>
+                                                    <div class="border border-base-300 border-2 rounded-lg mt-4 p-2">
+                                                        {robotEvent.description}
+                                                    </div>
+                                                </Show>
                                             </div>
                                         )
                                     }}
                                 </For>
-                            </Show>
-                            <Show when={isAdmin()}>
-                                <div class="card-actions justify-end">
-                                    <a
-                                        class="btn btn-primary"
-                                        href={formatUrl(
-                                            RouteKeys.EVENT_EDIT.nav,
-                                            { id: 0 },
-                                            { date: searchParams?.date }
-                                        )}
-                                    >
-                                        New Event
-                                    </a>
-                                </div>
+                                <p></p>
                             </Show>
                         </div>
                     </div>

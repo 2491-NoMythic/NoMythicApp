@@ -3,11 +3,10 @@ import { RobotEvent } from '../types/Api'
 import { getMonthValues, toDate, toYMD } from '../calendar/utilities'
 
 const getEvents = async (aDate: Date) => {
-    console.log('getEvents', aDate)
     const eventMonth = getMonthValues(aDate)
     const { data, error } = await supabase
         .from('events')
-        .select('event_id, event_date, event_type, description')
+        .select('event_id, event_date, event_type, description, title, start_time, end_time, virtual, all_day')
         .gte('event_date', toYMD(eventMonth.beginOfMonthDate))
         .lte('event_date', toYMD(eventMonth.endOfMonthDate))
         .eq('deleted', false)
@@ -20,7 +19,7 @@ const getEvents = async (aDate: Date) => {
 const getEventById = async (eventId: number) => {
     const { data, error } = await supabase
         .from('events')
-        .select('event_id, event_date, event_type, description')
+        .select('event_id, event_date, event_type, description, title, start_time, end_time, virtual, all_day')
         .eq('event_id', eventId)
 
     if (error) throw error
@@ -48,6 +47,11 @@ const saveEvent = async (event: RobotEvent) => {
         event_date: event.event_date,
         event_type: event.event_type,
         description: event.description,
+        title: event.title,
+        start_time: event.start_time,
+        end_time: event.end_time,
+        virtual: event.virtual,
+        all_day: event.all_day,
     })
     if (error) throw error
 }
@@ -59,6 +63,11 @@ const updateEvent = async (event: RobotEvent) => {
             event_date: event.event_date,
             event_type: event.event_type,
             description: event.description,
+            title: event.title,
+            start_time: event.start_time,
+            end_time: event.end_time,
+            virtual: event.virtual,
+            all_day: event.all_day,
         })
         .eq('event_id', event.event_id)
 
