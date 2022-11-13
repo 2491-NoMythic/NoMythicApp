@@ -80,9 +80,9 @@ const getCalendar = (monthValues: MonthValues) => {
  * @param eventData Array of events for that date
  * @returns
  */
-const getSelectedEvents = (aDate: Date, eventData: RobotEvent[]) => {
+const getSelectedEvents = (aDate: Date | string, eventData: RobotEvent[]) => {
     if (!eventData) return null
-    const dateStr = toYMD(aDate)
+    const dateStr = typeof aDate === 'string' ? aDate : toYMD(aDate)
     return eventData.filter((aEvent) => dateStr === aEvent.event_date) || []
 }
 

@@ -50,6 +50,13 @@ export const RouteKeys = {
         regex: /\/members\/attendance$/,
         display: 'Take Attendance',
     },
+    TAKE_ATTENDANCE_ID: {
+        route: '/attendance/:id',
+        nav: '/members/attendance/:id',
+        regex: /\/members\/attendance\/[0-9]+$/,
+        display: 'Take Attendance',
+    },
+
     TEAM_LIST: { route: '/teamlist', nav: '/admin/teamlist', regex: /\/admin\/teamlist$/, display: 'Team List' },
     MEMBER_VIEW: {
         route: '/member/:mid',
@@ -131,11 +138,15 @@ const AppRouting = () => {
             <Route path={RouteKeys.WELCOME.route} component={Welcome} />
             <Route path={RouteKeys.GUEST.route} component={Guest} />
             <Route path={RouteKeys.PROFILE.route} component={Profile} />
+            <Route path={RouteKeys.FULL_CALENDAR.route} component={FullCalendar} />
+
             {/* must be a member to view these pages */}
             <Route path="/members" component={MemberAccess}>
                 <Route path={RouteKeys.PROFILE_EDIT.route} component={ProfileEdit} />
                 <Route path={RouteKeys.TAKE_ATTENDANCE.route} component={AttendancePage} />
+                <Route path={RouteKeys.TAKE_ATTENDANCE_ID.route} component={AttendancePage} />
             </Route>
+
             {/* must be an admin to view these pages */}
             <Route path="/admin" component={AdminAccess}>
                 <Route path={RouteKeys.TEAM_LIST.route} component={TeamList} />
@@ -149,7 +160,7 @@ const AppRouting = () => {
                 <Route path={RouteKeys.ATTENDANCE_MEETING.route} component={AttendanceForMeeting} />
                 <Route path={RouteKeys.EVENT_EDIT.route} component={EventEdit} />
             </Route>
-            <Route path={RouteKeys.FULL_CALENDAR.route} component={FullCalendar} />
+
             <Route path="*" component={Redirect} />
         </Routes>
     )

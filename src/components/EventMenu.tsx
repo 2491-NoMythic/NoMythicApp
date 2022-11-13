@@ -18,10 +18,8 @@ const EventMenu: Component<inputs> = (props) => {
         setShow(false)
     }
 
-    const [authSession, googleUser, member, { isMember, isAdmin }] = useMyUser()
-
     return (
-        <Show when={isMember}>
+        <div class="relative">
             <div class="dropdown" onClick={toggle}>
                 <label tabindex="0" class="btn btn-square btn btn-ghost -mt-1">
                     <HiOutlineMenu size={24} />
@@ -29,24 +27,23 @@ const EventMenu: Component<inputs> = (props) => {
             </div>
             <ul
                 tabindex="0"
-                class="menu absolute top-24 z-50 dropdown-content shadow bg-base-100 rounded-box w-52 mt-4 border"
+                class="menu absolute top-10 right-2 z-50 dropdown-content shadow bg-base-100 rounded-box w-52 mt-4 border"
                 classList={{ hidden: !show() }}
             >
-                <Show when={isAdmin()}>
-                    <li>
-                        <A href={RouteKeys.TAKE_ATTENDANCE.nav} onClick={close}>
-                            Take Attendance
-                        </A>
-                    </li>
-                    <li>
-                        <A
-                            href={formatUrl(RouteKeys.ATTENDANCE_MEETING.nav, {}, { meetingDate: searchParams?.date })}
-                            onClick={close}
-                        >
-                            Admin Attendance
-                        </A>
-                    </li>
-                </Show>
+                <li>
+                    <A href={RouteKeys.TAKE_ATTENDANCE.nav} onClick={close}>
+                        Take Attendance
+                    </A>
+                </li>
+                <li>
+                    <A
+                        href={formatUrl(RouteKeys.ATTENDANCE_MEETING.nav, {}, { meetingDate: searchParams?.date })}
+                        onClick={close}
+                    >
+                        Admin Attendance
+                    </A>
+                </li>
+
                 <li>
                     <A
                         href={formatUrl(RouteKeys.EVENT_EDIT.nav, { id: props.eventId }, { date: searchParams?.date })}
@@ -56,7 +53,7 @@ const EventMenu: Component<inputs> = (props) => {
                     </A>
                 </li>
             </ul>
-        </Show>
+        </div>
     )
 }
 

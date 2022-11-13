@@ -1,6 +1,7 @@
 import { supabase } from './SupabaseClient'
 import { RobotEvent } from '../types/Api'
 import { getMonthValues, toDate, toYMD } from '../calendar/utilities'
+import { isEmpty } from '../utilities/bitsAndBobs'
 
 const getEvents = async (aDate: Date) => {
     const eventMonth = getMonthValues(aDate)
@@ -9,6 +10,19 @@ const getEvents = async (aDate: Date) => {
         .select('event_id, event_date, event_type, description, title, start_time, end_time, virtual, all_day')
         .gte('event_date', toYMD(eventMonth.beginOfMonthDate))
         .lte('event_date', toYMD(eventMonth.endOfMonthDate))
+        .eq('deleted', false)
+
+    if (error) throw error
+
+    return data as RobotEvent[]
+}
+
+const getEventsForDay = async (meetingDate: string) => {
+    if (isEmpty(meetingDate)) return [] as RobotEvent[]
+    const { data, error } = await supabase
+        .from('events')
+        .select('event_id, event_date, event_type, description, title, start_time, end_time, virtual, all_day')
+        .eq('event_date', meetingDate)
         .eq('deleted', false)
 
     if (error) throw error
@@ -74,4 +88,4 @@ const updateEvent = async (event: RobotEvent) => {
     if (error) throw error
 }
 
-export { getEvents, getEventById, deleteEvent, saveEvent, updateEvent }
+export { getEvents, getEventsForDay, getEventById, deleteEvent, saveEvent, updateEvent }
