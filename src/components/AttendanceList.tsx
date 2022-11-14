@@ -6,6 +6,7 @@ import { capitalizeWord, formatUrl } from '../utilities/formatters'
 import { RouteKeys } from './AppRouting'
 
 const AttendanceList: Component<{
+    eventId: number
     meetingDate: string
     teamMembers: Accessor<MemberAttendance[]>
     refetch: Function
@@ -23,7 +24,7 @@ const AttendanceList: Component<{
     type data = { memberId: number; attendanceType: AttendanceTypesType; attendanceId: number }
     const handleClick = async (data: data, _event) => {
         if (data.attendanceId === undefined) {
-            await insertAttendance(props.meetingDate, data.memberId, data.attendanceType)
+            await insertAttendance(props.eventId, props.meetingDate, data.memberId, data.attendanceType)
         } else {
             await updateAttendance(data.attendanceId, data.attendanceType)
         }

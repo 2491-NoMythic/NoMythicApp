@@ -15,20 +15,24 @@ import EventPicker from '../../calendar/components/EventPicker'
 import { getEventById, getEventsForDay } from '../../api/events'
 import { eventColors } from '../../types/UiConstants'
 import { format } from 'date-fns'
-import { formatEnumValue } from '../../utilities/formatters'
+import { formatEnumValue, formatUrl } from '../../utilities/formatters'
+import { useNavigate, useParams } from '@solidjs/router'
+import { RouteKeys } from '../../components/AppRouting'
+import BsCalendarPlus from '../../components/icons/BsCalendarPlus'
 
 const AttendancePage: Component = () => {
     const [filteredTeam, setFilteredTeam] = createSignal<MemberAttendance[]>([])
     const [meetingDate, setMeetingDate] = createSignal<string>(toYMD(getToday()))
     const [showEventSelector, setShowEventSelector] = createSignal(false)
-    const [selectedId, setSelectedId] = createSignal<number>(-1)
 
-    const [team, { mutate, refetch }] = createResource(meetingDate, getMemberAttendance)
-    const [eventsToday] = createResource(meetingDate, getEventsForDay)
-    const [selectedEvent] = createResource(selectedId, getEventById)
-
+    const params = useParams()
+    const navigate = useNavigate()
     const [sessionValues] = useSessionContext()
     const [authSession, googleUser, member, { isAdmin }] = useMyUser()
+
+    const [team, { refetch }] = createResource(() => parseInt(params.id || '-1'), getMemberAttendance)
+    const [eventsToday] = createResource(meetingDate, getEventsForDay)
+    const [selectedEvent] = createResource(() => parseInt(params.id || '-1'), getEventById)
 
     // runs whenever team or subTeam are changed
     createEffect(() => {
@@ -39,15 +43,16 @@ const AttendancePage: Component = () => {
 
     // called when the date field is changed
     const handleEventChange = (eventId: number) => {
-        console.log('the event id', eventId)
-        setSelectedId(eventId)
         setShowEventSelector(false)
+        if (eventId !== -1) {
+            navigate(formatUrl(RouteKeys.TAKE_ATTENDANCE_ID.nav, { id: eventId }))
+        }
     }
 
     // if there is one event for today, and nothing picked yet, use that event
     createEffect(() => {
-        if (eventsToday()?.length === 1 && selectedId() === -1) {
-            setSelectedId(eventsToday()[0].event_id)
+        if (eventsToday()?.length === 1 && params.id === undefined) {
+            navigate(formatUrl(RouteKeys.TAKE_ATTENDANCE_ID.nav, { id: eventsToday()[0].event_id }))
         }
     })
 
@@ -65,15 +70,26 @@ const AttendancePage: Component = () => {
                     </div>
                 </div>
 
-                <Show when={eventsToday()?.length === 1 && selectedId() === -1}>
+                <Show when={eventsToday()?.length === 0 && params.id === undefined}>
                     <div class="alert shadow-lg mt-4">
-                        <div class="flex">
-                            <div class="grow">There are no events today</div>
-                            <div>New</div>
-                        </div>
+                        <div>There are no events today</div>
+                        <Show when={isAdmin()}>
+                            <div class="flex-none">
+                                <a
+                                    class="btn btn-primary gap-2"
+                                    href={formatUrl(
+                                        RouteKeys.EVENT_EDIT.nav,
+                                        { id: 0 },
+                                        { date: toYMD(getToday()), back: 'ATTENDANCE' }
+                                    )}
+                                >
+                                    New <BsCalendarPlus />
+                                </a>
+                            </div>
+                        </Show>
                     </div>
                 </Show>
-                <Show when={eventsToday()?.length > 1 && selectedId() === -1}>
+                <Show when={eventsToday()?.length > 1 && params.id === undefined}>
                     <div class="alert shadow-lg mt-4">There are multiple events today. Select an event.</div>
                 </Show>
                 <Show when={selectedEvent()?.event_id}>
@@ -109,9 +125,14 @@ const AttendancePage: Component = () => {
                 </Show>
                 <SelectTeamInfoMessage
                     show={filteredTeam().length === 0}
-                    extraMessage="Using current season. NOTE: YOU ARE ONLY TAKING ATTENDANCE FOR A PARTICULAR DAY. In the future you will pick the event."
+                    extraMessage="Using current season. Pick an event."
                 />
-                <AttendanceList meetingDate={meetingDate()} teamMembers={filteredTeam} refetch={refetch} />
+                <AttendanceList
+                    eventId={parseInt(params.id)}
+                    meetingDate={meetingDate()}
+                    teamMembers={filteredTeam}
+                    refetch={refetch}
+                />
             </div>
             <Show when={showEventSelector()}>
                 <EventPicker aDate={toDate(meetingDate())} handleSelect={handleEventChange} />

@@ -31,6 +31,9 @@ const getEventsForDay = async (meetingDate: string) => {
 }
 
 const getEventById = async (eventId: number) => {
+    if (eventId === -1) {
+        return null
+    }
     const { data, error } = await supabase
         .from('events')
         .select('event_id, event_date, event_type, description, title, start_time, end_time, virtual, all_day')

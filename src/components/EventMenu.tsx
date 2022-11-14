@@ -31,7 +31,7 @@ const EventMenu: Component<inputs> = (props) => {
                 classList={{ hidden: !show() }}
             >
                 <li>
-                    <A href={RouteKeys.TAKE_ATTENDANCE.nav} onClick={close}>
+                    <A href={formatUrl(RouteKeys.TAKE_ATTENDANCE_ID.nav, { id: props.eventId })} onClick={close}>
                         Take Attendance
                     </A>
                 </li>

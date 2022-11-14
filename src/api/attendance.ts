@@ -2,6 +2,7 @@ import { Attendance, AttendanceTypes, AttendanceTypesType, MeetingCount, MemberA
 import { getStartEndOfSeason } from '../utilities/converters'
 import { supabase } from './SupabaseClient'
 
+//TODO: by event not date
 const makeCountsByMeetingDate = (records: MeetingCounts[]) => {
     const meetingCounts = new Map<string, number>()
     records.forEach((record) => {
@@ -21,16 +22,24 @@ const makeCountsByMeetingDate = (records: MeetingCounts[]) => {
     return countArray
 }
 
-const getMemberAttendance = async (meetingDate: string) => {
+/**
+ * Get member records with their attendance attached for an event
+ * @param eventId
+ * @returns MemberAttendance[]
+ */
+const getMemberAttendance = async (eventId: number) => {
+    if (eventId === -1) {
+        return []
+    }
     const { data, error } = await supabase
         .from('members')
         .select('member_id, first_name, last_name, sub_team, team_role, attendance (*)')
-        .eq('attendance.meeting_date', meetingDate)
+        .eq('attendance.event_id', eventId)
 
     if (error) throw error
 
     if (data.length === 0) {
-        return null
+        return []
     }
     return data as unknown as MemberAttendance[]
 }
@@ -60,8 +69,13 @@ const getAttendanceCounts = async (season: string) => {
     return counts
 }
 
-const getAttendance = async (meetingDate: string) => {
-    const { data, error } = await supabase.from('attendance').select().eq('meeting_date', meetingDate)
+/**
+ * Get all Attendance records for an event
+ * @param eventId
+ * @returns
+ */
+const getAttendance = async (eventId: number) => {
+    const { data, error } = await supabase.from('attendance').select().eq('event_id', eventId)
 
     if (error) throw error
 
@@ -80,10 +94,15 @@ const updateAttendance = async (attendanceId: number, attendanceType: Attendance
     if (error) throw error
 }
 
-const insertAttendance = async (meetingDate: string, memberId: number, attendanceType: AttendanceTypesType) => {
+const insertAttendance = async (
+    eventId: number,
+    meetingDate: string,
+    memberId: number,
+    attendanceType: AttendanceTypesType
+) => {
     const { data, error } = await supabase
         .from('attendance')
-        .insert([{ meeting_date: meetingDate, member_id: memberId, attendance: attendanceType }])
+        .insert([{ event_id: eventId, meeting_date: meetingDate, member_id: memberId, attendance: attendanceType }])
 
     if (error) throw error
 }
@@ -114,6 +133,7 @@ const getAttendanceForMember = async ({ season, memberId }) => {
  *  Total number of meetings in season that attendance was taken
  */
 const getNumberOfMeetings = async (season: string) => {
+    //TODO: update stored procedure to get events, not days with meetings
     const { startDate, endDate } = getStartEndOfSeason(season)
     const { data, error } = await supabase.rpc('number_of_meetings', { start_date: startDate, end_date: endDate })
     if (error) throw error

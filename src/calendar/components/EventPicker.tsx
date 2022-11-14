@@ -23,7 +23,7 @@ const EventPicker: Component<inputs> = (props) => {
     const [monthDate, setMonthDate] = createSignal<Date>(props.aDate)
     const [showEvents, setShowEvents] = createSignal(false)
     const [selectedEvents, setSelectedEvents] = createSignal<RobotEvent[]>(null)
-    const [robotEvents, { mutate, refetch }] = createResource(monthDate, getEvents)
+    const [robotEvents] = createResource(monthDate, getEvents)
     const [authSession, googleUser, member, { isAdmin }] = useMyUser()
 
     createEffect(() => {
@@ -140,7 +140,7 @@ const EventPicker: Component<inputs> = (props) => {
                                                 href={formatUrl(
                                                     RouteKeys.EVENT_EDIT.nav,
                                                     { id: 0 },
-                                                    { date: toYMD(monthDate()) }
+                                                    { date: toYMD(monthDate()), back: 'ATTENDANCE' }
                                                 )}
                                             >
                                                 New <BsCalendarPlus />

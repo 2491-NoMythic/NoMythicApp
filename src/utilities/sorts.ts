@@ -1,4 +1,5 @@
 import { Attendance, MeetingCount } from '../types/Api'
+import { isEmpty } from './bitsAndBobs'
 
 const sortByFirstName = (teamMembers) => {
     if (teamMembers === undefined) {
@@ -20,7 +21,7 @@ const sortByFirstName = (teamMembers) => {
 }
 
 const sortMeetingCounts = (meetingCounts: MeetingCount[], direction?: 'ASC' | 'DESC') => {
-    if (meetingCounts === undefined) {
+    if (isEmpty(meetingCounts)) {
         return []
     }
     const dir = direction === 'DESC' ? -1 : 1

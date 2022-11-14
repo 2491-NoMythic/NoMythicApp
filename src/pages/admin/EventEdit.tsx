@@ -76,7 +76,7 @@ const EventEdit: Component = () => {
             } else {
                 await updateEvent(updatedEvent)
             }
-            navigate(formatUrl(RouteKeys.FULL_CALENDAR.nav, {}, { date: searchParams.date }))
+            navigate(navUrl())
         } catch (error) {
             console.error(error)
         }
@@ -92,6 +92,14 @@ const EventEdit: Component = () => {
             }
         }
         return theDate
+    }
+
+    const navUrl = () => {
+        if (searchParams.back === 'ATTENDANCE') {
+            return formatUrl(RouteKeys.TAKE_ATTENDANCE.nav)
+        } else {
+            return formatUrl(RouteKeys.FULL_CALENDAR.nav, {}, { date: searchParams.date })
+        }
     }
 
     return (
@@ -180,13 +188,7 @@ const EventEdit: Component = () => {
                                 />
                             </div>
                             <div class="card-actions justify-end">
-                                <A
-                                    href={formatUrl(
-                                        RouteKeys.FULL_CALENDAR.nav,
-                                        {},
-                                        { date: searchParams.date ? searchParams.date : toYMD(getToday()) }
-                                    )}
-                                >
+                                <A href={navUrl()}>
                                     <button class="btn btn-secondary modal-button mr-6">Cancel</button>
                                 </A>
                                 <button
