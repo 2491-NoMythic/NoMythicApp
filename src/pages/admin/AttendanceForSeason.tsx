@@ -1,22 +1,36 @@
-import { createResource, createSignal, For, Show, Suspense } from 'solid-js'
-import { getAttendanceCounts } from '../../api/attendance'
+import { createResource, createSignal, For, onMount, Show, Suspense } from 'solid-js'
+import { getAttendanceByEvent } from '../../api/attendance'
+import { getMemberCount } from '../../api/members'
 import { RouteKeys } from '../../components/AppRouting'
 import AttendanceStats from '../../components/AttendanceStats'
 import BsCalendarPlus from '../../components/icons/BsCalendarPlus'
 import PageLoading from '../../components/PageLoading'
-import { calculateMonth, formatUrl } from '../../utilities/formatters'
-import { sortMeetingCounts } from '../../utilities/sorts'
-
-// TODO: we need to get this from somewhere
-const TEAM_SIZE = 30
+import { Attendance, AttendanceTypes } from '../../types/Api'
+import { isEmpty } from '../../utilities/bitsAndBobs'
+import { calculateMonth, formatEnumValue, formatUrl } from '../../utilities/formatters'
+import { sortEventAttendance } from '../../utilities/sorts'
 
 const AttendanceForSeason = () => {
     const today = new Date()
     const formatted = today.getFullYear() + ''
     const [season, setSeason] = createSignal<string>(formatted)
-    const [attendance, { mutate, refetch }] = createResource(season, getAttendanceCounts)
+    const [attendance, { mutate, refetch }] = createResource(season, getAttendanceByEvent)
+    const [memberCount, setMemberCount] = createSignal<number>(0)
 
     let currentMonth = ''
+
+    onMount(async () => {
+        const count = await getMemberCount()
+        setMemberCount(count)
+    })
+
+    const countAttendance = (attendance: Attendance[]) => {
+        if (isEmpty(attendance)) return 0
+        const filtered = attendance.filter((person) => {
+            return person.attendance === AttendanceTypes.FULL_TIME || person.attendance === AttendanceTypes.PART_TIME
+        })
+        return filtered?.length
+    }
 
     return (
         <Suspense fallback={<PageLoading />}>
@@ -32,10 +46,10 @@ const AttendanceForSeason = () => {
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-4 mt-4 mb-4">
                 <Show when={attendance() !== undefined}>
-                    <For each={sortMeetingCounts(attendance(), 'DESC')}>
-                        {(meeting) => {
+                    <For each={sortEventAttendance(attendance(), 'DESC')}>
+                        {(event) => {
                             let showMonth = false
-                            const month = calculateMonth(meeting.meeting_date)
+                            const month = calculateMonth(event.event_date)
                             if (currentMonth !== month) {
                                 currentMonth = month
                                 showMonth = true
@@ -48,10 +62,11 @@ const AttendanceForSeason = () => {
                                         </div>
                                     </Show>
                                     <AttendanceStats
-                                        meetingDate={meeting.meeting_date}
-                                        meetingCount={meeting.count}
-                                        meetingType="Regular Meeeting"
-                                        teamSize={TEAM_SIZE}
+                                        eventId={event?.event_id}
+                                        meetingDate={event?.event_date}
+                                        meetingCount={countAttendance(event?.attendance)}
+                                        meetingType={formatEnumValue(event.event_type)}
+                                        teamSize={memberCount()}
                                     />
                                 </>
                             )

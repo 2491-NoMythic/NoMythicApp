@@ -1,4 +1,4 @@
-import { Attendance, MeetingCount } from '../types/Api'
+import { Attendance, EventAttendance, MeetingCount } from '../types/Api'
 import { isEmpty } from './bitsAndBobs'
 
 const sortByFirstName = (teamMembers) => {
@@ -37,6 +37,23 @@ const sortMeetingCounts = (meetingCounts: MeetingCount[], direction?: 'ASC' | 'D
     return sorted
 }
 
+const sortEventAttendance = (eventAttendance: EventAttendance[], direction?: 'ASC' | 'DESC') => {
+    if (isEmpty(eventAttendance)) {
+        return []
+    }
+    const dir = direction === 'DESC' ? -1 : 1
+    const sorted = eventAttendance.sort((meetingA, meetingB) => {
+        if (meetingA.event_date < meetingB.event_date) {
+            return -1 * dir
+        }
+        if (meetingA.event_date > meetingB.event_date) {
+            return 1 * dir
+        }
+        return 0
+    })
+    return sorted
+}
+
 const sortAttendance = (attendance: Attendance[], direction?: 'ASC' | 'DESC') => {
     if (attendance === undefined) {
         return []
@@ -54,4 +71,4 @@ const sortAttendance = (attendance: Attendance[], direction?: 'ASC' | 'DESC') =>
     return sorted
 }
 
-export { sortByFirstName, sortMeetingCounts, sortAttendance }
+export { sortByFirstName, sortMeetingCounts, sortAttendance, sortEventAttendance }

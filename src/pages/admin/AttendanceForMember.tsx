@@ -121,9 +121,13 @@ const AttendanceForMember: Component = () => {
                                                         rightText="Attendance"
                                                         rightValue={formatEnumValue(meeting.attendance)}
                                                         rightSubText={null}
-                                                        link={formatUrl(RouteKeys.ATTENDANCE_MEETING.nav, null, {
-                                                            meetingDate: meeting.meeting_date,
-                                                        })}
+                                                        link={formatUrl(
+                                                            RouteKeys.ATTENDANCE_MEETING.nav,
+                                                            { id: meeting.event_id },
+                                                            {
+                                                                meetingDate: meeting.meeting_date,
+                                                            }
+                                                        )}
                                                     />
                                                 )
                                             }}

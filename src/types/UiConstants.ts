@@ -15,4 +15,12 @@ const eventColors = {
     event: 'text-error',
 }
 
-export { SubTeamSelection, eventColors }
+const eventBgColors = {
+    meeting: 'bg-info',
+    regular_practice: 'bg-accent',
+    extra_practice: 'bg-warning',
+    competition: 'bg-success',
+    event: 'bg-error',
+}
+
+export { SubTeamSelection, eventColors, eventBgColors }

@@ -1,10 +1,9 @@
 import { parse, format, isAfter, differenceInYears, differenceInCalendarYears } from 'date-fns'
 import { mixed } from 'yup'
+import { isEmpty } from './bitsAndBobs'
 
 const capitalizeWord = (word: string): string => {
-    if (word === undefined || word === null) {
-        return ''
-    }
+    if (isEmpty(word)) return null
     return word.charAt(0).toUpperCase() + word.slice(1)
 }
 
@@ -17,19 +16,21 @@ const calculatePercent = (count: number, teamSize: number) => {
 
 // return a day of week string like 'Monday'
 const calculateDay = (meeting: string) => {
+    if (isEmpty(meeting)) return null
     const blah = parse(meeting, 'yyyy-MM-dd', new Date())
     return format(blah, 'EEEE')
 }
 
 // return a month string like 'February'
 const calculateMonth = (aDate: string) => {
+    if (isEmpty(aDate)) return null
     const blah = parse(aDate, 'yyyy-MM-dd', new Date())
     return format(blah, 'MMMM')
 }
 
 // remove _ and capitalize words
 const formatEnumValue = (value: string) => {
-    if (value === undefined || value === null) return ''
+    if (isEmpty(value)) return null
     let words = value.split('_')
     words = words.map((word) => capitalizeWord(word))
     const word = words.reduce((prev, curr) => prev + ' ' + curr)
@@ -41,9 +42,7 @@ const formatEnumValue = (value: string) => {
  *  - graduation considered last day of june
  */
 const calculateGrade = (gradYear: number) => {
-    if (gradYear === null || gradYear === undefined) {
-        return ''
-    }
+    if (isEmpty(gradYear)) return null
     const today = new Date()
     const gradDateString = gradYear.toString() + '-06-30'
     const gradDate = parse(gradDateString, 'yyyy-MM-dd', new Date())

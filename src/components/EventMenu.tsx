@@ -36,10 +36,7 @@ const EventMenu: Component<inputs> = (props) => {
                     </A>
                 </li>
                 <li>
-                    <A
-                        href={formatUrl(RouteKeys.ATTENDANCE_MEETING.nav, {}, { meetingDate: searchParams?.date })}
-                        onClick={close}
-                    >
+                    <A href={formatUrl(RouteKeys.ATTENDANCE_MEETING.nav, { id: props.eventId })} onClick={close}>
                         Admin Attendance
                     </A>
                 </li>

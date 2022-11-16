@@ -1,4 +1,5 @@
 import { useNavigate } from '@solidjs/router'
+import { HiSolidUserGroup } from 'solid-icons/hi'
 import { Accessor, Component, For, Show } from 'solid-js'
 import { insertAttendance, updateAttendance } from '../api/attendance'
 import { AttendanceTypes, AttendanceTypesType, MemberAttendance, SubTeam } from '../types/Api'
@@ -15,20 +16,24 @@ const AttendanceList: Component<{
     const navigate = useNavigate()
 
     type memberIdType = { memberId: number }
-    const handleNavToMember = (data: memberIdType, _event) => {
+    const handleNavToMember = (data: memberIdType, event) => {
+        console.log('handleNavToMember')
+        event.preventDefault()
         if (props.clickToMember) {
             navigate(formatUrl(RouteKeys.ATTENDANCE_MEMBER.nav, { mid: data.memberId }, { season: '2023' }))
         }
     }
 
     type data = { memberId: number; attendanceType: AttendanceTypesType; attendanceId: number }
-    const handleClick = async (data: data, _event) => {
+    const handleClick = async (data: data, event) => {
+        console.log('handleClick')
+        event.preventDefault()
         if (data.attendanceId === undefined) {
             await insertAttendance(props.eventId, props.meetingDate, data.memberId, data.attendanceType)
         } else {
             await updateAttendance(data.attendanceId, data.attendanceType)
         }
-        // calling refresh will get any updates other might have entered too
+        // calling refresh will get any updates others might have entered too
         props.refetch()
     }
 
@@ -48,15 +53,25 @@ const AttendanceList: Component<{
                     <For each={props.teamMembers()}>
                         {(teamMember) => {
                             return (
-                                <tr
-                                    onClick={[handleNavToMember, { memberId: teamMember.member_id }]}
-                                    class={`${props.clickToMember ? 'cursor-pointer' : ''}`}
-                                >
-                                    <td class="hidden lg:table-cell">{teamMember.first_name}</td>
-                                    <td class="hidden lg:table-cell">{teamMember.last_name}</td>
+                                <tr>
+                                    <td
+                                        onClick={[handleNavToMember, { memberId: teamMember.member_id }]}
+                                        class={`hidden lg:table-cell ${props.clickToMember ? 'cursor-pointer' : ''}`}
+                                    >
+                                        {teamMember.first_name}
+                                    </td>
+                                    <td
+                                        onClick={[handleNavToMember, { memberId: teamMember.member_id }]}
+                                        class={`hidden lg:table-cell ${props.clickToMember ? 'cursor-pointer' : ''}`}
+                                    >
+                                        {teamMember.last_name}
+                                    </td>
                                     <td class="hidden lg:table-cell">{capitalizeWord(teamMember.sub_team)}</td>
                                     <td class="hidden lg:table-cell">{capitalizeWord(teamMember.team_role)}</td>
-                                    <td class="lg:hidden">
+                                    <td
+                                        onClick={[handleNavToMember, { memberId: teamMember.member_id }]}
+                                        class={`lg:hidden ${props.clickToMember ? 'cursor-pointer' : ''}`}
+                                    >
                                         {teamMember.first_name} {teamMember.last_name}
                                         <div class="text-secondary">
                                             {capitalizeWord(teamMember.team_role)}

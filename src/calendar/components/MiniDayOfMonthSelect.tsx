@@ -1,7 +1,7 @@
 import { getDate } from 'date-fns'
 import { Component, Show } from 'solid-js'
 import { useMyUser } from '../../contexts/UserContext'
-import { eventColors } from '../../types/UiConstants'
+import { eventBgColors, eventColors } from '../../types/UiConstants'
 import { Day } from '../types'
 
 type inputs = { day: Day; handleSelect: (aDay: Day) => void }
@@ -34,7 +34,7 @@ const MiniDayOfMonthSelect: Component<inputs> = (props) => {
             <Show when={props?.day?.data}>
                 <div class="-mt-1">
                     {props.day.data.map((robotEvent) => (
-                        <div class={`mt-0.5 text-accent-content ${eventColors[robotEvent.event_type]}`}>
+                        <div class={`mt-0.5 text-accent-content ${eventBgColors[robotEvent.event_type]}`}>
                             <div class="h-1.5"></div>
                         </div>
                     ))}

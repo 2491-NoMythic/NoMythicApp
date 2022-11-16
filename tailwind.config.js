@@ -3,7 +3,20 @@ module.exports = {
     content: ['./index.html', './src/index.css', './src/index/App.tsx', './src/**/*.{jsx,tsx,css,html}'],
     darkMode: 'class',
     theme: {
-        extend: {},
+        extend: {
+            animation: {
+                'spin-slow': 'spin 4s linear infinite',
+                'spin-once': 'spin 2s linear',
+                'ping-slow': 'ping 4s cubic-bezier(1, 1, 0.2, 1) infinite',
+            },
+            keyframes: {
+                spin: {
+                    to: {
+                        transform: 'rotate(-360deg)',
+                    },
+                },
+            },
+        },
     },
     plugins: [require('@tailwindcss/typography'), require('daisyui')],
     daisyui: {

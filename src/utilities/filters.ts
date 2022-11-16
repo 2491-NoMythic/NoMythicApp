@@ -1,4 +1,5 @@
-import { TeamRole } from '../types/Api'
+import { Attendance, AttendanceTypes, TeamRole } from '../types/Api'
+import { isEmpty } from './bitsAndBobs'
 
 const filterBySubTeam = (teamMembers, subTeamFilter) => {
     let filtered = []

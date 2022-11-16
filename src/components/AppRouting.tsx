@@ -101,10 +101,10 @@ export const RouteKeys = {
         display: 'Member Attendance',
     },
     ATTENDANCE_MEETING: {
-        route: '/attendance/meeting',
-        nav: '/admin/attendance/meeting',
-        regex: /\/admin\/attendance\/meeting$/,
-        display: 'Meeting Attendance',
+        route: '/attendance/event/:id',
+        nav: '/admin/attendance/event/:id',
+        regex: /\/admin\/attendance\/event\/[0-9]+$/,
+        display: 'Meeting/Event Attendance',
     },
     FULL_CALENDAR: {
         route: '/fullcalendar',
