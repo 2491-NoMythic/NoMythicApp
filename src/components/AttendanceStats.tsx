@@ -4,6 +4,7 @@ import { RouteKeys } from './AppRouting'
 import TwoSideStatsBase from './TwoSideStatsBase'
 
 const AttendanceStats: Component<{
+    eventId: number
     meetingDate: string
     meetingCount: number
     meetingType: string
@@ -17,7 +18,7 @@ const AttendanceStats: Component<{
             rightText="Attended"
             rightValue={props.meetingCount?.toString()}
             rightSubText={calculatePercent(props.meetingCount, props.teamSize) + '%'}
-            link={formatUrl(RouteKeys.ATTENDANCE_MEETING.nav, null, { meetingDate: props.meetingDate })}
+            link={formatUrl(RouteKeys.ATTENDANCE_MEETING.nav, { id: props.eventId })}
         />
     )
 }

@@ -24,7 +24,7 @@ const TwoSideStatsBase: Component<{
     return (
         <div class={`stats shadow md:mr-4 mt-4 ${props.link ? 'cursor-pointer' : ''}`} onClick={handleClick}>
             <div class="stat">
-                <div class="stat-figure text-secondary">
+                <div class="stat-figure text-secondary mt-2">
                     <IoCalendarOutline />
                 </div>
 
@@ -34,7 +34,7 @@ const TwoSideStatsBase: Component<{
             </div>
 
             <div class="stat">
-                <div class="stat-figure text-secondary">
+                <div class="stat-figure text-secondary mt-2">
                     <HiSolidUserGroup />
                 </div>
                 {props.rightText ? <div class="stat-title">{props.rightText}</div> : <div>&nbsp;</div>}

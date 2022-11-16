@@ -1,9 +1,11 @@
 import { Component, Switch, Match, createSignal, Show, onMount, createResource, Suspense } from 'solid-js'
 import { useMyUser } from '../contexts/UserContext'
-import unicorn from '../assets/2491_logo_disc_outline.png'
+import logo from '../assets/logo.png'
 import { useNavigate } from '@solidjs/router'
 import PageLoading from '../components/PageLoading'
 import { RouteKeys } from '../components/AppRouting'
+import NextEvents from '../components/NextEvents'
+import Config from '../config'
 
 const Welcome: Component = () => {
     const [authSession, googleUser, member, { isLoggedIn, isMember }] = useMyUser()
@@ -26,9 +28,9 @@ const Welcome: Component = () => {
                 <div class="flex flex-col items-center justify-center">
                     <Switch
                         fallback={
-                            <div class="card lg:card-side bg-base-100 shadow-xl mt-10 max-w-5xl">
+                            <div class="card lg:card-side bg-base-100 shadow-xl mt-10 max-w-4xl">
                                 <figure class="p-6">
-                                    <img src={unicorn} alt="2491 NoMythic" />
+                                    <img src={logo} alt="Team Logo" />
                                 </figure>
                                 <div class="card-body">
                                     <h2 class="card-title">Sorry Friend!</h2>
@@ -47,31 +49,39 @@ const Welcome: Component = () => {
                         }
                     >
                         <Match when={isMember()}>
-                            <div class="card lg:card-side bg-base-100 shadow-xl mt-10 max-w-5xl">
-                                <figure class="p-6">
-                                    <img src={unicorn} alt="2491 NoMythic" />
-                                </figure>
-                                <div class="card-body">
-                                    <h2 class="card-title">Welcome {member().first_name + ' ' + member().last_name}</h2>
-                                    <p>
-                                        Today is a good day for robotics. <br />
-                                        We see you. We hear you. You matter.
-                                    </p>
+                            <div class="m-4 max-w-4xl">
+                                <div class="card lg:card-side bg-base-100 shadow-xl">
+                                    <figure class="p-6">
+                                        <img src={logo} alt="Team Logo" class="w-60 h-60" />
+                                    </figure>
+                                    <div class="card-body w-200px">
+                                        <h2 class="card-title">
+                                            Welcome {member().first_name + ' ' + member().last_name}
+                                        </h2>
+                                        <p>
+                                            Today is a good day for robotics. <br />
+                                            We see you. We hear you. You matter.
+                                        </p>
+                                    </div>
                                 </div>
+                                <NextEvents />
                             </div>
                         </Match>
                         <Match when={isLoggedIn()}>
-                            <div class="card lg:card-side bg-base-100 shadow-xl mt-10 max-w-5xl">
+                            <div class="card lg:card-side bg-base-100 shadow-xl mt-10 max-w-4xl">
                                 <figure class="p-6">
-                                    <img src={unicorn} alt="2491 NoMythic" />
+                                    <img src={logo} alt="Team logo" class="w-60 h-60" />
                                 </figure>
                                 <div class="card-body">
                                     <h2 class="card-title">Hello Friend!</h2>
                                     <p>
-                                        It looks like google logged you in, but you are not a member of NoMythic.{' '}
-                                        {googleUser().fullName}, if there has been an error, contact a mentor. In the
-                                        future we will have more collaboration options for logged in users.
+                                        It looks like google logged you in, but you are not a member of{' '}
+                                        {Config.teamName}. {googleUser().fullName}, if there has been an error, contact
+                                        a mentor. You can check you google email by checking your profile by clicking on
+                                        the icon at the top right of the app. This email may not be the same the team
+                                        has, but needs to be to log in.
                                     </p>
+                                    <p>In the future we will have more collaboration options for logged in users.</p>
                                     <div class="card-actions justify-end">
                                         <button class="btn btn-primary" onClick={continueAsGuest}>
                                             Guest Area

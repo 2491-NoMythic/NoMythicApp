@@ -26,7 +26,7 @@ const DayOfMonth: Component<inputs> = (props) => {
             }`}
             onClick={handleSelect}
         >
-            <div class="flex justify-end ">
+            <div class="flex justify-end">
                 <div
                     class={`w-6 h-6 lg:w-8 lg:h-8 lg:pt-1 text-center font-bold rounded-full ${
                         props?.day?.isToday ? 'bg-secondary' : ''

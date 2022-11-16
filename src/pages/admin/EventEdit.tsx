@@ -1,9 +1,9 @@
-import { Component, createEffect, createResource, Show, Suspense } from 'solid-js'
+import { Component, createEffect, createResource, createSignal, Show, Suspense } from 'solid-js'
 import { EventTypes, EventTypesType, TeamRole } from '../../types/Api'
 import * as yup from 'yup'
 import { useParams, useSearchParams, useNavigate, A } from '@solidjs/router'
 import { useFormHandler, yupSchema } from 'solid-form-handler'
-import { getEventById, saveEvent, updateEvent } from '../../api/events'
+import { deleteEvent, getEventById, saveEvent, updateEvent } from '../../api/events'
 import { RouteKeys } from '../../components/AppRouting'
 import { SelectableField, DateField, TextField } from '../../components/forms'
 import PageLoading from '../../components/PageLoading'
@@ -13,6 +13,7 @@ import { getToday, toDate, toYMD } from '../../calendar/utilities'
 import { formatUrl } from '../../utilities/formatters'
 import { Checkbox } from '../../components/forms/Checkbox'
 import { createInputMask } from '@solid-primitives/input-mask'
+import { HiOutlineTrash } from 'solid-icons/hi'
 
 // Definition of the fields we will do validatio on
 type RobotEvent = {
@@ -53,8 +54,20 @@ const EventEdit: Component = () => {
     const { formData } = formHandler
     const params = useParams()
     const [searchParams] = useSearchParams()
+    const [opened, setOpened] = createSignal(false)
     const [robotEvent] = createResource(() => parseInt(params.id), getEventById)
     const navigate = useNavigate()
+
+    const toggleModal = () => {
+        setOpened(!opened())
+    }
+
+    const handleDelete = async (event) => {
+        event.preventDefault()
+        setOpened(false)
+        await deleteEvent(robotEvent()?.event_id)
+        navigate(RouteKeys.FULL_CALENDAR.nav)
+    }
 
     const submit = async (event: Event) => {
         try {
@@ -76,7 +89,7 @@ const EventEdit: Component = () => {
             } else {
                 await updateEvent(updatedEvent)
             }
-            navigate(formatUrl(RouteKeys.FULL_CALENDAR.nav, {}, { date: searchParams.date }))
+            navigate(navUrl())
         } catch (error) {
             console.error(error)
         }
@@ -94,6 +107,14 @@ const EventEdit: Component = () => {
         return theDate
     }
 
+    const navUrl = () => {
+        if (searchParams.back === 'ATTENDANCE') {
+            return formatUrl(RouteKeys.TAKE_ATTENDANCE.nav)
+        } else {
+            return formatUrl(RouteKeys.FULL_CALENDAR.nav, {}, { date: formData().event_date })
+        }
+    }
+
     return (
         <Suspense fallback={<PageLoading />}>
             <div class="card max-w-5xl bg-base-100 shadow-xl mt-4">
@@ -102,7 +123,7 @@ const EventEdit: Component = () => {
                         <h2 class="card-title">New Event</h2>
                     </Show>
                     <Show when={robotEvent() !== undefined}>
-                        <form onSubmit={submit}>
+                        <form>
                             <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
                                 <DateField
                                     label="Event Date"
@@ -179,14 +200,18 @@ const EventEdit: Component = () => {
                                     class="h-24"
                                 />
                             </div>
-                            <div class="card-actions justify-end">
-                                <A
-                                    href={formatUrl(
-                                        RouteKeys.FULL_CALENDAR.nav,
-                                        {},
-                                        { date: searchParams.date ? searchParams.date : toYMD(getToday()) }
-                                    )}
-                                >
+                        </form>
+                        <div class="flex">
+                            <Show when={params.id !== '0'}>
+                                <div class="flex-none">
+                                    <button class="btn btn-error inline-flex items-center" onClick={toggleModal}>
+                                        <HiOutlineTrash fill="none" class="mr-3 mb-3" />
+                                        Delete
+                                    </button>
+                                </div>
+                            </Show>
+                            <div class="card-actions grow justify-end">
+                                <A href={navUrl()}>
                                     <button class="btn btn-secondary modal-button mr-6">Cancel</button>
                                 </A>
                                 <button
@@ -197,10 +222,26 @@ const EventEdit: Component = () => {
                                     Save
                                 </button>
                             </div>
-                        </form>
+                        </div>
                     </Show>
                 </div>
             </div>
+            <Show when={opened()}>
+                <div class="modal modal-open">
+                    <div class="modal-box">
+                        <h3 class="font-bold text-lg">Are you sure you want to delete?</h3>
+                        <p class="py-4">You cannot restore the event after deleting.</p>
+                        <div class="modal-action">
+                            <button class="btn btn-secondary" onClick={toggleModal}>
+                                Cancel
+                            </button>
+                            <button class="btn btn-error inline-flex items-center" onClick={handleDelete}>
+                                <HiOutlineTrash fill="none" class="mb-3 mr-3" /> Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </Show>
         </Suspense>
     )
 }

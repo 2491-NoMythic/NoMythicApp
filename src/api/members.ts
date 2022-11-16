@@ -105,6 +105,13 @@ const deleteMember = async (memberId: number) => {
     if (error) throw error
 }
 
+const getMemberCount = async () => {
+    const { count, error } = await supabase.from('members').select('*', { count: 'exact', head: true })
+
+    if (error) throw error
+    return count as number
+}
+
 export {
     getMembers,
     getMemberByEamil,
@@ -113,4 +120,5 @@ export {
     saveMemberFromAdmin,
     newMemberFromAdmin,
     deleteMember,
+    getMemberCount,
 }

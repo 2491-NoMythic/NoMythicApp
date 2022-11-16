@@ -46,15 +46,6 @@ const EventTypes = {
 } as const
 type EventTypesType = typeof EventTypes[keyof typeof EventTypes]
 
-type MemberAttendance = {
-    member_id: number
-    first_name: string
-    last_name: string
-    sub_team: SubTeamType
-    team_role: TeamRoleType
-    attendance: Attendance
-}
-
 type Member = {
     member_id?: number
     auth_id?: string
@@ -98,8 +89,25 @@ type Attendance = {
     member_id: number
     meeting_date: string
     attendance: AttendanceTypesType
+    event_id: string
 }
 
+type MemberAttendance = {
+    member_id: number
+    first_name: string
+    last_name: string
+    sub_team: SubTeamType
+    team_role: TeamRoleType
+    attendance: Attendance
+}
+
+type EventAttendance = {
+    event_id: number
+    event_date: string
+    event_type: EventTypesType
+    title: string
+    attendance: Attendance[]
+}
 type MeetingCount = {
     count: number
     meeting_date: string
@@ -147,6 +155,7 @@ export type {
     Parent,
     RobotEvent,
     EventTypesType,
+    EventAttendance,
 }
 
 export { SubTeam, TeamRole, AttendanceTypes, School, EventTypes }

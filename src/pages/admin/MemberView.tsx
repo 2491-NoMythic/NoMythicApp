@@ -1,4 +1,4 @@
-import { A, useNavigate, useParams, useSearchParams } from '@solidjs/router'
+import { A, useNavigate, useParams } from '@solidjs/router'
 import { Component, createEffect, createResource, createSignal, For, Show, Suspense } from 'solid-js'
 import { deleteMember, getMemberById } from '../../api/members'
 import { HiOutlineEye, HiOutlineTrash } from 'solid-icons/hi'
@@ -13,7 +13,6 @@ const MemberView: Component = () => {
     const params = useParams()
     const [member] = createResource(() => parseInt(params.mid), getMemberById)
     const [parents] = createResource(() => parseInt(params.mid), getParents)
-    const [searchParams] = useSearchParams()
     const [opened, setOpened] = createSignal(false)
     const [parentNames, setParentNames] = createSignal([] as string[])
 

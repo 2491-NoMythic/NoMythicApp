@@ -178,7 +178,9 @@ const FullCalendar: Component = () => {
                                                             )}
                                                         </div>
                                                     </div>
-                                                    <EventMenu eventId={robotEvent.event_id} />
+                                                    <Show when={isAdmin()}>
+                                                        <EventMenu eventId={robotEvent.event_id} />
+                                                    </Show>
                                                 </div>
                                                 <Show when={robotEvent.description}>
                                                     <div class="border border-base-300 border-2 rounded-lg mt-4 p-2">
@@ -200,11 +202,3 @@ const FullCalendar: Component = () => {
 }
 
 export default FullCalendar
-
-const eventColors = {
-    meeting: 'bg-info',
-    regular_practice: 'bg-accent',
-    extra_practice: 'bg-warning',
-    competition: 'bg-success',
-    event: 'bg-error',
-}

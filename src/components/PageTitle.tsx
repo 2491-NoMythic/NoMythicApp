@@ -1,7 +1,7 @@
 import { useLocation } from '@solidjs/router'
 import { Component } from 'solid-js'
 import { RouteKeys } from '../components/AppRouting'
-
+import Config from '../config'
 /**
  * Displays the page title in the navigation bar
  * The specific page comes from the AppRouting definitions
@@ -19,7 +19,11 @@ const PageTitle: Component = () => {
         return 'Undefined'
     }
 
-    return <div class="flex-1 text-xl text-white font-semibold">NoMythic - {findTitle(location.pathname)}</div>
+    return (
+        <div class="flex-1 text-xl text-white font-semibold">
+            {Config.teamName} - {findTitle(location.pathname)}
+        </div>
+    )
 }
 
 export default PageTitle
