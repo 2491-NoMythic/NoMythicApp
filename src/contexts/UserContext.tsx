@@ -3,6 +3,7 @@ import { Session } from '@supabase/supabase-js'
 
 import { AuthSession, GoogleUser, Member, TeamRole } from '../types/Api'
 import { convertGoogleSessionToAuthSession, convertGoogleSessionToGoogleUser } from '../utilities/converters'
+import { isEmpty } from '../utilities/bitsAndBobs'
 
 type UserStore = [
     Accessor<AuthSession>,
@@ -12,7 +13,9 @@ type UserStore = [
         loadUser: (googleUser: Session) => void
         loadMember: (member: Member) => void
         removeUser: () => void
+        resetMember: () => void
         isLoggedIn: () => boolean
+        isFound: () => boolean
         isMember: () => boolean
         isAdmin: () => boolean
     }
@@ -44,11 +47,17 @@ export function UserProvider(props) {
                 setGoogleUser({} as GoogleUser)
                 setMember({} as Member)
             },
+            resetMember() {
+                setMember({} as Member)
+            },
             isLoggedIn() {
-                return authSession() !== null && authSession().accessToken !== undefined
+                return authSession() !== null && !isEmpty(authSession().accessToken)
+            },
+            isFound() {
+                return member() !== null && isEmpty(member().auth_id) && !isEmpty(member().member_id)
             },
             isMember() {
-                return member() !== null && member().member_id !== undefined
+                return member() !== null && !isEmpty(member().auth_id)
             },
             isAdmin() {
                 return (

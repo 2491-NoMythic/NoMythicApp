@@ -17,7 +17,6 @@ const AttendanceList: Component<{
 
     type memberIdType = { memberId: number }
     const handleNavToMember = (data: memberIdType, event) => {
-        console.log('handleNavToMember')
         event.preventDefault()
         if (props.clickToMember) {
             navigate(formatUrl(RouteKeys.ATTENDANCE_MEMBER.nav, { mid: data.memberId }, { season: '2023' }))
@@ -26,7 +25,6 @@ const AttendanceList: Component<{
 
     type data = { memberId: number; attendanceType: AttendanceTypesType; attendanceId: number }
     const handleClick = async (data: data, event) => {
-        console.log('handleClick')
         event.preventDefault()
         if (data.attendanceId === undefined) {
             await insertAttendance(props.eventId, props.meetingDate, data.memberId, data.attendanceType)

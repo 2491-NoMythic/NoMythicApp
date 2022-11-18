@@ -1,6 +1,6 @@
 import { useParams, useSearchParams } from '@solidjs/router'
 import { Component, createEffect, createResource, createSignal, For, Suspense } from 'solid-js'
-import { getAttendanceForMember, getNumberOfMeetings } from '../../api/attendance'
+import { getAttendanceForMember, getNumberOfEvents } from '../../api/attendance'
 import { getMemberById } from '../../api/members'
 import { RouteKeys } from '../../components/AppRouting'
 import PageLoading from '../../components/PageLoading'
@@ -19,7 +19,7 @@ const AttendanceForMember: Component = () => {
         getAttendanceForMember
     )
     const [memberAttended, setMemberAttended] = createSignal(0)
-    const [numberOfMeetings] = createResource(searchParams.season, getNumberOfMeetings)
+    const [numberOfMeetings] = createResource(searchParams.season, getNumberOfEvents)
     const [member] = createResource(() => parseInt(params.mid), getMemberById)
 
     type AttendanceByMonth = { month: string; meetings: Attendance[] }

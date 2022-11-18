@@ -1,3 +1,5 @@
+import { isBefore } from 'date-fns'
+import { getToday, toDate, toYMD } from '../calendar/utilities'
 import {
     Attendance,
     AttendanceTypes,
@@ -49,13 +51,15 @@ const makeCountsByEventId = (records: MeetingCounts[]) => {
 
 /**
  * Get list of events for the season and their attendance
- * Would be better to just get count of attendance
+ * TODO: use season
  * @param season
  */
 const getAttendanceByEvent = async (season: string) => {
+    const today = toYMD(getToday())
     const { data, error } = await supabase
         .from('events')
         .select('event_id, event_date, event_type, title, attendance (*)')
+        .lte('event_date', today)
         .eq('deleted', false)
     if (error) throw error
 
@@ -78,6 +82,7 @@ const getMemberAttendance = async (eventId: number) => {
         .from('members')
         .select('member_id, first_name, last_name, sub_team, team_role, attendance (*)')
         .eq('attendance.event_id', eventId)
+        .eq('deleted', false)
 
     if (error) throw error
 
@@ -172,19 +177,21 @@ const getAttendanceForMember = async ({ season, memberId }) => {
 }
 
 /**
- * Total number of meetings in season that attendance was taken
+ * Total number of events in season (so far)
  * Season is the year the game comes out (in January)
  */
-const getNumberOfMeetings = async (season: string) => {
-    //TODO: update stored procedure to get events, not days with meetings
+const getNumberOfEvents = async (season: string) => {
     const { startDate, endDate } = getStartEndOfSeason(season)
-    const { data, error } = await supabase.rpc('number_of_meetings', { start_date: startDate, end_date: endDate })
-    if (error) throw error
+    const theEnd = isBefore(getToday(), toDate(endDate)) ? toYMD(getToday()) : endDate
+    const { count, error } = await supabase
+        .from('events')
+        .select('*', { count: 'exact', head: true })
+        .eq('deleted', false)
+        .gte('event_date', startDate)
+        .lte('event_date', theEnd)
 
-    if (data.length === 0) {
-        return null
-    }
-    return data as unknown as number
+    if (error) throw error
+    return count as number
 }
 
 export {
@@ -194,6 +201,6 @@ export {
     insertAttendance,
     getAttendanceCounts,
     getAttendanceForMember,
-    getNumberOfMeetings,
+    getNumberOfEvents,
     getAttendanceByEvent,
 }

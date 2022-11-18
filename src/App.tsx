@@ -3,7 +3,7 @@ import { useNavigate } from '@solidjs/router'
 import { supabase } from './api/SupabaseClient'
 import { AuthChangeEvent, Session } from '@supabase/supabase-js'
 import { useMyUser } from './contexts/UserContext'
-import { getMemberByEamil } from './api/members'
+import { getMemberByEmail } from './api/members'
 import AppRouting, { RouteKeys } from './components/AppRouting'
 import ErrorAlert from './components/ErrorAlert'
 import MainMenu from './components/MainMenu'
@@ -26,8 +26,8 @@ const App: Component = () => {
 
     const handleLoadMember = async () => {
         // no point if not logged in
-        if (isLoggedIn() && !isMember()) {
-            const member = await getMemberByEamil(googleUser().email)
+        if (isLoggedIn() && member() !== null && member().member_id === undefined) {
+            const member = await getMemberByEmail(googleUser().email)
             if (member !== null && member.member_id !== undefined) {
                 loadMember(member)
             }

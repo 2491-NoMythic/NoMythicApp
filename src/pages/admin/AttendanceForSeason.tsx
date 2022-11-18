@@ -7,12 +7,13 @@ import BsCalendarPlus from '../../components/icons/BsCalendarPlus'
 import PageLoading from '../../components/PageLoading'
 import { Attendance, AttendanceTypes } from '../../types/Api'
 import { isEmpty } from '../../utilities/bitsAndBobs'
+import { getSeason } from '../../utilities/converters'
 import { calculateMonth, formatEnumValue, formatUrl } from '../../utilities/formatters'
 import { sortEventAttendance } from '../../utilities/sorts'
 
 const AttendanceForSeason = () => {
     const today = new Date()
-    const formatted = today.getFullYear() + ''
+    const formatted = getSeason(today) + ''
     const [season, setSeason] = createSignal<string>(formatted)
     const [attendance, { mutate, refetch }] = createResource(season, getAttendanceByEvent)
     const [memberCount, setMemberCount] = createSignal<number>(0)
@@ -46,6 +47,9 @@ const AttendanceForSeason = () => {
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-4 mt-4 mb-4">
                 <Show when={attendance() !== undefined}>
+                    <div class="text-xl font-semibold">
+                        {attendance()?.length} meetings in season {season()}
+                    </div>
                     <For each={sortEventAttendance(attendance(), 'DESC')}>
                         {(event) => {
                             let showMonth = false
