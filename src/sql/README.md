@@ -46,3 +46,16 @@ as $$
   where meeting_date >= startDate and meeting_date <= endDate;
 $$;
 ```
+
+### Link a member by email address using google auth_id
+
+```sql
+create or replace function link_member()
+returns void as $$
+begin
+  update members
+  set auth_id = auth.uid()
+  where email = auth.jwt() ->> 'email';
+end;
+$$ language plpgsql;
+```

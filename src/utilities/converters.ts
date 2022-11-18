@@ -1,4 +1,6 @@
 import { Session } from '@supabase/supabase-js'
+import { getMonth, getYear } from 'date-fns'
+import { getSeasonEvents } from '../api/events'
 import { AuthSession, GoogleUser } from '../types/Api'
 
 const convertGoogleSessionToAuthSession = (googleSession: Session) => {
@@ -16,6 +18,15 @@ const convertGoogleSessionToGoogleUser = (googleSession: Session) => {
     googleUser.email = googleSession?.user?.user_metadata?.email
     googleUser.avatarUrl = googleSession?.user?.user_metadata.avatar_url
     return googleUser
+}
+
+const getSeason = (aDate: Date) => {
+    const currentMonth = getMonth(aDate)
+    const currentYear = getYear(aDate)
+    if (currentMonth >= 6) {
+        return currentYear + 1
+    }
+    return currentYear
 }
 
 const getStartEndOfSeason = (season: string) => {
@@ -39,4 +50,10 @@ const seasonMonths = [
     'May',
 ]
 
-export { convertGoogleSessionToAuthSession, convertGoogleSessionToGoogleUser, getStartEndOfSeason, seasonMonths }
+export {
+    convertGoogleSessionToAuthSession,
+    convertGoogleSessionToGoogleUser,
+    getStartEndOfSeason,
+    seasonMonths,
+    getSeason,
+}

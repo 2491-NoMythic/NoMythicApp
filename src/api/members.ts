@@ -12,8 +12,8 @@ const getMembers = async (year: string) => {
     return data as Member[]
 }
 
-const getMemberByEamil = async (email: string) => {
-    const { data, error } = await supabase.from('members').select().eq('email', email)
+const getMemberByEmail = async (email: string) => {
+    const { data, error } = await supabase.from('members').select().eq('email', email).eq('deleted', false)
 
     if (error) throw error
 
@@ -106,19 +106,29 @@ const deleteMember = async (memberId: number) => {
 }
 
 const getMemberCount = async () => {
-    const { count, error } = await supabase.from('members').select('*', { count: 'exact', head: true })
+    const { count, error } = await supabase
+        .from('members')
+        .select('*', { count: 'exact', head: true })
+        .eq('deleted', false)
 
     if (error) throw error
     return count as number
 }
 
+const linkMember = async () => {
+    const { data, error } = await supabase.rpc('link_member')
+
+    if (error) throw error
+}
+
 export {
     getMembers,
-    getMemberByEamil,
+    getMemberByEmail,
     getMemberById,
     saveMemberFromProfile,
     saveMemberFromAdmin,
     newMemberFromAdmin,
     deleteMember,
     getMemberCount,
+    linkMember,
 }

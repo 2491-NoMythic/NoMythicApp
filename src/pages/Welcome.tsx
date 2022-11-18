@@ -1,4 +1,4 @@
-import { Component, Switch, Match, createSignal, Show, onMount, createResource, Suspense } from 'solid-js'
+import { Component, Switch, Match, createSignal, Show, onMount, createResource, Suspense, createEffect } from 'solid-js'
 import { useMyUser } from '../contexts/UserContext'
 import logo from '../assets/logo.png'
 import { useNavigate } from '@solidjs/router'
@@ -6,9 +6,11 @@ import PageLoading from '../components/PageLoading'
 import { RouteKeys } from '../components/AppRouting'
 import NextEvents from '../components/NextEvents'
 import Config from '../config'
+import { supabase } from '../api/SupabaseClient'
+import { linkMember } from '../api/members'
 
 const Welcome: Component = () => {
-    const [authSession, googleUser, member, { isLoggedIn, isMember }] = useMyUser()
+    const [authSession, googleUser, member, { isLoggedIn, isFound, isMember, resetMember }] = useMyUser()
     const navigate = useNavigate()
 
     // this is a little weird, but it is to prevent flashing on the screen as the 'is' methods resolve.
@@ -19,6 +21,15 @@ const Welcome: Component = () => {
 
     const continueAsGuest = () => {
         navigate(RouteKeys.GUEST.nav)
+    }
+
+    const cancel = () => {
+        supabase.auth.signOut()
+    }
+
+    const joinTeam = async () => {
+        await linkMember()
+        resetMember()
     }
 
     // note: switch will pick the first Match found. if none found, then fallback
@@ -65,6 +76,33 @@ const Welcome: Component = () => {
                                     </div>
                                 </div>
                                 <NextEvents />
+                            </div>
+                        </Match>
+                        <Match when={isFound()}>
+                            <div class="card lg:card-side bg-base-100 shadow-xl mt-10 max-w-4xl">
+                                <figure class="p-6">
+                                    <img src={logo} alt="Team logo" class="w-60 h-60" />
+                                </figure>
+                                <div class="card-body">
+                                    <h2 class="card-title">Hello new team mate!</h2>
+                                    <p>
+                                        It looks like google logged you in, and you are a member of {Config.teamName}.
+                                        Google has your name as {googleUser().fullName}. We have your name as{' '}
+                                        {member().first_name} {member().last_name} We both have your email as{' '}
+                                        {member().email} Is this you? If so, press the Join button and you will Join the
+                                        team. If something has gone wrong and those names don't line up, press Cancel
+                                        and contact a mentor. If this is you but there is a mistake in spelling we can
+                                        correct that later. Welcome.
+                                    </p>
+                                    <div class="card-actions justify-end">
+                                        <button class="btn btn-secondary" onClick={cancel}>
+                                            Cancel
+                                        </button>
+                                        <button class="btn btn-primary" onClick={joinTeam}>
+                                            Join
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </Match>
                         <Match when={isLoggedIn()}>
