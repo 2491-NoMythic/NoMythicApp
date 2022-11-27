@@ -14,9 +14,9 @@ const App: Component = () => {
     const navigate = useNavigate()
 
     onMount(() => {
-        supabase.auth.onAuthStateChange((event: AuthChangeEvent, session: Session) => {
+        supabase.auth.onAuthStateChange((event: AuthChangeEvent, session: Session | null) => {
             if (event === 'SIGNED_IN') {
-                loadUser(session)
+                loadUser(session!)
             } else if (event === 'SIGNED_OUT' || event === 'USER_DELETED') {
                 removeUser()
                 navigate(RouteKeys.HOME.nav)
