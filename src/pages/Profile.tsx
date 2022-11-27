@@ -5,7 +5,7 @@ import { useNoMythicUser } from '../contexts/UserContext'
 import { capitalizeWord } from '../utilities/formatters'
 
 const Profile: Component = () => {
-    const [authSession, googleUser, member, { isLoggedIn, isMember }] = useNoMythicUser()
+    const { googleUser, member, isLoggedIn, isMember } = useNoMythicUser()
 
     return (
         <>

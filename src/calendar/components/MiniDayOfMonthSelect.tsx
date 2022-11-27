@@ -6,7 +6,7 @@ import { Day } from '../types'
 
 type inputs = { day: Day; handleSelect: (aDay: Day) => void }
 const MiniDayOfMonthSelect: Component<inputs> = (props) => {
-    const [authSession, googleUser, member, { isAdmin }] = useNoMythicUser()
+    const { isAdmin } = useNoMythicUser()
 
     const handleClick = (event) => {
         event.preventDefault()
