@@ -1,12 +1,12 @@
 import { getDate } from 'date-fns'
 import { Component, Show } from 'solid-js'
-import { useMyUser } from '../../contexts/UserContext'
+import { useNoMythicUser } from '../../contexts/UserContext'
 import { eventBgColors, eventColors } from '../../types/UiConstants'
 import { Day } from '../types'
 
 type inputs = { day: Day; handleSelect: (aDay: Day) => void }
 const MiniDayOfMonthSelect: Component<inputs> = (props) => {
-    const [authSession, googleUser, member, { isAdmin }] = useMyUser()
+    const [authSession, googleUser, member, { isAdmin }] = useNoMythicUser()
 
     const handleClick = (event) => {
         event.preventDefault()

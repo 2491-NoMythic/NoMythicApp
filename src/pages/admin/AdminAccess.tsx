@@ -1,10 +1,10 @@
 import { Outlet } from '@solidjs/router'
 import { Component, createEffect, Show } from 'solid-js'
 import NoAccessAlert from '../../components/NoAccessAlert'
-import { useMyUser } from '../../contexts/UserContext'
+import { useNoMythicUser } from '../../contexts/UserContext'
 
 const AdminAccess: Component = (props) => {
-    const [authSession, googleUser, member, { isAdmin }] = useMyUser()
+    const { isAdmin } = useNoMythicUser()
 
     return (
         <Show when={isAdmin()} fallback={<NoAccessAlert />}>

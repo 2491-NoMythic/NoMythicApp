@@ -1,7 +1,7 @@
 import { Component, createSignal, Show, Switch, Match, createEffect, For } from 'solid-js'
 import { HiOutlineUser } from 'solid-icons/hi'
 import { supabase } from '../api/SupabaseClient'
-import { useMyUser } from '../contexts/UserContext'
+import { useNoMythicUser } from '../contexts/UserContext'
 import { useNavigate } from '@solidjs/router'
 import Settings from './Settings'
 import { RouteKeys } from './AppRouting'
@@ -35,7 +35,7 @@ const PersonMenu: Component = () => {
         navigate(RouteKeys.PROFILE.nav)
     }
 
-    const [authSession, googleUser, member, { isLoggedIn, isMember }] = useMyUser()
+    const { googleUser, isLoggedIn, isMember } = useNoMythicUser()
 
     return (
         <>

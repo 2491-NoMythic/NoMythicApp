@@ -1,7 +1,7 @@
 import { Component, createSignal, Show } from 'solid-js'
 import { A } from '@solidjs/router'
 import { HiOutlineMenu } from 'solid-icons/hi'
-import { useMyUser } from '../contexts/UserContext'
+import { useNoMythicUser } from '../contexts/UserContext'
 import { RouteKeys } from './AppRouting'
 
 const HamburgerMenu: Component = () => {
@@ -15,7 +15,7 @@ const HamburgerMenu: Component = () => {
         setShow(false)
     }
 
-    const [authSession, googleUser, member, { isLoggedIn, isMember }] = useMyUser()
+    const { isMember } = useNoMythicUser()
 
     return (
         <>

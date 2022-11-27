@@ -1,11 +1,11 @@
 import { A } from '@solidjs/router'
 import { Component, Show } from 'solid-js'
 import { RouteKeys } from '../components/AppRouting'
-import { useMyUser } from '../contexts/UserContext'
+import { useNoMythicUser } from '../contexts/UserContext'
 import { capitalizeWord } from '../utilities/formatters'
 
 const Profile: Component = () => {
-    const [authSession, googleUser, member, { isLoggedIn, isMember }] = useMyUser()
+    const [authSession, googleUser, member, { isLoggedIn, isMember }] = useNoMythicUser()
 
     return (
         <>

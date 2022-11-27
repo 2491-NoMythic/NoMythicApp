@@ -3,7 +3,7 @@ import { HiOutlineMenu } from 'solid-icons/hi'
 import { children, Component, createSignal, JSX, Show } from 'solid-js'
 import PersonMenu from './PersonMenu'
 import logo from '../assets/logo.png'
-import { useMyUser } from '../contexts/UserContext'
+import { useNoMythicUser } from '../contexts/UserContext'
 import PageTitle from './PageTitle'
 import { RouteKeys } from './AppRouting'
 
@@ -16,7 +16,7 @@ import { RouteKeys } from './AppRouting'
  */
 const MainMenu: Component<{ children: JSX.Element }> = (props) => {
     const content = children(() => props.children)
-    const [authSession, googleUser, member, { isMember, isAdmin }] = useMyUser()
+    const { isMember, isAdmin } = useNoMythicUser()
     const [checked, setChecked] = createSignal(false)
     const [doSpin, setDoSpin] = createSignal(false)
 
