@@ -1,7 +1,7 @@
 import { Component, createEffect } from 'solid-js'
 import { useNavigate } from '@solidjs/router'
 import { supabase } from '../api/SupabaseClient'
-import { useMyUser } from '../contexts/UserContext'
+import { useNoMythicUser } from '../contexts/UserContext'
 import { RouteKeys } from '../components/AppRouting'
 import Config from '../config'
 
@@ -9,7 +9,7 @@ const redirectUrl = import.meta.env.VITE_REDIRECT_URL
 
 const Home: Component = () => {
     const navigate = useNavigate()
-    const [authSession, googleUser, member, { isLoggedIn, isMember }] = useMyUser()
+    const { isLoggedIn, isMember } = useNoMythicUser()
 
     const signInWithGoogle = async () => {
         const { data, error } = await supabase.auth.signInWithOAuth({

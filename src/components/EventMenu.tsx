@@ -1,7 +1,6 @@
 import { Component, createSignal, Show } from 'solid-js'
 import { A, useSearchParams } from '@solidjs/router'
 import { HiOutlineMenu } from 'solid-icons/hi'
-import { useMyUser } from '../contexts/UserContext'
 import { RouteKeys } from './AppRouting'
 import { formatUrl } from '../utilities/formatters'
 

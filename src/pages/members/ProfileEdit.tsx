@@ -2,7 +2,7 @@ import { useFormHandler, yupSchema } from 'solid-form-handler'
 import { SelectableField, TextField } from '../../components/forms'
 import * as yup from 'yup'
 import { Component } from 'solid-js'
-import { useMyUser } from '../../contexts/UserContext'
+import { useNoMythicUser } from '../../contexts/UserContext'
 import { A, useNavigate } from '@solidjs/router'
 import { saveMemberFromProfile } from '../../api/members'
 import { SubTeam, SubTeamType, TeamRole, TeamRoleType } from '../../types/Api'
@@ -34,7 +34,7 @@ const ProfileEdit: Component = () => {
     const formHandler = useFormHandler(yupSchema(userSchema))
     const { formData } = formHandler
     const navigate = useNavigate()
-    const [authSession, googleUser, member] = useMyUser()
+    const { member } = useNoMythicUser()
 
     const submit = async (event: Event) => {
         event.preventDefault()

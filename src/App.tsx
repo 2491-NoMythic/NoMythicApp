@@ -2,7 +2,7 @@ import { Component, createEffect, ErrorBoundary, onMount } from 'solid-js'
 import { useNavigate } from '@solidjs/router'
 import { supabase } from './api/SupabaseClient'
 import { AuthChangeEvent, Session } from '@supabase/supabase-js'
-import { useMyUser } from './contexts/UserContext'
+import { useNoMythicUser } from './contexts/UserContext'
 import { getMemberByEmail } from './api/members'
 import AppRouting, { RouteKeys } from './components/AppRouting'
 import ErrorAlert from './components/ErrorAlert'
@@ -10,13 +10,13 @@ import MainMenu from './components/MainMenu'
 import Footer from './components/Footer'
 
 const App: Component = () => {
-    const [authSession, googleUser, member, { removeUser, loadUser, loadMember, isLoggedIn, isMember }] = useMyUser()
+    const { googleUser, member, removeUser, loadUser, loadMember, isLoggedIn } = useNoMythicUser()
     const navigate = useNavigate()
 
     onMount(() => {
-        supabase.auth.onAuthStateChange((event: AuthChangeEvent, session: Session) => {
+        supabase.auth.onAuthStateChange((event: AuthChangeEvent, session: Session | null) => {
             if (event === 'SIGNED_IN') {
-                loadUser(session)
+                loadUser(session!)
             } else if (event === 'SIGNED_OUT' || event === 'USER_DELETED') {
                 removeUser()
                 navigate(RouteKeys.HOME.nav)

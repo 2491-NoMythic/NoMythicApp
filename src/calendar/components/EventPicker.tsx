@@ -9,7 +9,7 @@ import { formatEnumValue, formatUrl } from '../../utilities/formatters'
 import { RouteKeys } from '../../components/AppRouting'
 import BsCalendarPlus from '../../components/icons/BsCalendarPlus'
 import IoCalendarOutline from '../../components/icons/IoCalendarOutline'
-import { useMyUser } from '../../contexts/UserContext'
+import { useNoMythicUser } from '../../contexts/UserContext'
 import { eventColors } from '../../types/UiConstants'
 
 /**
@@ -24,7 +24,7 @@ const EventPicker: Component<inputs> = (props) => {
     const [showEvents, setShowEvents] = createSignal(false)
     const [selectedEvents, setSelectedEvents] = createSignal<RobotEvent[]>(null)
     const [robotEvents] = createResource(monthDate, getEvents)
-    const [authSession, googleUser, member, { isAdmin }] = useMyUser()
+    const { isAdmin } = useNoMythicUser()
 
     createEffect(() => {
         const monthValues = getMonthValues(monthDate())

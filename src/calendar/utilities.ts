@@ -81,7 +81,7 @@ const getCalendar = (monthValues: MonthValues) => {
  * @returns
  */
 const getSelectedEvents = (aDate: Date | string, eventData: RobotEvent[]) => {
-    if (!eventData) return null
+    if (!eventData) return []
     const dateStr = typeof aDate === 'string' ? aDate : toYMD(aDate)
     return eventData.filter((aEvent) => dateStr === aEvent.event_date) || []
 }
@@ -141,7 +141,7 @@ const getToday = () => {
  */
 const toYMD = (aDate: Date) => {
     if (aDate === undefined || aDate === null) {
-        return null
+        return ''
     }
     return format(aDate, 'yyyy-MM-dd')
 }

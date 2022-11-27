@@ -10,7 +10,7 @@ import PageLoading from '../../components/PageLoading'
 import { RouteKeys } from '../../components/AppRouting'
 import { formatEnumValue, formatUrl } from '../../utilities/formatters'
 import IoCalendarOutline from '../../components/icons/IoCalendarOutline'
-import { useMyUser } from '../../contexts/UserContext'
+import { useNoMythicUser } from '../../contexts/UserContext'
 import EventMenu from '../../components/EventMenu'
 import BsCalendarPlus from '../../components/icons/BsCalendarPlus'
 
@@ -19,8 +19,8 @@ const FullCalendar: Component = () => {
     const [calendar, setCalendar] = createSignal<Month>()
     const [selectedEvents, setSelectedEvents] = createSignal<RobotEvent[]>()
     const [searchParams, setSearchParams] = useSearchParams()
-    const [robotEvents, { mutate, refetch }] = createResource(toDate(searchParams.date), getEvents)
-    const [authSession, googleUser, member, { isMember, isAdmin }] = useMyUser()
+    const [robotEvents] = createResource(toDate(searchParams.date), getEvents)
+    const { isAdmin } = useNoMythicUser()
 
     const eventColors = {
         meeting: 'text-info',

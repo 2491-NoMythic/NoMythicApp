@@ -9,7 +9,7 @@ import AttendanceList from '../../components/AttendanceList'
 import PageLoading from '../../components/PageLoading'
 import { useSessionContext } from '../../contexts/SessionContext'
 import { getToday, toDate, toYMD } from '../../calendar/utilities'
-import { useMyUser } from '../../contexts/UserContext'
+import { useNoMythicUser } from '../../contexts/UserContext'
 import IoCalendarOutline from '../../components/icons/IoCalendarOutline'
 import EventPicker from '../../calendar/components/EventPicker'
 import { getEventById, getEventsForDay } from '../../api/events'
@@ -28,7 +28,7 @@ const AttendancePage: Component = () => {
     const params = useParams()
     const navigate = useNavigate()
     const [sessionValues] = useSessionContext()
-    const [authSession, googleUser, member, { isAdmin }] = useMyUser()
+    const { isAdmin } = useNoMythicUser()
 
     const [team, { refetch }] = createResource(() => parseInt(params.id || '-1'), getMemberAttendance)
     const [eventsToday] = createResource(meetingDate, getEventsForDay)
