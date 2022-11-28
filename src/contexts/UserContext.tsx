@@ -19,12 +19,21 @@ type UserStore = {
     isAdmin: () => boolean
 }
 
+type InitialState = {
+    authSession: AuthSession
+    googleUser: GoogleUser
+    member: Member
+}
+
 const UserContext = createContext<UserStore>()
 
-export function UserProvider(props: { children: Node }) {
-    const [authSession, setAuthSession] = createSignal<AuthSession>({} as AuthSession)
-    const [googleUser, setGoogleUser] = createSignal<GoogleUser>({} as GoogleUser)
-    const [member, setMember] = createSignal<Member>({} as Member)
+export function UserProvider(props: {
+    children: number | boolean | Node | JSX.ArrayElement | JSX.FunctionElement | (string & {})
+    initialState: InitialState
+}) {
+    const [authSession, setAuthSession] = createSignal<AuthSession>(props.initialState.authSession)
+    const [googleUser, setGoogleUser] = createSignal<GoogleUser>(props.initialState.googleUser)
+    const [member, setMember] = createSignal<Member>(props.initialState.member)
 
     const store: UserStore = {
         authSession,
@@ -48,21 +57,20 @@ export function UserProvider(props: { children: Node }) {
             setMember({} as Member)
         },
         isLoggedIn() {
-            return authSession() !== null && !isEmpty(authSession().accessToken)
+            return !isEmpty(authSession().accessToken)
         },
         isFound() {
-            return member() !== null && isEmpty(member().auth_id) && !isEmpty(member().member_id)
+            return isEmpty(member().auth_id) && !isEmpty(member().member_id)
         },
         isMember() {
-            return member() !== null && !isEmpty(member().auth_id)
+            return !isEmpty(member().auth_id)
         },
         isAdmin() {
             return (
-                member() !== null &&
-                (member().team_role === TeamRole.MENTOR ||
-                    member().team_role === TeamRole.COACH ||
-                    member().team_role === TeamRole.CAPTAIN ||
-                    member().admin_tester === true)
+                member().team_role === TeamRole.MENTOR ||
+                member().team_role === TeamRole.COACH ||
+                member().team_role === TeamRole.CAPTAIN ||
+                member().admin_tester === true
             )
         },
     }

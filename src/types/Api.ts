@@ -49,16 +49,16 @@ type EventTypesType = typeof EventTypes[keyof typeof EventTypes]
 type Member = {
     member_id?: number
     auth_id?: string
-    first_name: string
-    last_name: string
+    first_name?: string
+    last_name?: string
     pronouns?: string
-    sub_team: SubTeamType
-    team_role: TeamRoleType
+    sub_team?: SubTeamType
+    team_role?: TeamRoleType
     school?: SchoolType
     grad_year?: number
     advisor?: string
     phone?: string
-    email: string
+    email?: string
     address?: string
     food_needs?: string
     deleted?: boolean
@@ -66,16 +66,16 @@ type Member = {
 }
 
 type AuthSession = {
-    accessToken: string
-    expiresAt: number
-    expiresIn: number
+    accessToken?: string
+    expiresAt?: number
+    expiresIn?: number
 }
 
 type GoogleUser = {
-    authId: string
-    email: string
-    fullName: string
-    avatarUrl: string
+    authId?: string
+    email?: string
+    fullName?: string
+    avatarUrl?: string
 }
 
 type AuthUser = {
