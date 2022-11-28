@@ -10,8 +10,8 @@ import { SessionProvider } from './contexts/SessionContext'
 render(
     () => (
         <Router>
-            <UserProvider>
-                <SessionProvider>
+            <UserProvider initialState={{ authSession: {}, googleUser: {}, member: {} }}>
+                <SessionProvider initialState={{ subTeam: null, season: null }}>
                     <App />
                 </SessionProvider>
             </UserProvider>

@@ -1,4 +1,4 @@
-import { createContext, useContext } from 'solid-js'
+import { createContext, JSX, useContext } from 'solid-js'
 import { createStore, Store } from 'solid-js/store'
 
 /**
@@ -28,10 +28,13 @@ type SessionStore = [
 
 const SessionContext = createContext<SessionStore>()
 
-export function SessionProvider(props) {
+export function SessionProvider(props: {
+    children: number | boolean | Node | JSX.ArrayElement | JSX.FunctionElement | (string & {})
+    initialState: SessionValues
+}) {
     const [sessionValues, setSessionValues] = createStore<SessionValues>({
-        subTeam: null,
-        season: null,
+        subTeam: props.initialState.subTeam,
+        season: props.initialState.season,
     })
 
     const store: SessionStore = [
