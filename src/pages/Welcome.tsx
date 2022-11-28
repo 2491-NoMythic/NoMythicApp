@@ -1,5 +1,5 @@
 import { Component, Switch, Match, createSignal, Show, onMount, createResource, Suspense, createEffect } from 'solid-js'
-import { useMyUser } from '../contexts/UserContext'
+import { useNoMythicUser } from '../contexts/UserContext'
 import logo from '../assets/logo.png'
 import { useNavigate } from '@solidjs/router'
 import PageLoading from '../components/PageLoading'
@@ -10,7 +10,7 @@ import { supabase } from '../api/SupabaseClient'
 import { linkMember } from '../api/members'
 
 const Welcome: Component = () => {
-    const [authSession, googleUser, member, { isLoggedIn, isFound, isMember, resetMember }] = useMyUser()
+    const { googleUser, member, isLoggedIn, isFound, isMember, resetMember } = useNoMythicUser()
     const navigate = useNavigate()
 
     // this is a little weird, but it is to prevent flashing on the screen as the 'is' methods resolve.
