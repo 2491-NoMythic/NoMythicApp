@@ -15,8 +15,8 @@ export enum SessionValueKeys {
 }
 
 type SessionValues = {
-    subTeam: string
-    season: string
+    subTeam: string | null
+    season: string | null
 }
 
 type SessionStore = [
@@ -29,7 +29,7 @@ type SessionStore = [
 const SessionContext = createContext<SessionStore>()
 
 export function SessionProvider(props: {
-    children: number | boolean | Node | JSX.ArrayElement | JSX.FunctionElement | (string & {})
+    children: number | boolean | Node | JSX.ArrayElement | JSX.FunctionElement | (string & {}) | null | undefined
     initialState: SessionValues
 }) {
     const [sessionValues, setSessionValues] = createStore<SessionValues>({

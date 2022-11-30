@@ -28,7 +28,7 @@ type InitialState = {
 const UserContext = createContext<UserStore>()
 
 export function UserProvider(props: {
-    children: number | boolean | Node | JSX.ArrayElement | JSX.FunctionElement | (string & {})
+    children: number | boolean | Node | JSX.ArrayElement | JSX.FunctionElement | (string & {}) | null | undefined
     initialState: InitialState
 }) {
     const [authSession, setAuthSession] = createSignal<AuthSession>(props.initialState.authSession)

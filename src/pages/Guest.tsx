@@ -1,4 +1,4 @@
-import { Component, createResource, createSignal, onMount, Suspense } from 'solid-js'
+import { Component, Suspense } from 'solid-js'
 import logo from '../assets/logo.png'
 import PageLoading from '../components/PageLoading'
 
