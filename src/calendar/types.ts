@@ -18,7 +18,8 @@ type MonthValues = {
     year: number
     month: number
     beginOfMonthDate: Date
-    startOfCalMonth: Date
+    startOfCalMonth: Date // day on cal might be before month starts
+    endOfCalMonth: Date // day on cal might be after month ends
     startDayOfCal: 0 | 1 | 2 | 3 | 4 | 5 | 6
     endOfMonthDate: Date
     lastDayOfCal: 0 | 1 | 2 | 3 | 4 | 5 | 6

@@ -22,8 +22,8 @@ const AttendanceForMeeting: Component = () => {
     const [filteredTeam, setFilteredTeam] = createSignal<MemberAttendance[]>([])
     const [memberCount, setMemberCount] = createSignal<number>(0)
     const [eventCount, setEventCount] = createSignal<number>(0)
-    const [team, { mutate, refetch }] = createResource(parseInt(params.id), getMemberAttendance)
-    const [anEvent] = createResource(parseInt(params.id), getEventById)
+    const [team, { mutate, refetch }] = createResource(() => parseInt(params.id), getMemberAttendance)
+    const [anEvent] = createResource(() => parseInt(params.id), getEventById)
 
     onMount(async () => {
         const count = await getMemberCount()

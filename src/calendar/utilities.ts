@@ -11,6 +11,7 @@ import {
     format,
     parse,
     getDate,
+    endOfWeek,
 } from 'date-fns'
 import { RobotEvent } from '../types/Api'
 import { MonthValues, Month, Week } from './types'
@@ -31,6 +32,7 @@ const getMonthValues = (aDate: Date): MonthValues => {
     const startOfCalMonth = startOfWeek(beginOfMonthDate, { weekStartsOn })
     const startDayOfCal = getDay(startOfCalMonth)
     const endOfMonthDate = endOfMonth(justDate)
+    const endOfCalMonth = endOfWeek(endOfMonthDate, { weekStartsOn })
     const lastDayOfCal = getDay(endOfMonthDate)
     const weeks = getWeeksInMonth(justDate)
     const days = getDaysInMonth(justDate)
@@ -42,6 +44,7 @@ const getMonthValues = (aDate: Date): MonthValues => {
         month,
         beginOfMonthDate,
         startOfCalMonth,
+        endOfCalMonth,
         startDayOfCal,
         endOfMonthDate,
         lastDayOfCal,

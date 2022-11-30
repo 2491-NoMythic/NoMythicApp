@@ -14,8 +14,8 @@ const getEvents = async (aDate: Date) => {
     const { data, error } = await supabase
         .from('events')
         .select('event_id, event_date, event_type, description, title, start_time, end_time, virtual, all_day')
-        .gte('event_date', toYMD(eventMonth.beginOfMonthDate))
-        .lte('event_date', toYMD(eventMonth.endOfMonthDate))
+        .gte('event_date', toYMD(eventMonth.startOfCalMonth))
+        .lte('event_date', toYMD(eventMonth.endOfCalMonth))
         .eq('deleted', false)
 
     if (error) throw error

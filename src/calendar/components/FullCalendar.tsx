@@ -19,7 +19,7 @@ const FullCalendar: Component = () => {
     const [calendar, setCalendar] = createSignal<Month>()
     const [selectedEvents, setSelectedEvents] = createSignal<RobotEvent[]>()
     const [searchParams, setSearchParams] = useSearchParams()
-    const [robotEvents] = createResource(toDate(searchParams.date), getEvents)
+    const [robotEvents] = createResource(() => toDate(searchParams.date), getEvents)
     const { isAdmin } = useNoMythicUser()
 
     const eventColors = {

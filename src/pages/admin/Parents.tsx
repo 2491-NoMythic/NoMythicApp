@@ -1,5 +1,5 @@
-import { A, useParams, useSearchParams } from '@solidjs/router'
-import { Component, createEffect, createResource, createSignal, For, Show, Suspense } from 'solid-js'
+import { A, useParams } from '@solidjs/router'
+import { Component, createResource, createSignal, For, Show, Suspense } from 'solid-js'
 import { getMemberById } from '../../api/members'
 import { deleteParent, getParents } from '../../api/parents'
 import { HiOutlineEye, HiOutlinePencilAlt, HiOutlinePlusCircle, HiOutlineTrash } from 'solid-icons/hi'
@@ -10,10 +10,9 @@ import { RouteKeys } from '../../components/AppRouting'
 
 const Parents: Component = () => {
     const params = useParams()
-    const [parents, { refetch }] = createResource(parseInt(params.mid), getParents)
-    const [member] = createResource(parseInt(params.mid), getMemberById)
+    const [parents, { refetch }] = createResource(() => parseInt(params.mid), getParents)
+    const [member] = createResource(() => parseInt(params.mid), getMemberById)
 
-    const [searchParams] = useSearchParams()
     // used for are you sure dialog
     const [opened, setOpened] = createSignal(false)
     // parentId used for delete

@@ -1,6 +1,8 @@
 import { Component, createSignal, For } from 'solid-js'
 import { SessionValueKeys, useSessionContext } from '../contexts/SessionContext'
 
+type SubTeams = { value: string; display: string }[]
+
 const subTeamList = [
     { value: 'team', display: 'Whole Team' },
     { value: 'build', display: 'Build' },
@@ -14,7 +16,7 @@ const subTeamList = [
  This version only sets / reads the search params for subteam
 */
 const SubTeamSelectorUrl: Component = () => {
-    const [subTeams, setSubTeams] = createSignal([])
+    const [subTeams, setSubTeams] = createSignal<SubTeams>([])
     setSubTeams(subTeamList)
 
     const [sessionValues, { updateSessionValue }] = useSessionContext()

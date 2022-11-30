@@ -1,5 +1,5 @@
-import { Component, createEffect, createResource, createSignal, Show, Suspense } from 'solid-js'
-import { EventTypes, EventTypesType, TeamRole } from '../../types/Api'
+import { Component, createResource, createSignal, Show, Suspense } from 'solid-js'
+import { EventTypes, EventTypesType } from '../../types/Api'
 import * as yup from 'yup'
 import { useParams, useSearchParams, useNavigate, A } from '@solidjs/router'
 import { useFormHandler, yupSchema } from 'solid-form-handler'
