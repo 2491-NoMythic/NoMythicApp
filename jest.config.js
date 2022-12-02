@@ -3,4 +3,5 @@ module.exports = {
     moduleNameMapper: {
         'assets/(.*)': require.resolve('./test/file-mock.js'),
     },
+    roots: ['./test/'],
 }

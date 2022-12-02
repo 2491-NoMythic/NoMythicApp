@@ -1,4 +1,4 @@
-import { Component, Switch, Match, createSignal, Show, onMount, createResource, Suspense, createEffect } from 'solid-js'
+import { Component, Switch, Match, Show, createResource, Suspense } from 'solid-js'
 import { useNoMythicUser } from '../contexts/UserContext'
 import logo from '../assets/logo.png'
 import { useNavigate } from '@solidjs/router'
@@ -10,7 +10,7 @@ import { supabase } from '../api/SupabaseClient'
 import { linkMember } from '../api/members'
 
 const Welcome: Component = () => {
-    const { googleUser, member, isLoggedIn, isFound, isMember, resetMember } = useNoMythicUser()
+    const { googleUser, member, resetMember, getMemberStatus } = useNoMythicUser()
     const navigate = useNavigate()
 
     // this is a little weird, but it is to prevent flashing on the screen as the 'is' methods resolve.
@@ -36,9 +36,9 @@ const Welcome: Component = () => {
     return (
         <Suspense fallback={<PageLoading />}>
             <Show when={time()}>
-                <div class="flex flex-col items-center justify-center">
-                    <Switch
-                        fallback={
+                <div class="flex flex-col items-center justify-center" id="welcome">
+                    <Switch>
+                        <Match when={getMemberStatus() === 'ERROR'}>
                             <div class="card lg:card-side bg-base-100 shadow-xl mt-10 max-w-4xl">
                                 <figure class="p-6">
                                     <img src={logo} alt="Team Logo" />
@@ -57,9 +57,8 @@ const Welcome: Component = () => {
                                     </div>
                                 </div>
                             </div>
-                        }
-                    >
-                        <Match when={isMember()}>
+                        </Match>
+                        <Match when={getMemberStatus() === 'MEMBER'}>
                             <div class="m-4 max-w-4xl">
                                 <div class="card lg:card-side bg-base-100 shadow-xl">
                                     <figure class="p-6">
@@ -78,7 +77,7 @@ const Welcome: Component = () => {
                                 <NextEvents />
                             </div>
                         </Match>
-                        <Match when={isFound()}>
+                        <Match when={getMemberStatus() === 'FOUND'}>
                             <div class="card lg:card-side bg-base-100 shadow-xl mt-10 max-w-4xl">
                                 <figure class="p-6">
                                     <img src={logo} alt="Team logo" class="w-60 h-60" />
@@ -105,7 +104,7 @@ const Welcome: Component = () => {
                                 </div>
                             </div>
                         </Match>
-                        <Match when={isLoggedIn()}>
+                        <Match when={getMemberStatus() === 'LOGGED_IN'}>
                             <div class="card lg:card-side bg-base-100 shadow-xl mt-10 max-w-4xl">
                                 <figure class="p-6">
                                     <img src={logo} alt="Team logo" class="w-60 h-60" />

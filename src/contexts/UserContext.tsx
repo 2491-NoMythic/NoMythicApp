@@ -17,6 +17,7 @@ type UserStore = {
     isFound: () => boolean
     isMember: () => boolean
     isAdmin: () => boolean
+    getMemberStatus: () => string
 }
 
 type InitialState = {
@@ -35,6 +36,18 @@ export function UserProvider(props: {
     const [googleUser, setGoogleUser] = createSignal<GoogleUser>(props.initialState.googleUser)
     const [member, setMember] = createSignal<Member>(props.initialState.member)
 
+    const checkIsLoggedIn = () => {
+        return !isEmpty(authSession().accessToken)
+    }
+
+    const checkIsFound = () => {
+        return isEmpty(member().auth_id) && !isEmpty(member().member_id)
+    }
+
+    const checkIsMember = () => {
+        return !isEmpty(member().auth_id)
+    }
+
     const store: UserStore = {
         authSession,
         googleUser,
@@ -46,7 +59,9 @@ export function UserProvider(props: {
             setGoogleUser(googleUser)
         },
         loadMember(member: Member) {
-            setMember(member)
+            if (!isEmpty(member)) {
+                setMember(member)
+            }
         },
         removeUser() {
             setAuthSession({} as AuthSession)
@@ -57,13 +72,13 @@ export function UserProvider(props: {
             setMember({} as Member)
         },
         isLoggedIn() {
-            return !isEmpty(authSession().accessToken)
+            return checkIsLoggedIn()
         },
         isFound() {
-            return isEmpty(member().auth_id) && !isEmpty(member().member_id)
+            return checkIsFound()
         },
         isMember() {
-            return !isEmpty(member().auth_id)
+            return checkIsMember()
         },
         isAdmin() {
             return (
@@ -72,6 +87,16 @@ export function UserProvider(props: {
                 member().team_role === TeamRole.CAPTAIN ||
                 member().admin_tester === true
             )
+        },
+        getMemberStatus() {
+            if (checkIsMember()) {
+                return 'MEMBER'
+            } else if (checkIsFound()) {
+                return 'FOUND'
+            } else if (checkIsLoggedIn()) {
+                return 'LOGGED_IN'
+            }
+            return 'ERROR'
         },
     }
 

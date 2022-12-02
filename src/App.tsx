@@ -1,4 +1,4 @@
-import { Component, createEffect, ErrorBoundary, onMount } from 'solid-js'
+import { Component, createEffect, ErrorBoundary, onMount, Suspense } from 'solid-js'
 import { useNavigate } from '@solidjs/router'
 import { supabase } from './api/SupabaseClient'
 import { AuthChangeEvent, Session } from '@supabase/supabase-js'
@@ -8,6 +8,7 @@ import AppRouting, { RouteKeys } from './components/AppRouting'
 import ErrorAlert from './components/ErrorAlert'
 import MainMenu from './components/MainMenu'
 import Footer from './components/Footer'
+import PageLoading from './components/PageLoading'
 
 const App: Component = () => {
     const { googleUser, member, removeUser, loadUser, loadMember, isLoggedIn } = useNoMythicUser()
@@ -28,9 +29,7 @@ const App: Component = () => {
         // no point if not logged in
         if (isLoggedIn() && member().member_id === undefined && googleUser().email !== undefined) {
             const member = await getMemberByEmail(googleUser().email!)
-            if (member !== null && member.member_id !== undefined) {
-                loadMember(member)
-            }
+            loadMember(member)
         }
     }
 

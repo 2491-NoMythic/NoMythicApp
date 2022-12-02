@@ -1,13 +1,12 @@
 import { Router } from '@solidjs/router'
 import { render } from 'solid-testing-library'
-import App from './App'
-import { UserProvider } from './contexts/UserContext'
+import App from '../src/App'
+import { UserProvider } from '../src/contexts/UserContext'
 import '@testing-library/jest-dom'
 
-const mockResponse = {}
 window.scrollTo = jest.fn()
 
-jest.mock('./api/SupabaseClient', () => ({
+jest.mock('../src/api/SupabaseClient', () => ({
     __esModule: true,
     supabase: {
         select: jest.fn(),
