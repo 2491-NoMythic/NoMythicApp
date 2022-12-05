@@ -1,5 +1,4 @@
 import { parse, format, isAfter, differenceInYears, differenceInCalendarYears } from 'date-fns'
-import { mixed } from 'yup'
 import { isEmpty } from './bitsAndBobs'
 
 const capitalizeWord = (word: string): string => {

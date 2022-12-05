@@ -12,11 +12,13 @@ import { createStore, Store } from 'solid-js/store'
 export enum SessionValueKeys {
     SUBTEAM = 'subTeam',
     SEASON = 'season',
+    ATTENDANCE_TAB = 'attendanceTab',
 }
 
 type SessionValues = {
     subTeam: string | null
     season: string | null
+    attendanceTab: string | null
 }
 
 type SessionStore = [
@@ -35,6 +37,7 @@ export function SessionProvider(props: {
     const [sessionValues, setSessionValues] = createStore<SessionValues>({
         subTeam: props.initialState.subTeam,
         season: props.initialState.season,
+        attendanceTab: props.initialState.attendanceTab,
     })
 
     const store: SessionStore = [

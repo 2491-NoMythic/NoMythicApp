@@ -92,12 +92,6 @@ const getMemberAttendance = async (eventId: number) => {
     return data as unknown as MemberAttendance[]
 }
 
-const getAttendanceByMemberId = async (memberId: number, season: string) => {}
-
-const getAttendanceBySubTeam = async (subTeam: string, season: string) => {}
-
-const getAttendanceForTeam = async (season: string) => {}
-
 type MeetingCounts = { meeting_date: string; attendance: AttendanceTypesType; event_id: number }
 const getAttendanceCounts = async (season: string) => {
     // not the query we want to do, but supabse doesn't support distinct or group by yet
@@ -176,6 +170,25 @@ const getAttendanceForMember = async ({ season, memberId }) => {
     return data as Attendance[]
 }
 
+const getAttendanceForAllMembers = async (season: string) => {
+    const { startDate, endDate } = getStartEndOfSeason(season)
+    const { data, error } = await supabase
+        // .from('members')
+        // .select('member_id, first_name, last_name, attendance(meeting_date, attendance), events(event_id, event_type)')
+        //.from('attendance')
+        //.select('meeting_date, attendance, events(event_id, event_type), members(member_id, first_name, last_name)')
+        .from('attendance')
+        .select('attendance_id, member_id, meeting_date, attendance, event_id')
+        .gte('meeting_date', startDate)
+        .lte('meeting_date', endDate)
+    if (error) throw error
+
+    if (data.length === 0) {
+        return null
+    }
+    return data as Attendance[]
+}
+
 /**
  * Total number of events in season (so far)
  * Season is the year the game comes out (in January)
@@ -203,4 +216,5 @@ export {
     getAttendanceForMember,
     getNumberOfEvents,
     getAttendanceByEvent,
+    getAttendanceForAllMembers,
 }
