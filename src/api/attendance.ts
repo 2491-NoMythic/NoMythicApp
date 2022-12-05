@@ -51,15 +51,16 @@ const makeCountsByEventId = (records: MeetingCounts[]) => {
 
 /**
  * Get list of events for the season and their attendance
- * TODO: use season
  * @param season
  */
 const getAttendanceByEvent = async (season: string) => {
-    const today = toYMD(getToday())
+    const { startDate, endDate } = getStartEndOfSeason(season)
+    const theEnd = isBefore(getToday(), toDate(endDate)) ? toYMD(getToday()) : endDate
     const { data, error } = await supabase
         .from('events')
         .select('event_id, event_date, event_type, title, attendance (*)')
-        .lte('event_date', today)
+        .gte('event_date', startDate)
+        .lte('event_date', theEnd)
         .eq('deleted', false)
     if (error) throw error
 
@@ -150,37 +151,19 @@ const insertAttendance = async (
 }
 
 /*
- * Returns attendance for a member from June of previous season year, to end of May current season
+ * Returns attendance for a member within the season (so far)
  * Season is the year the game comes out (in January)
  */
 const getAttendanceForMember = async ({ season, memberId }) => {
     const { startDate, endDate } = getStartEndOfSeason(season)
+    const theEnd = isBefore(getToday(), toDate(endDate)) ? toYMD(getToday()) : endDate
     const { data, error } = await supabase
         .from('attendance')
         .select()
         .eq('member_id', memberId)
         .gte('meeting_date', startDate)
-        .lte('meeting_date', endDate)
+        .lte('meeting_date', theEnd)
 
-    if (error) throw error
-
-    if (data.length === 0) {
-        return null
-    }
-    return data as Attendance[]
-}
-
-const getAttendanceForAllMembers = async (season: string) => {
-    const { startDate, endDate } = getStartEndOfSeason(season)
-    const { data, error } = await supabase
-        // .from('members')
-        // .select('member_id, first_name, last_name, attendance(meeting_date, attendance), events(event_id, event_type)')
-        //.from('attendance')
-        //.select('meeting_date, attendance, events(event_id, event_type), members(member_id, first_name, last_name)')
-        .from('attendance')
-        .select('attendance_id, member_id, meeting_date, attendance, event_id')
-        .gte('meeting_date', startDate)
-        .lte('meeting_date', endDate)
     if (error) throw error
 
     if (data.length === 0) {
@@ -190,21 +173,23 @@ const getAttendanceForAllMembers = async (season: string) => {
 }
 
 /**
- * Total number of events in season (so far)
- * Season is the year the game comes out (in January)
+ * Fetch Attendance for all members within the season (so far)
+ * Seaason is the year the game comes out (in January)
  */
-const getNumberOfEvents = async (season: string) => {
+const getAttendanceForAllMembers = async (season: string) => {
     const { startDate, endDate } = getStartEndOfSeason(season)
     const theEnd = isBefore(getToday(), toDate(endDate)) ? toYMD(getToday()) : endDate
-    const { count, error } = await supabase
-        .from('events')
-        .select('*', { count: 'exact', head: true })
-        .eq('deleted', false)
-        .gte('event_date', startDate)
-        .lte('event_date', theEnd)
-
+    const { data, error } = await supabase
+        .from('attendance')
+        .select('attendance_id, member_id, meeting_date, attendance, event_id')
+        .gte('meeting_date', startDate)
+        .lte('meeting_date', theEnd)
     if (error) throw error
-    return count as number
+
+    if (data.length === 0) {
+        return null
+    }
+    return data as Attendance[]
 }
 
 export {
@@ -214,7 +199,6 @@ export {
     insertAttendance,
     getAttendanceCounts,
     getAttendanceForMember,
-    getNumberOfEvents,
     getAttendanceByEvent,
     getAttendanceForAllMembers,
 }

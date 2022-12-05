@@ -1,10 +1,12 @@
-import { useParams, useSearchParams } from '@solidjs/router'
+import { A, useParams, useSearchParams } from '@solidjs/router'
 import { Component, createEffect, createResource, createSignal, For, Suspense } from 'solid-js'
-import { getAttendanceForMember, getNumberOfEvents } from '../../api/attendance'
+import { getAttendanceForMember } from '../../api/attendance'
+import { getNumberOfEvents } from '../../api/events'
 import { getMemberById } from '../../api/members'
 import { RouteKeys } from '../../components/AppRouting'
 import PageLoading from '../../components/PageLoading'
 import TwoSideStatsBase from '../../components/TwoSideStatsBase'
+import { SessionValueKeys, useSessionContext } from '../../contexts/SessionContext'
 import { Attendance, AttendanceTypes } from '../../types/Api'
 import { seasonMonths } from '../../utilities/converters'
 import { calculateMonth, calculatePercent, calculateDay, formatEnumValue, formatUrl } from '../../utilities/formatters'
@@ -13,6 +15,7 @@ import { sortAttendance } from '../../utilities/sorts'
 const AttendanceForMember: Component = () => {
     const params = useParams()
     const [searchParams] = useSearchParams()
+    const [sessionValues] = useSessionContext()
 
     const [attendance] = createResource(
         () => ({ season: searchParams.season, memberId: params.mid }),
@@ -90,8 +93,15 @@ const AttendanceForMember: Component = () => {
     return (
         <Suspense fallback={<PageLoading />}>
             <div>
-                <div class="text-xl font-semibold mt-4">
-                    Attendance for {member()?.first_name} {member()?.last_name}
+                <div class="flex">
+                    <div class="text-xl font-semibold mt-4 grow">
+                        Attendance for {member()?.first_name} {member()?.last_name}
+                    </div>
+                    <div class="mt-4">
+                        <A class="btn btn-secondary" href={RouteKeys.ATTENDANCE_SEASON.nav}>
+                            Back
+                        </A>
+                    </div>
                 </div>
                 <TwoSideStatsBase
                     leftText={searchParams.season + ' Season'}

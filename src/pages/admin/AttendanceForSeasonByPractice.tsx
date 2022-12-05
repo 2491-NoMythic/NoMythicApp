@@ -2,7 +2,6 @@ import { Accessor, Component, createResource, createSignal, For, onMount, Show, 
 import { getAttendanceByEvent } from '../../api/attendance'
 import { getMemberCount } from '../../api/members'
 import AttendanceStats from '../../components/AttendanceStats'
-import PageLoading from '../../components/PageLoading'
 import { Attendance, AttendanceTypes } from '../../types/Api'
 import { isEmpty } from '../../utilities/bitsAndBobs'
 import { calculateMonth, formatEnumValue } from '../../utilities/formatters'

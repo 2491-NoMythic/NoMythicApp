@@ -1,6 +1,5 @@
 import { Session } from '@supabase/supabase-js'
 import { getMonth, getYear } from 'date-fns'
-import { getSeasonEvents } from '../api/events'
 import { AuthSession, GoogleUser } from '../types/Api'
 
 const convertGoogleSessionToAuthSession = (googleSession: Session) => {
