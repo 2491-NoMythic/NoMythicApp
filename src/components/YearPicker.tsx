@@ -5,6 +5,7 @@ const validYears = ['2023']
 const YearPicker: Component<{
     year: Accessor<string>
     setYear: Setter<string>
+    labelLocation?: string
 }> = (props) => {
     const [years, setYears] = createSignal([])
 
@@ -15,9 +16,12 @@ const YearPicker: Component<{
     }
 
     return (
-        <div class="form-control">
+        <div class={`form-control ${props.labelLocation === 'SIDE' ? 'flex-row' : ''}`}>
             <label class="label">
-                <span class="label-text">Select Year</span>
+                <span class="label-text">
+                    Select {props.labelLocation === 'SIDE' && <br />}
+                    Season
+                </span>
             </label>
             <select class="select select-bordered" onChange={changeHandler}>
                 <option disabled selected={props.year() === ''}>
@@ -25,11 +29,7 @@ const YearPicker: Component<{
                 </option>
                 <For each={years()}>
                     {(validYear) => {
-                        return (
-                            <option selected={validYear === props.year()}>
-                                {validYear}
-                            </option>
-                        )
+                        return <option selected={validYear === props.year()}>{validYear}</option>
                     }}
                 </For>
             </select>

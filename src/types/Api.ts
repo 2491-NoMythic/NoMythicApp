@@ -89,7 +89,7 @@ type Attendance = {
     member_id: number
     meeting_date: string
     attendance: AttendanceTypesType
-    event_id: string
+    event_id: number
 }
 
 type MemberAttendance = {
