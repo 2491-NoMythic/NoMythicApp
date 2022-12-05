@@ -6,7 +6,7 @@ import { getMembers } from '../../api/members'
 import { RouteKeys } from '../../components/AppRouting'
 import SubTeamSelector from '../../components/SubTeamSelector'
 import { useSessionContext } from '../../contexts/SessionContext'
-import { EventTypes, Member, RobotEvent, SubTeam } from '../../types/Api'
+import { AttendanceTypes, EventTypes, Member, RobotEvent, SubTeam } from '../../types/Api'
 import { isEmpty } from '../../utilities/bitsAndBobs'
 import { filterBySubTeam } from '../../utilities/filters'
 import { calculatePercent, capitalizeWord, formatUrl } from '../../utilities/formatters'
@@ -51,7 +51,9 @@ const AttendanceForSeasonByMember: Component<{ season: Accessor<string> }> = (pr
         if (isEmpty(allAttendance())) {
             return 0
         }
-        const data = allAttendance().filter((record) => record.member_id === memberId)
+        const data = allAttendance().filter(
+            (record) => record.member_id === memberId && record.attendance !== AttendanceTypes.ABSENT
+        )
         return isEmpty(data) ? 0 : data.length
     }
 
@@ -62,7 +64,11 @@ const AttendanceForSeasonByMember: Component<{ season: Accessor<string> }> = (pr
         }
         const data = allAttendance().filter((record) => {
             const event = eventMap().get(record.event_id)
-            return record.member_id === memberId && event.event_type === EventTypes.REGULAR_PRACTICE
+            return (
+                record.member_id === memberId &&
+                event.event_type === EventTypes.REGULAR_PRACTICE &&
+                record.attendance !== AttendanceTypes.ABSENT
+            )
         })
         return isEmpty(data) ? 0 : data.length
     }
@@ -79,6 +85,7 @@ const AttendanceForSeasonByMember: Component<{ season: Accessor<string> }> = (pr
         const filtered = filterBySubTeam(members(), sessionValues.subTeam)
         const sorted = sortByFirstName(filtered)
         setfilteredMembers(sorted)
+        console.log(allAttendance())
     })
 
     return (
