@@ -85,80 +85,82 @@ const AttendanceForSeasonByMember: Component<{ season: Accessor<string> }> = (pr
         const filtered = filterBySubTeam(members(), sessionValues.subTeam)
         const sorted = sortByFirstName(filtered)
         setfilteredMembers(sorted)
-        console.log(allAttendance())
     })
 
+    // the show prevents race condition when solid can't tell eventMap updated on it's own
     return (
-        <div>
-            <div class="text-l lg:text-xl font-semibold p-4">
-                {allRegularCount()} regular meetings of {allEventCount()} total events in season {props.season()}
-            </div>
+        <Show when={eventMap()?.size > 0 && allAttendance()?.length > 0}>
             <div>
-                <SubTeamSelector />
+                <div class="text-l lg:text-xl font-semibold p-4">
+                    {allRegularCount()} regular meetings of {allEventCount()} total events in season {props.season()}
+                </div>
+                <div>
+                    <SubTeamSelector />
+                </div>
+                <table class="table table-compact table-zebra w-full mt-4">
+                    <thead>
+                        <tr class="hidden lg:table-row">
+                            <td>First Name</td>
+                            <td>Last Name</td>
+                            <td>Sub Team</td>
+                            <td>Team Role</td>
+                            <td>All</td>
+                            <td>Regular</td>
+                        </tr>
+                        <tr class="table-row lg:hidden">
+                            <td>Member</td>
+                            <td>All</td>
+                            <td>Regular</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <For each={filteredMembers()}>
+                            {(record) => {
+                                const fullCount = getFullCount(record.member_id)
+                                const regularCount = getRegularCount(record.member_id)
+                                return (
+                                    <tr>
+                                        <td
+                                            onClick={[handleNavToMember, { memberId: record.member_id }]}
+                                            class="hidden lg:table-cell cursor-pointer"
+                                        >
+                                            {record.first_name}
+                                        </td>
+                                        <td
+                                            onClick={[handleNavToMember, { memberId: record.member_id }]}
+                                            class="hidden lg:table-cell cursor-pointer"
+                                        >
+                                            {record.last_name}
+                                        </td>
+                                        <td class="hidden lg:table-cell">{capitalizeWord(record.sub_team)}</td>
+                                        <td class="hidden lg:table-cell">{capitalizeWord(record.team_role)}</td>
+                                        <td
+                                            onClick={[handleNavToMember, { memberId: record.member_id }]}
+                                            class="lg:hidden cursor-pointer"
+                                        >
+                                            {record.first_name} {record.last_name}
+                                            <div class="text-secondary">
+                                                {capitalizeWord(record.team_role)}
+                                                <Show when={record.sub_team !== SubTeam.UNASSIGNED}>
+                                                    <span class="text-base-content"> of </span>
+                                                    {capitalizeWord(record.sub_team)}
+                                                </Show>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            {fullCount} ({calculatePercent(fullCount, allEventCount())}%)
+                                        </td>
+                                        <td>
+                                            {regularCount} ({calculatePercent(regularCount, allRegularCount())}%)
+                                        </td>
+                                    </tr>
+                                )
+                            }}
+                        </For>
+                    </tbody>
+                </table>
             </div>
-            <table class="table table-compact table-zebra w-full mt-4">
-                <thead>
-                    <tr class="hidden lg:table-row">
-                        <td>First Name</td>
-                        <td>Last Name</td>
-                        <td>Sub Team</td>
-                        <td>Team Role</td>
-                        <td>All</td>
-                        <td>Regular</td>
-                    </tr>
-                    <tr class="table-row lg:hidden">
-                        <td>Member</td>
-                        <td>All</td>
-                        <td>Regular</td>
-                    </tr>
-                </thead>
-                <tbody>
-                    <For each={filteredMembers()}>
-                        {(record) => {
-                            const fullCount = getFullCount(record.member_id)
-                            const regularCount = getRegularCount(record.member_id)
-                            return (
-                                <tr>
-                                    <td
-                                        onClick={[handleNavToMember, { memberId: record.member_id }]}
-                                        class="hidden lg:table-cell cursor-pointer"
-                                    >
-                                        {record.first_name}
-                                    </td>
-                                    <td
-                                        onClick={[handleNavToMember, { memberId: record.member_id }]}
-                                        class="hidden lg:table-cell cursor-pointer"
-                                    >
-                                        {record.last_name}
-                                    </td>
-                                    <td class="hidden lg:table-cell">{capitalizeWord(record.sub_team)}</td>
-                                    <td class="hidden lg:table-cell">{capitalizeWord(record.team_role)}</td>
-                                    <td
-                                        onClick={[handleNavToMember, { memberId: record.member_id }]}
-                                        class="lg:hidden cursor-pointer"
-                                    >
-                                        {record.first_name} {record.last_name}
-                                        <div class="text-secondary">
-                                            {capitalizeWord(record.team_role)}
-                                            <Show when={record.sub_team !== SubTeam.UNASSIGNED}>
-                                                <span class="text-base-content"> of </span>
-                                                {capitalizeWord(record.sub_team)}
-                                            </Show>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        {fullCount} ({calculatePercent(fullCount, allEventCount())}%)
-                                    </td>
-                                    <td>
-                                        {regularCount} ({calculatePercent(regularCount, allRegularCount())}%)
-                                    </td>
-                                </tr>
-                            )
-                        }}
-                    </For>
-                </tbody>
-            </table>
-        </div>
+        </Show>
     )
 }
 

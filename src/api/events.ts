@@ -1,8 +1,9 @@
 import { supabase } from './SupabaseClient'
 import { RobotEvent } from '../types/Api'
-import { getMonthValues, toDate, toYMD } from '../calendar/utilities'
+import { getMonthValues, getToday, toDate, toYMD } from '../calendar/utilities'
 import { isEmpty } from '../utilities/bitsAndBobs'
 import { getStartEndOfSeason } from '../utilities/converters'
+import { isBefore } from 'date-fns'
 
 /**
  * Get the events for the month that aDate falls within
@@ -24,17 +25,18 @@ const getEvents = async (aDate: Date) => {
 }
 
 /**
- * Returns all the events that are currently in a season
+ * Returns all the events that are currently in a season (so far)
  * @param season string
  * @returns RobotEvents[]
  */
 const getSeasonEvents = async (season: string) => {
     const { startDate, endDate } = getStartEndOfSeason(season)
+    const theEnd = isBefore(getToday(), toDate(endDate)) ? toYMD(getToday()) : endDate
     const { data, error } = await supabase
         .from('events')
         .select('event_id, event_date, event_type, description, title, start_time, end_time, virtual, all_day')
         .gte('event_date', startDate)
-        .lte('event_date', endDate)
+        .lte('event_date', theEnd)
         .eq('deleted', false)
 
     if (error) throw error
@@ -149,4 +151,32 @@ const updateEvent = async (event: RobotEvent) => {
     if (error) throw error
 }
 
-export { getEvents, getEventsForDay, getEventById, deleteEvent, saveEvent, updateEvent, getSeasonEvents, getNextEvents }
+/**
+ * Total number of events in season (so far)
+ * Season is the year the game comes out (in January)
+ */
+const getNumberOfEvents = async (season: string) => {
+    const { startDate, endDate } = getStartEndOfSeason(season)
+    const theEnd = isBefore(getToday(), toDate(endDate)) ? toYMD(getToday()) : endDate
+    const { count, error } = await supabase
+        .from('events')
+        .select('*', { count: 'exact', head: true })
+        .eq('deleted', false)
+        .gte('event_date', startDate)
+        .lte('event_date', theEnd)
+
+    if (error) throw error
+    return count as number
+}
+
+export {
+    getEvents,
+    getEventsForDay,
+    getEventById,
+    deleteEvent,
+    saveEvent,
+    updateEvent,
+    getSeasonEvents,
+    getNextEvents,
+    getNumberOfEvents,
+}
