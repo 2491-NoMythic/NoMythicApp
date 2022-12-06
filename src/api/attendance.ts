@@ -1,53 +1,8 @@
 import { isBefore } from 'date-fns'
 import { getToday, toDate, toYMD } from '../calendar/utilities'
-import {
-    Attendance,
-    AttendanceTypes,
-    AttendanceTypesType,
-    EventAttendance,
-    MeetingCount,
-    MemberAttendance,
-} from '../types/Api'
+import { Attendance, AttendanceTypesType, EventAttendance, MemberAttendance } from '../types/Api'
 import { getStartEndOfSeason } from '../utilities/converters'
 import { supabase } from './SupabaseClient'
-
-const makeCountsByMeetingDate = (records: MeetingCounts[]) => {
-    const meetingCounts = new Map<string, number>()
-    records.forEach((record) => {
-        const meetingDate = record.meeting_date
-        const currentCount = meetingCounts.get(meetingDate)
-        const value = record.attendance !== AttendanceTypes.ABSENT ? 1 : 0
-        if (currentCount === undefined) {
-            meetingCounts.set(meetingDate, value)
-        } else {
-            meetingCounts.set(meetingDate, currentCount + value)
-        }
-    })
-    const countArray = [] as MeetingCount[]
-    for (const key of meetingCounts.keys()) {
-        countArray.push({ count: meetingCounts.get(key), meeting_date: key })
-    }
-    return countArray
-}
-
-const makeCountsByEventId = (records: MeetingCounts[]) => {
-    const meetingCounts = new Map<string, number>()
-    records.forEach((record) => {
-        const meetingDate = record.meeting_date
-        const currentCount = meetingCounts.get(meetingDate)
-        const value = record.attendance !== AttendanceTypes.ABSENT ? 1 : 0
-        if (currentCount === undefined) {
-            meetingCounts.set(meetingDate, value)
-        } else {
-            meetingCounts.set(meetingDate, currentCount + value)
-        }
-    })
-    const countArray = [] as MeetingCount[]
-    for (const key of meetingCounts.keys()) {
-        countArray.push({ count: meetingCounts.get(key), meeting_date: key })
-    }
-    return countArray
-}
 
 /**
  * Get list of events for the season and their attendance
@@ -62,6 +17,7 @@ const getAttendanceByEvent = async (season: string) => {
         .gte('event_date', startDate)
         .lte('event_date', theEnd)
         .eq('deleted', false)
+        .eq('take_attendance', true)
     if (error) throw error
 
     if (data.length === 0) {
@@ -81,7 +37,7 @@ const getMemberAttendance = async (eventId: number) => {
     }
     const { data, error } = await supabase
         .from('members')
-        .select('member_id, first_name, last_name, sub_team, team_role, attendance (*)')
+        .select('member_id, first_name, last_name, sub_team, team_role, attendance(*)')
         .eq('attendance.event_id', eventId)
         .eq('deleted', false)
 
@@ -91,25 +47,6 @@ const getMemberAttendance = async (eventId: number) => {
         return []
     }
     return data as unknown as MemberAttendance[]
-}
-
-type MeetingCounts = { meeting_date: string; attendance: AttendanceTypesType; event_id: number }
-const getAttendanceCounts = async (season: string) => {
-    // not the query we want to do, but supabse doesn't support distinct or group by yet
-    // this is what we want in sql:
-    // select count(distinct member_id) as att_count, meeting_date from attendance
-    // where attendance = 'full_time' or attendance = 'part_time'
-    // group by meeting_date
-    const { data, error } = await supabase.from('attendance').select('meeting_date, attendance, event_id')
-
-    if (error) throw error
-
-    if (data.length === 0) {
-        return null
-    }
-    const attendanceCounts = data as unknown as MeetingCounts[]
-    const counts = makeCountsByMeetingDate(attendanceCounts)
-    return counts
 }
 
 /**
@@ -163,6 +100,7 @@ const getAttendanceForMember = async ({ season, memberId }) => {
         .eq('member_id', memberId)
         .gte('meeting_date', startDate)
         .lte('meeting_date', theEnd)
+        .eq('take_attendance', true)
 
     if (error) throw error
 
@@ -181,9 +119,12 @@ const getAttendanceForAllMembers = async (season: string) => {
     const theEnd = isBefore(getToday(), toDate(endDate)) ? toYMD(getToday()) : endDate
     const { data, error } = await supabase
         .from('attendance')
-        .select('attendance_id, member_id, meeting_date, attendance, event_id')
+        .select('attendance_id, member_id, meeting_date, attendance, event_id, events(*)')
         .gte('meeting_date', startDate)
         .lte('meeting_date', theEnd)
+        .eq('events.deleted', false)
+        // doesn't work how we want it to. just returns null for an event, doesn't remove attendance record
+        .eq('events.take_attendance', true)
     if (error) throw error
 
     if (data.length === 0) {
@@ -197,7 +138,6 @@ export {
     getAttendance,
     updateAttendance,
     insertAttendance,
-    getAttendanceCounts,
     getAttendanceForMember,
     getAttendanceByEvent,
     getAttendanceForAllMembers,

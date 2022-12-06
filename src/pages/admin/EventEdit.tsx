@@ -1,4 +1,4 @@
-import { Component, createResource, createSignal, Show, Suspense } from 'solid-js'
+import { Component, createEffect, createResource, createSignal, Show, Suspense } from 'solid-js'
 import { EventTypes, EventTypesType } from '../../types/Api'
 import * as yup from 'yup'
 import { useParams, useSearchParams, useNavigate, A } from '@solidjs/router'
@@ -25,6 +25,7 @@ type RobotEvent = {
     end_time: string
     virtual: boolean
     all_day: boolean
+    take_attendance: boolean
 }
 
 // these are the validation rules
@@ -45,6 +46,7 @@ export const eventSchema: yup.SchemaOf<RobotEvent> = yup.object({
     end_time: yup.string().notRequired().nullable(),
     virtual: yup.boolean().required().default(false),
     all_day: yup.boolean().required().default(false),
+    take_attendance: yup.boolean().required().default(false), // will not work defaulting to true
 })
 
 const timeInputHandler = createInputMask('99:99 aa')
@@ -83,6 +85,7 @@ const EventEdit: Component = () => {
                 end_time: formData().end_time,
                 virtual: formData().virtual,
                 all_day: formData().all_day,
+                take_attendance: formData().take_attendance,
             }
             if (robotEvent()?.event_id === undefined) {
                 await saveEvent(updatedEvent)
@@ -198,6 +201,13 @@ const EventEdit: Component = () => {
                                     value={robotEvent()?.description}
                                     formHandler={formHandler}
                                     class="h-24"
+                                />
+
+                                <Checkbox
+                                    label="Take Attendance"
+                                    name="take_attendance"
+                                    checked={robotEvent() === null ? true : robotEvent().take_attendance}
+                                    formHandler={formHandler}
                                 />
                             </div>
                         </form>

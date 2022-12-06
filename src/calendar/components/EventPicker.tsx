@@ -72,11 +72,13 @@ const EventPicker: Component<inputs> = (props) => {
         setShowEvents(true)
     }
 
-    type eventData = { eventId: number }
+    type eventData = { eventId: number; takeAttendance: boolean }
     const handleSelectEvent = (data: eventData, event) => {
         event.preventDefault()
-        setShowEvents(false)
-        props.handleSelect(data.eventId)
+        if (data.takeAttendance) {
+            setShowEvents(false)
+            props.handleSelect(data.eventId)
+        }
     }
 
     return (
@@ -156,10 +158,17 @@ const EventPicker: Component<inputs> = (props) => {
                                                 return (
                                                     <div class="mt-2">
                                                         <div
-                                                            class="flex cursor-pointer hover:text-accent-content"
+                                                            class={`flex ${
+                                                                robotEvent.take_attendance === true
+                                                                    ? 'hover:text-accent-content cursor-pointer'
+                                                                    : ''
+                                                            }`}
                                                             onClick={[
                                                                 handleSelectEvent,
-                                                                { eventId: robotEvent.event_id },
+                                                                {
+                                                                    eventId: robotEvent.event_id,
+                                                                    takeAttendance: robotEvent.take_attendance,
+                                                                },
                                                             ]}
                                                         >
                                                             <div class={eventColors[robotEvent.event_type]}>

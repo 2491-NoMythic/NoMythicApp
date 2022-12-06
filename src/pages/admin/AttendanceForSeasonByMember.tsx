@@ -51,9 +51,11 @@ const AttendanceForSeasonByMember: Component<{ season: Accessor<string> }> = (pr
         if (isEmpty(allAttendance())) {
             return 0
         }
-        const data = allAttendance().filter(
-            (record) => record.member_id === memberId && record.attendance !== AttendanceTypes.ABSENT
-        )
+        const data = allAttendance().filter((record) => {
+            const event = eventMap().get(record.event_id)
+            // undefined means the event shouldn't have had attendance records on it
+            return event !== undefined && record.member_id === memberId && record.attendance !== AttendanceTypes.ABSENT
+        })
         return isEmpty(data) ? 0 : data.length
     }
 
@@ -64,7 +66,9 @@ const AttendanceForSeasonByMember: Component<{ season: Accessor<string> }> = (pr
         }
         const data = allAttendance().filter((record) => {
             const event = eventMap().get(record.event_id)
+            // undefined means the event shouldn't have had attendance records on it
             return (
+                event !== undefined &&
                 record.member_id === memberId &&
                 event.event_type === EventTypes.REGULAR_PRACTICE &&
                 record.attendance !== AttendanceTypes.ABSENT
@@ -87,6 +91,9 @@ const AttendanceForSeasonByMember: Component<{ season: Accessor<string> }> = (pr
         setfilteredMembers(sorted)
     })
 
+    createEffect(() => {
+        console.log(allAttendance())
+    })
     // the show prevents race condition when solid can't tell eventMap updated on it's own
     return (
         <Show when={eventMap()?.size > 0 && allAttendance()?.length > 0}>
