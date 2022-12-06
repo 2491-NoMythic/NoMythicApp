@@ -4,7 +4,7 @@ import { HiOutlineMenu } from 'solid-icons/hi'
 import { RouteKeys } from './AppRouting'
 import { formatUrl } from '../utilities/formatters'
 
-type inputs = { eventId: number }
+type inputs = { eventId: number; takeAttendance: boolean }
 const EventMenu: Component<inputs> = (props) => {
     const [show, setShow] = createSignal(false)
     const [searchParams] = useSearchParams()
@@ -29,17 +29,21 @@ const EventMenu: Component<inputs> = (props) => {
                 class="menu absolute top-10 right-2 z-50 dropdown-content shadow bg-base-100 rounded-box w-52 mt-4 border"
                 classList={{ hidden: !show() }}
             >
-                <li>
-                    <A href={formatUrl(RouteKeys.TAKE_ATTENDANCE_ID.nav, { id: props.eventId })} onClick={close}>
-                        Take Attendance
-                    </A>
-                </li>
-                <li>
-                    <A href={formatUrl(RouteKeys.ATTENDANCE_MEETING.nav, { id: props.eventId })} onClick={close}>
-                        Admin Attendance
-                    </A>
-                </li>
-
+                <Show when={props.takeAttendance === true}>
+                    <li>
+                        <A href={formatUrl(RouteKeys.TAKE_ATTENDANCE_ID.nav, { id: props.eventId })} onClick={close}>
+                            Take Attendance
+                        </A>
+                    </li>
+                    <li>
+                        <A href={formatUrl(RouteKeys.ATTENDANCE_MEETING.nav, { id: props.eventId })} onClick={close}>
+                            Admin Attendance
+                        </A>
+                    </li>
+                </Show>
+                <Show when={props.takeAttendance === false}>
+                    <li class="p-4">Attendance NA</li>
+                </Show>
                 <li>
                     <A
                         href={formatUrl(RouteKeys.EVENT_EDIT.nav, { id: props.eventId }, { date: searchParams?.date })}

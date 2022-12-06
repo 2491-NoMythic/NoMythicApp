@@ -179,7 +179,10 @@ const FullCalendar: Component = () => {
                                                         </div>
                                                     </div>
                                                     <Show when={isAdmin()}>
-                                                        <EventMenu eventId={robotEvent.event_id} />
+                                                        <EventMenu
+                                                            eventId={robotEvent.event_id}
+                                                            takeAttendance={robotEvent.take_attendance}
+                                                        />
                                                     </Show>
                                                 </div>
                                                 <Show when={robotEvent.description}>

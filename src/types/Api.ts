@@ -138,6 +138,7 @@ type RobotEvent = {
     all_day?: boolean
     virtual?: boolean
     title?: string
+    take_attendance: boolean
 }
 
 export type {

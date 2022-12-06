@@ -6,7 +6,7 @@ import { getStartEndOfSeason } from '../utilities/converters'
 import { isBefore } from 'date-fns'
 
 /**
- * Get the events for the month that aDate falls within
+ * Get the events for the month that aDate falls within that are not deleted
  * @param aDate Date
  * @returns RobotEvent[]
  */
@@ -14,7 +14,7 @@ const getEvents = async (aDate: Date) => {
     const eventMonth = getMonthValues(aDate)
     const { data, error } = await supabase
         .from('events')
-        .select('event_id, event_date, event_type, description, title, start_time, end_time, virtual, all_day')
+        .select('*')
         .gte('event_date', toYMD(eventMonth.startOfCalMonth))
         .lte('event_date', toYMD(eventMonth.endOfCalMonth))
         .eq('deleted', false)
@@ -26,6 +26,7 @@ const getEvents = async (aDate: Date) => {
 
 /**
  * Returns all the events that are currently in a season (so far)
+ * that are not deleted and you can take attendance for
  * @param season string
  * @returns RobotEvents[]
  */
@@ -34,10 +35,11 @@ const getSeasonEvents = async (season: string) => {
     const theEnd = isBefore(getToday(), toDate(endDate)) ? toYMD(getToday()) : endDate
     const { data, error } = await supabase
         .from('events')
-        .select('event_id, event_date, event_type, description, title, start_time, end_time, virtual, all_day')
+        .select('*')
         .gte('event_date', startDate)
         .lte('event_date', theEnd)
         .eq('deleted', false)
+        .eq('take_attendance', true)
 
     if (error) throw error
 
@@ -45,17 +47,13 @@ const getSeasonEvents = async (season: string) => {
 }
 
 /**
- * Get the events for a single day
+ * Get the events for a single day not deleted
  * @param meetingDate string
  * @returns RobotEvent[]
  */
 const getEventsForDay = async (meetingDate: string) => {
     if (isEmpty(meetingDate)) return [] as RobotEvent[]
-    const { data, error } = await supabase
-        .from('events')
-        .select('event_id, event_date, event_type, description, title, start_time, end_time, virtual, all_day')
-        .eq('event_date', meetingDate)
-        .eq('deleted', false)
+    const { data, error } = await supabase.from('events').select('*').eq('event_date', meetingDate).eq('deleted', false)
 
     if (error) throw error
 
@@ -63,7 +61,7 @@ const getEventsForDay = async (meetingDate: string) => {
 }
 
 /**
- * Find next 2 events starting from meetingDate
+ * Find next 3 events starting from meetingDate
  * @param meetingDate string to start search
  * @returns RobotEvent
  */
@@ -71,7 +69,7 @@ const getNextEvents = async (meetingDate: string) => {
     if (isEmpty(meetingDate)) return [] as RobotEvent[]
     const { data, error } = await supabase
         .from('events')
-        .select('event_id, event_date, event_type, description, title, start_time, end_time, virtual, all_day')
+        .select('*')
         .gte('event_date', meetingDate)
         .eq('deleted', false)
         .order('event_date')
@@ -90,10 +88,7 @@ const getEventById = async (eventId: number) => {
     if (eventId === -1) {
         return null
     }
-    const { data, error } = await supabase
-        .from('events')
-        .select('event_id, event_date, event_type, description, title, start_time, end_time, virtual, all_day')
-        .eq('event_id', eventId)
+    const { data, error } = await supabase.from('events').select('*').eq('event_id', eventId)
 
     if (error) throw error
 
@@ -129,6 +124,7 @@ const saveEvent = async (event: RobotEvent) => {
         end_time: event.end_time,
         virtual: event.virtual,
         all_day: event.all_day,
+        take_attendance: event.take_attendance,
     })
     if (error) throw error
 }
@@ -145,6 +141,7 @@ const updateEvent = async (event: RobotEvent) => {
             end_time: event.end_time,
             virtual: event.virtual,
             all_day: event.all_day,
+            take_attendance: event.take_attendance,
         })
         .eq('event_id', event.event_id)
 
@@ -152,7 +149,7 @@ const updateEvent = async (event: RobotEvent) => {
 }
 
 /**
- * Total number of events in season (so far)
+ * Total number of events in season (so far) not deleted that you can take attendance at
  * Season is the year the game comes out (in January)
  */
 const getNumberOfEvents = async (season: string) => {
@@ -164,6 +161,7 @@ const getNumberOfEvents = async (season: string) => {
         .eq('deleted', false)
         .gte('event_date', startDate)
         .lte('event_date', theEnd)
+        .eq('take_attendance', true)
 
     if (error) throw error
     return count as number
