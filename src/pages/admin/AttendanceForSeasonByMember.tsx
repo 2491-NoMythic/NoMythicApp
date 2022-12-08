@@ -3,6 +3,7 @@ import { Accessor, Component, createEffect, createMemo, createResource, createSi
 import { getAttendanceForAllMembers } from '../../api/attendance'
 import { getSeasonEvents } from '../../api/events'
 import { getMembers } from '../../api/members'
+import { toDate } from '../../calendar/utilities'
 import { RouteKeys } from '../../components/AppRouting'
 import SubTeamSelector from '../../components/SubTeamSelector'
 import { useSessionContext } from '../../contexts/SessionContext'
@@ -11,6 +12,7 @@ import { isEmpty } from '../../utilities/bitsAndBobs'
 import { filterBySubTeam } from '../../utilities/filters'
 import { calculatePercent, capitalizeWord, formatUrl } from '../../utilities/formatters'
 import { sortByFirstName } from '../../utilities/sorts'
+import Config from '../../config'
 
 const AttendanceForSeasonByMember: Component<{ season: Accessor<string> }> = (props) => {
     const [allAttendance] = createResource(props.season, getAttendanceForAllMembers)
@@ -45,6 +47,42 @@ const AttendanceForSeasonByMember: Component<{ season: Accessor<string> }> = (pr
         })
         return records.length
     })
+
+    // function to get the number of attended events by a member of the last few regular events (Config.lastNumPracticesAttended).
+    // events should be sorted on backend
+    const lastFewRegularCount = (memberId: number) => {
+        if (isEmpty(events())) {
+            return 0
+        }
+        // get only regular events
+        const filtered = events().filter((event: RobotEvent) => {
+            return event.event_type === EventTypes.REGULAR_PRACTICE
+        })
+        // need the date of the practice we are going by
+        let lastDate: string
+        // if we have less events than the number we are looking for, take the last one
+        if (filtered.length < Config.lastNumPracticesAttended) {
+            lastDate = filtered[filtered.length - 1].event_date
+        } else {
+            lastDate = filtered[Config.lastNumPracticesAttended - 1].event_date
+        }
+        // now find the attendance records for the events limited by the date we figured out
+        const records = allAttendance().filter((record) => {
+            const event = eventMap().get(record.event_id)
+            // undefined means the event shouldn't have had attendance records on it
+            return (
+                event !== undefined &&
+                record.member_id === memberId &&
+                event.event_type === EventTypes.REGULAR_PRACTICE &&
+                record.attendance !== AttendanceTypes.ABSENT &&
+                toDate(record.meeting_date) >= toDate(lastDate)
+            )
+        })
+        if (isEmpty(records)) {
+            return 0
+        }
+        return records.length
+    }
 
     // function to get practices attended by a member
     const getFullCount = (memberId: number) => {
@@ -91,9 +129,6 @@ const AttendanceForSeasonByMember: Component<{ season: Accessor<string> }> = (pr
         setfilteredMembers(sorted)
     })
 
-    createEffect(() => {
-        console.log(allAttendance())
-    })
     // the show prevents race condition when solid can't tell eventMap updated on it's own
     return (
         <Show when={eventMap()?.size > 0 && allAttendance()?.length > 0}>
@@ -113,11 +148,13 @@ const AttendanceForSeasonByMember: Component<{ season: Accessor<string> }> = (pr
                             <td>Team Role</td>
                             <td>All</td>
                             <td>Regular</td>
+                            <td>Last {Config.lastNumPracticesAttended}</td>
                         </tr>
                         <tr class="table-row lg:hidden">
                             <td>Member</td>
                             <td>All</td>
                             <td>Regular</td>
+                            <td>Last {Config.lastNumPracticesAttended}</td>
                         </tr>
                     </thead>
                     <tbody>
@@ -125,6 +162,7 @@ const AttendanceForSeasonByMember: Component<{ season: Accessor<string> }> = (pr
                             {(record) => {
                                 const fullCount = getFullCount(record.member_id)
                                 const regularCount = getRegularCount(record.member_id)
+                                const lastFew = lastFewRegularCount(record.member_id)
                                 return (
                                     <tr>
                                         <td
@@ -160,6 +198,7 @@ const AttendanceForSeasonByMember: Component<{ season: Accessor<string> }> = (pr
                                         <td>
                                             {regularCount} ({calculatePercent(regularCount, allRegularCount())}%)
                                         </td>
+                                        <td>{lastFew}</td>
                                     </tr>
                                 )
                             }}

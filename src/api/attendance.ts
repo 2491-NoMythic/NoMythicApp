@@ -100,7 +100,6 @@ const getAttendanceForMember = async ({ season, memberId }) => {
         .eq('member_id', memberId)
         .gte('meeting_date', startDate)
         .lte('meeting_date', theEnd)
-        .eq('take_attendance', true)
 
     if (error) throw error
 
