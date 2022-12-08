@@ -1,28 +1,27 @@
-import { Component, createEffect, createResource, createSignal, Show, Suspense } from 'solid-js'
-import SubTeamSelector from '../../components/SubTeamSelector'
-import { filterBySubTeam } from '../../utilities/filters'
-import { sortByFirstName } from '../../utilities/sorts'
-import SelectTeamInfoMessage from '../../components/SelectTeamInfoMessage'
-import { MemberAttendance } from '../../types/Api'
-import { getMemberAttendance } from '../../api/attendance'
-import AttendanceList from '../../components/AttendanceList'
-import PageLoading from '../../components/PageLoading'
-import { useSessionContext } from '../../contexts/SessionContext'
-import { getToday, toDate, toYMD } from '../../calendar/utilities'
-import { useNoMythicUser } from '../../contexts/UserContext'
-import IoCalendarOutline from '../../components/icons/IoCalendarOutline'
-import EventPicker from '../../calendar/components/EventPicker'
-import { getEventById, getEventsForDay } from '../../api/events'
-import { eventColors } from '../../types/UiConstants'
-import { format } from 'date-fns'
-import { formatEnumValue, formatUrl } from '../../utilities/formatters'
 import { useNavigate, useParams } from '@solidjs/router'
+import { format } from 'date-fns'
+import { Component, createEffect, createResource, createSignal, Show, Suspense } from 'solid-js'
+import { getMemberAttendance } from '../../api/attendance'
+import { getEventById, getEventsForDay } from '../../api/events'
+import EventPicker from '../../calendar/components/EventPicker'
+import { getToday, toDate, toYMD } from '../../calendar/utilities'
 import { RouteKeys } from '../../components/AppRouting'
+import AttendanceList from '../../components/AttendanceList'
 import BsCalendarPlus from '../../components/icons/BsCalendarPlus'
+import IoCalendarOutline from '../../components/icons/IoCalendarOutline'
+import PageLoading from '../../components/PageLoading'
+import SelectTeamInfoMessage from '../../components/SelectTeamInfoMessage'
+import SubTeamSelector from '../../components/SubTeamSelector'
+import { useSessionContext } from '../../contexts/SessionContext'
+import { useNoMythicUser } from '../../contexts/UserContext'
+import { MemberAttendance } from '../../types/Api'
+import { eventColors } from '../../types/UiConstants'
+import { filterBySubTeam } from '../../utilities/filters'
+import { formatEnumValue, formatUrl } from '../../utilities/formatters'
+import { sortByFirstName } from '../../utilities/sorts'
 
 const AttendancePage: Component = () => {
     const [filteredTeam, setFilteredTeam] = createSignal<MemberAttendance[]>([])
-    const [meetingDate, setMeetingDate] = createSignal<string>(toYMD(getToday()))
     const [showEventSelector, setShowEventSelector] = createSignal(false)
 
     const params = useParams()
@@ -31,6 +30,10 @@ const AttendancePage: Component = () => {
     const { isAdmin } = useNoMythicUser()
 
     const [team, { refetch }] = createResource(() => parseInt(params.id || '-1'), getMemberAttendance)
+
+    // meeting date is only used for getting inital data
+    const [meetingDate, setMeetingDate] = createSignal<string>(toYMD(getToday()))
+    // eventsToday is only used to get initial data when hitting the page for first time
     const [eventsToday] = createResource(meetingDate, getEventsForDay)
     const [selectedEvent] = createResource(() => parseInt(params.id || '-1'), getEventById)
 
@@ -90,7 +93,7 @@ const AttendancePage: Component = () => {
                     </div>
                 </Show>
                 <Show when={eventsToday()?.length > 1 && params.id === undefined}>
-                    <div class="alert shadow-lg mt-4">There are multiple events today. Select an event.</div>
+                    <div class="alert shadow-lg mt-4">There are multiple events today. Pick an event.</div>
                 </Show>
                 <Show when={selectedEvent()?.event_id}>
                     <div class="alert shadow-lg mt-4">
@@ -129,7 +132,7 @@ const AttendancePage: Component = () => {
                 />
                 <AttendanceList
                     eventId={parseInt(params.id)}
-                    meetingDate={meetingDate()}
+                    meetingDate={selectedEvent()?.event_date}
                     teamMembers={filteredTeam}
                     refetch={refetch}
                 />

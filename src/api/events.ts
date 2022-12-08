@@ -40,6 +40,7 @@ const getSeasonEvents = async (season: string) => {
         .lte('event_date', theEnd)
         .eq('deleted', false)
         .eq('take_attendance', true)
+        .order('event_date', { ascending: false })
 
     if (error) throw error
 

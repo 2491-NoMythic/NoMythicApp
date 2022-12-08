@@ -1,6 +1,5 @@
 import { useNavigate } from '@solidjs/router'
-import { HiSolidUserGroup } from 'solid-icons/hi'
-import { Accessor, Component, For, Show } from 'solid-js'
+import { Accessor, Component, createEffect, For, Show } from 'solid-js'
 import { insertAttendance, updateAttendance } from '../api/attendance'
 import { AttendanceTypes, AttendanceTypesType, MemberAttendance, SubTeam } from '../types/Api'
 import { capitalizeWord, formatUrl } from '../utilities/formatters'
