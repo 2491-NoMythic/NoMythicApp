@@ -56,13 +56,28 @@ const getMemberAttendance = async (eventId: number) => {
  */
 const getAttendance = async (eventId: number) => {
     const { data, error } = await supabase.from('attendance').select().eq('event_id', eventId)
-
     if (error) throw error
-
     if (data.length === 0) {
         return null
     }
     return data as Attendance[]
+}
+
+/**
+ * Check to see if an attendance records exists or not yet. We don't want to insert a second record
+ * for a member on the same event.
+ *
+ * @param eventId number
+ * @param memberId number
+ */
+const checkAttendanceForEvent = async (eventId: number, memberId: number) => {
+    const { data, error } = await supabase
+        .from('attendance')
+        .select('*')
+        .eq('event_id', eventId)
+        .eq('member_id', memberId)
+    if (error) throw error
+    return data.length !== 0
 }
 
 const updateAttendance = async (attendanceId: number, attendanceType: AttendanceTypesType) => {
@@ -70,7 +85,6 @@ const updateAttendance = async (attendanceId: number, attendanceType: Attendance
         .from('attendance')
         .update([{ attendance: attendanceType }])
         .eq('attendance_id', attendanceId)
-
     if (error) throw error
 }
 
@@ -83,7 +97,6 @@ const insertAttendance = async (
     const { data, error } = await supabase
         .from('attendance')
         .insert([{ event_id: eventId, meeting_date: meetingDate, member_id: memberId, attendance: attendanceType }])
-
     if (error) throw error
 }
 
@@ -102,7 +115,6 @@ const getAttendanceForMember = async ({ season, memberId }) => {
         .lte('meeting_date', theEnd)
 
     if (error) throw error
-
     if (data.length === 0) {
         return null
     }
@@ -135,6 +147,7 @@ const getAttendanceForAllMembers = async (season: string) => {
 export {
     getMemberAttendance,
     getAttendance,
+    checkAttendanceForEvent,
     updateAttendance,
     insertAttendance,
     getAttendanceForMember,
