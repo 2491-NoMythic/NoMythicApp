@@ -1,6 +1,6 @@
 import { useNavigate } from '@solidjs/router'
 import { Accessor, Component, createEffect, For, Show } from 'solid-js'
-import { insertAttendance, updateAttendance } from '../api/attendance'
+import { checkAttendanceForEvent, insertAttendance, updateAttendance } from '../api/attendance'
 import { AttendanceTypes, AttendanceTypesType, MemberAttendance, SubTeam } from '../types/Api'
 import { capitalizeWord, formatUrl } from '../utilities/formatters'
 import { RouteKeys } from './AppRouting'
@@ -26,7 +26,11 @@ const AttendanceList: Component<{
     const handleClick = async (data: data, event) => {
         event.preventDefault()
         if (data.attendanceId === undefined) {
-            await insertAttendance(props.eventId, props.meetingDate, data.memberId, data.attendanceType)
+            // we don't want to insert if the record is already there - just ignore
+            const existsAlready = await checkAttendanceForEvent(props.eventId, data.memberId)
+            if (!existsAlready) {
+                await insertAttendance(props.eventId, props.meetingDate, data.memberId, data.attendanceType)
+            }
         } else {
             await updateAttendance(data.attendanceId, data.attendanceType)
         }
