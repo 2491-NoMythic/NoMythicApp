@@ -17,7 +17,6 @@ const Parents: Component = () => {
     const [opened, setOpened] = createSignal(false)
     // parentId used for delete
     const [parentId, setParentId] = createSignal<number>(null)
-    //const navigate = useNavigate()
 
     const doCancel = () => {
         setParentId(null)

@@ -1,7 +1,7 @@
 import { useFormHandler, yupSchema } from 'solid-form-handler'
 import { TextField } from '../../components/forms'
 import * as yup from 'yup'
-import { Component, createResource, Show, Suspense } from 'solid-js'
+import { Component, createEffect, createResource, Show, Suspense } from 'solid-js'
 import { A, useNavigate, useParams, useSearchParams } from '@solidjs/router'
 import { getMemberById } from '../../api/members'
 import PageLoading from '../../components/PageLoading'
@@ -43,7 +43,6 @@ const ParentEdit: Component = () => {
     const params = useParams()
     const [member] = createResource(() => parseInt(params.mid), getMemberById)
     const [parent] = createResource(() => parseInt(params.pid), getParentById)
-    const [searchParams] = useSearchParams()
     const navigate = useNavigate()
 
     const submit = async (event: Event) => {
@@ -79,10 +78,10 @@ const ParentEdit: Component = () => {
         <Suspense fallback={<PageLoading />}>
             <div class="card max-w-5xl bg-base-100 shadow-xl mt-4">
                 <div class="card-body">
-                    <Show when={member()?.member_id === undefined} fallback={<h2 class="card-title">Edit Parent</h2>}>
-                        <h2 class="card-title">New Member</h2>
+                    <Show when={params.pid === '0'} fallback={<h2 class="card-title">Edit Parent</h2>}>
+                        <h2 class="card-title">Add Parent</h2>
                     </Show>
-                    <Show when={member() !== undefined}>
+                    <Show when={params.pid === '0' || (params.pid !== '0' && parent()?.parent_id !== undefined)}>
                         <form onSubmit={submit}>
                             <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
                                 <TextField
@@ -145,7 +144,7 @@ const ParentEdit: Component = () => {
                                 />
                             </div>
                             <div class="card-actions justify-end">
-                                <A href={formatUrl(RouteKeys.PARENT_LIST.nav, { mid: member().member_id })}>
+                                <A href={formatUrl(RouteKeys.PARENT_LIST.nav, { mid: member()?.member_id })}>
                                     <button class="btn btn-secondary modal-button mr-6">Cancel</button>
                                 </A>
                                 <button
