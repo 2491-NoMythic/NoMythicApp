@@ -15,6 +15,7 @@ import { Checkbox } from '../../components/forms/Checkbox'
 import { createInputMask } from '@solid-primitives/input-mask'
 import { HiOutlineTrash } from 'solid-icons/hi'
 import { isEmpty } from '../../utilities/bitsAndBobs'
+import { transform } from '@babel/core'
 
 // Definition of the fields we will do validatio on
 type RobotEvent = {
@@ -27,6 +28,14 @@ type RobotEvent = {
     virtual: boolean
     all_day: boolean
     take_attendance: boolean
+}
+
+// helper for yup transform function
+const emptyStringToNull = (value, originalValue) => {
+    if (typeof originalValue === 'string' && originalValue === '') {
+        return null
+    }
+    return value
 }
 
 // these are the validation rules
@@ -46,6 +55,7 @@ export const eventSchema: yup.SchemaOf<RobotEvent> = yup.object({
     start_time: yup
         .string()
         .notRequired()
+        .transform(emptyStringToNull)
         .nullable()
         .test('is-time', 'Invalid time', (value) => {
             return isValidTime(value)
@@ -53,6 +63,7 @@ export const eventSchema: yup.SchemaOf<RobotEvent> = yup.object({
     end_time: yup
         .string()
         .notRequired()
+        .transform(emptyStringToNull)
         .nullable()
         .test('is-time', 'Invalid time', (value) => {
             return isValidTime(value)

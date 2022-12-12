@@ -179,7 +179,9 @@ const isValidTime = (timeString: string) => {
     if (timeString === undefined || timeString === null) {
         return true
     }
-    if (timeString.length < 8) {
+    // we want 'am' or 'pm' not 'a' or 'p' which pass the isValid
+    const regex = /(am|pm|AM|PM)$/
+    if (!regex.test(timeString)) {
         return false
     }
     const theTime = parse(timeString, 'h:m a', new Date())
