@@ -11,7 +11,7 @@ render(
     () => (
         <Router>
             <UserProvider initialState={{ authSession: {}, googleUser: {}, member: {} }}>
-                <SessionProvider initialState={{ subTeam: null, season: null }}>
+                <SessionProvider initialState={{ subTeam: null, season: null, attendanceTab: null }}>
                     <App />
                 </SessionProvider>
             </UserProvider>
