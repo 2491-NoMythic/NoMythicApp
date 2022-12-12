@@ -9,11 +9,12 @@ import { SelectableField, DateField, TextField } from '../../components/forms'
 import PageLoading from '../../components/PageLoading'
 import { TextArea } from '../../components/forms/TextArea'
 import { isValid } from 'date-fns'
-import { getToday, toDate, toYMD } from '../../calendar/utilities'
+import { getToday, isValidTime, toDate, toYMD } from '../../calendar/utilities'
 import { formatUrl } from '../../utilities/formatters'
 import { Checkbox } from '../../components/forms/Checkbox'
 import { createInputMask } from '@solid-primitives/input-mask'
 import { HiOutlineTrash } from 'solid-icons/hi'
+import { isEmpty } from '../../utilities/bitsAndBobs'
 
 // Definition of the fields we will do validatio on
 type RobotEvent = {
@@ -42,14 +43,26 @@ export const eventSchema: yup.SchemaOf<RobotEvent> = yup.object({
         .oneOf(['regular_practice', 'extra_practice', 'competition', 'event', 'meeting'], 'Please select'),
     description: yup.string().notRequired().max(300, 'Max 300 characters'),
     title: yup.string().notRequired().max(50).nullable(),
-    start_time: yup.string().notRequired().nullable(),
-    end_time: yup.string().notRequired().nullable(),
+    start_time: yup
+        .string()
+        .notRequired()
+        .nullable()
+        .test('is-time', 'Invalid time', (value) => {
+            return isValidTime(value)
+        }),
+    end_time: yup
+        .string()
+        .notRequired()
+        .nullable()
+        .test('is-time', 'Invalid time', (value) => {
+            return isValidTime(value)
+        }),
     virtual: yup.boolean().required().default(false),
     all_day: yup.boolean().required().default(false),
     take_attendance: yup.boolean().required().default(false), // will not work defaulting to true
 })
 
-const timeInputHandler = createInputMask('99:99 aa')
+const timeInputHandler = createInputMask([/^[0-9]{1,2}/, ':', /[0-9]{1,2}/, ' ', /[ap|AP]/, /[m|M]/])
 
 const EventEdit: Component = () => {
     const formHandler = useFormHandler(yupSchema(eventSchema))
@@ -81,8 +94,8 @@ const EventEdit: Component = () => {
                 event_type: formData().event_type,
                 description: formData().description,
                 title: formData().title,
-                start_time: formData().start_time,
-                end_time: formData().end_time,
+                start_time: formData().start_time.toUpperCase(),
+                end_time: formData().end_time.toUpperCase(),
                 virtual: formData().virtual,
                 all_day: formData().all_day,
                 take_attendance: formData().take_attendance,

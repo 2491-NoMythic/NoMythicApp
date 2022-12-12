@@ -12,6 +12,7 @@ import {
     parse,
     getDate,
     endOfWeek,
+    isValid,
 } from 'date-fns'
 import { RobotEvent } from '../types/Api'
 import { MonthValues, Month, Week } from './types'
@@ -174,4 +175,26 @@ const toDate = (aDate: string) => {
     return parse(aDate, 'yyyy-MM-dd', new Date())
 }
 
-export { getMonthValues, getCalendar, getCalendarMerged, getSelectedEvents, toYMD, toMDY, stripTime, getToday, toDate }
+const isValidTime = (timeString: string) => {
+    if (timeString === undefined || timeString === null) {
+        return true
+    }
+    if (timeString.length < 8) {
+        return false
+    }
+    const theTime = parse(timeString, 'h:m a', new Date())
+    return isValid(theTime)
+}
+
+export {
+    getMonthValues,
+    getCalendar,
+    getCalendarMerged,
+    getSelectedEvents,
+    toYMD,
+    toMDY,
+    stripTime,
+    getToday,
+    toDate,
+    isValidTime,
+}
