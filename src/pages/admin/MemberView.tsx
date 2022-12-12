@@ -76,10 +76,6 @@ const MemberView: Component = () => {
                                 <td>{member()?.phone}</td>
                             </tr>
                             <tr>
-                                <td>Address</td>
-                                <td>{member()?.address}</td>
-                            </tr>
-                            <tr>
                                 <td>Food Needs</td>
                                 <td>{member()?.food_needs}</td>
                             </tr>
@@ -113,6 +109,12 @@ const MemberView: Component = () => {
                                             <span class="hidden lg:inline ml-2 mb-1">View / Edit</span>
                                         </A>
                                     </td>
+                                </tr>
+                            </Show>
+                            <Show when={member()?.school === School.NON_STUDENT}>
+                                <tr>
+                                    <td>Address</td>
+                                    <td>{member()?.address}</td>
                                 </tr>
                             </Show>
                         </tbody>

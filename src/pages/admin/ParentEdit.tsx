@@ -8,6 +8,7 @@ import PageLoading from '../../components/PageLoading'
 import { getParentById, saveParent, updateParent } from '../../api/parents'
 import { formatUrl } from '../../utilities/formatters'
 import { RouteKeys } from '../../components/AppRouting'
+import { createInputMask } from '@solid-primitives/input-mask'
 
 // Definition of the fields we will do validatio on
 type Parent = {
@@ -23,13 +24,27 @@ type Parent = {
     zip: string
 }
 
+// helper for yup transform function
+const emptyStringToNull = (value, originalValue) => {
+    if (typeof originalValue === 'string' && originalValue === '') {
+        return null
+    }
+    return value
+}
+
 // These are the validation rules
 export const parentSchema: yup.SchemaOf<Parent> = yup.object({
     first_name: yup.string().required('Required field').max(40, 'Max 40 characters'),
     last_name: yup.string().required('Required field').max(40, 'Max 40 characters'),
     pronouns: yup.string().notRequired().max(20, 'Max 20 characters'),
     email: yup.string().email('Invalid email').required('Required field').max(60, 'Max 60 characters'),
-    phone: yup.string().notRequired().max(14, 'Max 14 characters'),
+    phone: yup
+        .string()
+        .notRequired()
+        .min(14, 'Number Incomplete')
+        .max(14, 'Max 14 characters')
+        .transform(emptyStringToNull)
+        .nullable(),
     addr1: yup.string().notRequired().max(60, 'Max 60 characters'),
     addr2: yup.string().notRequired().max(60, 'Max 60 characters'),
     city: yup.string().notRequired().max(40, 'Max 40 characters'),
@@ -44,6 +59,7 @@ const ParentEdit: Component = () => {
     const [member] = createResource(() => parseInt(params.mid), getMemberById)
     const [parent] = createResource(() => parseInt(params.pid), getParentById)
     const navigate = useNavigate()
+    const phoneInputHandler = createInputMask('(999) 999-9999')
 
     const submit = async (event: Event) => {
         event.preventDefault()
@@ -68,7 +84,7 @@ const ParentEdit: Component = () => {
             } else {
                 await updateParent(updatedParent)
             }
-            navigate(formatUrl(RouteKeys.PARENT_VIEW.nav, { mid: member()?.member_id }))
+            navigate(formatUrl(RouteKeys.PARENT_LIST.nav, { mid: member()?.member_id }))
         } catch (error) {
             console.error(error)
         }
@@ -113,9 +129,12 @@ const ParentEdit: Component = () => {
                                 />
                                 <TextField
                                     label="Phone Number"
+                                    altLabel="Required"
                                     name="phone"
                                     value={parent()?.phone}
                                     formHandler={formHandler}
+                                    onInput={phoneInputHandler}
+                                    onPaste={phoneInputHandler}
                                 />
                                 <TextField
                                     label="Address Line 1"
