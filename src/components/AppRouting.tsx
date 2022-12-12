@@ -78,7 +78,7 @@ export const RouteKeys = {
     },
     PARENT_VIEW: {
         route: '/member/:mid/parent/:pid',
-        nav: '/member/:mid/parent/:pid',
+        nav: '/admin/member/:mid/parent/:pid',
         regex: /\/admin\/member\/[0-9]+\/parent\/[0-9]+$/,
         display: 'View Parent',
     },

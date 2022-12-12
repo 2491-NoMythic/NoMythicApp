@@ -11,7 +11,6 @@ const ParentView: Component = () => {
     const params = useParams()
     const [member] = createResource(() => parseInt(params.mid), getMemberById)
     const [parent] = createResource(() => parseInt(params.pid), getParentById)
-    const [searchParams] = useSearchParams()
     const [opened, setOpened] = createSignal(false)
     const navigate = useNavigate()
 

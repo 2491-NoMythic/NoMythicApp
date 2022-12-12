@@ -7,6 +7,7 @@ import { getMemberById, newMemberFromAdmin, saveMemberFromAdmin, saveMemberFromP
 import { School, SchoolType, SubTeam, SubTeamType, TeamRole, TeamRoleType } from '../../types/Api'
 import PageLoading from '../../components/PageLoading'
 import { RouteKeys } from '../../components/AppRouting'
+import { createInputMask } from '@solid-primitives/input-mask'
 
 // Definition of the fields we will do validatio on
 type User = {
@@ -40,7 +41,13 @@ export const userSchema: yup.SchemaOf<User> = yup.object({
     sub_team: yup.mixed<SubTeamType>().oneOf(['build', 'unassigned', 'operations', 'programming']),
     team_role: yup.mixed<TeamRoleType>().oneOf(['member', 'captain', 'coach', 'mentor']),
     email: yup.string().email('Invalid email').required('Required field').max(60, 'Max 60 characters'),
-    phone: yup.string().notRequired().max(14, 'Max 14 characters'),
+    phone: yup
+        .string()
+        .notRequired()
+        .min(14, 'Number Incomplete')
+        .max(14, 'Max 14 characters')
+        .transform(emptyStringToNull)
+        .nullable(),
     address: yup.string().notRequired().max(100, 'Max 100 characters'),
     food_needs: yup.string().notRequired().max(60, 'Max 60 characters'),
     school: yup.mixed<SchoolType>().oneOf(['non_student', 'avalon', 'grs', 'other']),
@@ -60,6 +67,7 @@ const MemberEdit: Component = () => {
     const params = useParams()
     const [member] = createResource(() => parseInt(params.mid), getMemberById)
     const navigate = useNavigate()
+    const phoneInputHandler = createInputMask('(999) 999-9999')
 
     const submit = async (event: Event) => {
         event.preventDefault()
@@ -154,18 +162,14 @@ const MemberEdit: Component = () => {
                                     value={member()?.email}
                                     formHandler={formHandler}
                                 />
-
                                 <TextField
                                     label="Phone Number"
+                                    altLabel="(555) 555-5555"
                                     name="phone"
                                     value={member()?.phone}
                                     formHandler={formHandler}
-                                />
-                                <TextField
-                                    label="Home Address"
-                                    name="address"
-                                    value={member()?.address}
-                                    formHandler={formHandler}
+                                    onInput={phoneInputHandler}
+                                    onPaste={phoneInputHandler}
                                 />
                                 <TextField
                                     label="Food needs"
@@ -204,6 +208,14 @@ const MemberEdit: Component = () => {
                                         label="Graduation Year"
                                         name="grad_year"
                                         value={member()?.grad_year}
+                                        formHandler={formHandler}
+                                    />
+                                </Show>
+                                <Show when={formData().school === School.NON_STUDENT}>
+                                    <TextField
+                                        label="Address"
+                                        name="address"
+                                        value={member()?.address}
                                         formHandler={formHandler}
                                     />
                                 </Show>
