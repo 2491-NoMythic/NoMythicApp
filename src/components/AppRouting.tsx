@@ -22,6 +22,7 @@ const AttendanceForMeeting = lazy(() => import('../pages/admin/AttendanceForMeet
 const AttendanceForMember = lazy(() => import('../pages/admin/AttendanceForMember'))
 const FullCalendar = lazy(() => import('../calendar/components/FullCalendar'))
 const EventEdit = lazy(() => import('../pages/admin/EventEdit'))
+const CheckinForMeeting = lazy(() => import('../pages/admin/CheckinForMeeting'))
 
 /**
  * route: the path to give in the <Route> tags - no prefix like /admin or /members
@@ -56,7 +57,6 @@ export const RouteKeys = {
         regex: /\/members\/attendance\/[0-9]+$/,
         display: 'Take Attendance',
     },
-
     TEAM_LIST: { route: '/teamlist', nav: '/admin/teamlist', regex: /\/admin\/teamlist$/, display: 'Team List' },
     MEMBER_VIEW: {
         route: '/member/:mid',
@@ -118,6 +118,12 @@ export const RouteKeys = {
         regex: /\/admin\/eventedit\/[0-9]+$/,
         display: 'Edit Event',
     },
+    CHECKIN_MEETING: {
+        route: '/checkin/event/:id',
+        nav: '/admin/checkin/event/:id',
+        regex: /\/admin\/checking\/event\/[0-9]+$/,
+        display: 'Member Checkin',
+    },
 } as const
 
 /**
@@ -159,6 +165,7 @@ const AppRouting = () => {
                 <Route path={RouteKeys.ATTENDANCE_MEMBER.route} component={AttendanceForMember} />
                 <Route path={RouteKeys.ATTENDANCE_MEETING.route} component={AttendanceForMeeting} />
                 <Route path={RouteKeys.EVENT_EDIT.route} component={EventEdit} />
+                <Route path={RouteKeys.CHECKIN_MEETING.route} component={CheckinForMeeting} />
             </Route>
 
             <Route path="*" component={Redirect} />
