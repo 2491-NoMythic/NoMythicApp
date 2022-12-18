@@ -67,6 +67,11 @@ const EventMenu: Component<inputs> = (props) => {
                             Edit Event
                         </A>
                     </li>
+                    <li>
+                        <A href={formatUrl(RouteKeys.TAKE_CHECKIN_ID.nav, { id: props.eventId })} onClick={close}>
+                            Checkin
+                        </A>
+                    </li>
                 </ul>
             </div>
         </div>

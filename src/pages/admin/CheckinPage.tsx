@@ -1,11 +1,11 @@
 import { useNavigate, useParams } from '@solidjs/router'
 import { Component, createEffect, createResource, createSignal, Show, Suspense } from 'solid-js'
-import { getMemberAttendance } from '../../api/attendance'
+import { getMemberCheckins } from '../../api/checkin'
 import { getEventById, getEventsForDay } from '../../api/events'
 import EventPicker from '../../calendar/components/EventPicker'
 import { getToday, toDate, toYMD } from '../../calendar/utilities'
 import { RouteKeys } from '../../components/AppRouting'
-import AttendanceList from '../../components/AttendanceList'
+import CheckinList from '../../components/CheckinList'
 import BsCalendarPlus from '../../components/icons/BsCalendarPlus'
 import IoCalendarOutline from '../../components/icons/IoCalendarOutline'
 import PageLoading from '../../components/PageLoading'
@@ -14,15 +14,15 @@ import SelectTeamInfoMessage from '../../components/SelectTeamInfoMessage'
 import SubTeamSelector from '../../components/SubTeamSelector'
 import { useSessionContext } from '../../contexts/SessionContext'
 import { useNoMythicUser } from '../../contexts/UserContext'
-import { MemberAttendance } from '../../types/Api'
+import { MemberCheckin } from '../../types/Api'
 import { filterBySubTeam } from '../../utilities/filters'
 import { formatUrl } from '../../utilities/formatters'
 import { sortByFirstName } from '../../utilities/sorts'
 
-/* NOTE: This page has a ton of code in common with CheckinPage */
+/* NOTE: This page has a ton of code in common with AttendancePage */
 
-const AttendancePage: Component = () => {
-    const [filteredTeam, setFilteredTeam] = createSignal<MemberAttendance[]>([])
+const CheckinPage: Component = () => {
+    const [filteredTeam, setFilteredTeam] = createSignal<MemberCheckin[]>([])
     const [showEventSelector, setShowEventSelector] = createSignal(false)
 
     const params = useParams()
@@ -30,7 +30,7 @@ const AttendancePage: Component = () => {
     const [sessionValues] = useSessionContext()
     const { isAdmin } = useNoMythicUser()
 
-    const [team, { refetch }] = createResource(() => parseInt(params.id || '-1'), getMemberAttendance)
+    const [team, { refetch }] = createResource(() => parseInt(params.id || '-1'), getMemberCheckins)
 
     // meeting date is only used for getting inital data
     const [meetingDate, setMeetingDate] = createSignal<string>(toYMD(getToday()))
@@ -49,14 +49,14 @@ const AttendancePage: Component = () => {
     const handleEventChange = (eventId: number) => {
         setShowEventSelector(false)
         if (eventId !== -1) {
-            navigate(formatUrl(RouteKeys.TAKE_ATTENDANCE_ID.nav, { id: eventId }))
+            navigate(formatUrl(RouteKeys.TAKE_CHECKIN_ID.nav, { id: eventId }))
         }
     }
 
     // if there is one event for today, and nothing picked yet, use that event
     createEffect(() => {
         if (eventsToday()?.length === 1 && params.id === undefined) {
-            navigate(formatUrl(RouteKeys.TAKE_ATTENDANCE_ID.nav, { id: eventsToday()[0].event_id }))
+            navigate(formatUrl(RouteKeys.TAKE_CHECKIN_ID.nav, { id: eventsToday()[0].event_id }))
         }
     })
 
@@ -84,7 +84,7 @@ const AttendancePage: Component = () => {
                                     href={formatUrl(
                                         RouteKeys.EVENT_EDIT.nav,
                                         { id: 0 },
-                                        { date: toYMD(getToday()), back: 'ATTENDANCE' }
+                                        { date: toYMD(getToday()), back: 'CHECKIN' }
                                     )}
                                 >
                                     New <BsCalendarPlus />
@@ -103,12 +103,7 @@ const AttendancePage: Component = () => {
                     show={filteredTeam().length === 0}
                     extraMessage="Using current season. Pick an event."
                 />
-                <AttendanceList
-                    eventId={parseInt(params.id)}
-                    meetingDate={selectedEvent()?.event_date}
-                    teamMembers={filteredTeam}
-                    refetch={refetch}
-                />
+                <CheckinList eventId={parseInt(params.id)} teamMembers={filteredTeam} refetch={refetch} />
             </div>
             <Show when={showEventSelector()}>
                 <EventPicker aDate={toDate(meetingDate())} handleSelect={handleEventChange} />
@@ -117,4 +112,4 @@ const AttendancePage: Component = () => {
     )
 }
 
-export default AttendancePage
+export default CheckinPage

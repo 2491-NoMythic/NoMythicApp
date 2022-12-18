@@ -88,6 +88,11 @@ const MainMenu: Component<{ children: JSX.Element }> = (props) => {
                                     </A>
                                 </li>
                                 <li>
+                                    <A href={RouteKeys.TAKE_CHECKIN.nav} onClick={closeMenu}>
+                                        Check In
+                                    </A>
+                                </li>
+                                <li>
                                     <A href={RouteKeys.ATTENDANCE_SEASON.nav} onClick={closeMenu}>
                                         Admin Attendance
                                     </A>

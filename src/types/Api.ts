@@ -46,6 +46,13 @@ const EventTypes = {
 } as const
 type EventTypesType = typeof EventTypes[keyof typeof EventTypes]
 
+const CheckinStatus = {
+    GOOD: 'good',
+    OK: 'ok',
+    BAD: 'bad',
+} as const
+type CheckinStatusType = typeof CheckinStatus[keyof typeof CheckinStatus]
+
 type Member = {
     member_id?: number
     auth_id?: string
@@ -141,6 +148,23 @@ type RobotEvent = {
     take_attendance: boolean
 }
 
+type Checkin = {
+    checkin_id?: number
+    event_id: number
+    member_id: number
+    member_status: CheckinStatusType
+    description?: string
+}
+
+type MemberCheckin = {
+    member_id: number
+    first_name: string
+    last_name: string
+    sub_team: SubTeamType
+    team_role: TeamRoleType
+    checkin: Checkin
+}
+
 export type {
     MemberAttendance,
     Member,
@@ -157,6 +181,9 @@ export type {
     RobotEvent,
     EventTypesType,
     EventAttendance,
+    Checkin,
+    CheckinStatusType,
+    MemberCheckin,
 }
 
-export { SubTeam, TeamRole, AttendanceTypes, School, EventTypes }
+export { SubTeam, TeamRole, AttendanceTypes, School, EventTypes, CheckinStatus }
