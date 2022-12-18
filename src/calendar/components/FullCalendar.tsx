@@ -130,8 +130,8 @@ const FullCalendar: Component = () => {
                             </div>
                         </div>
                     </div>
-                    <div class="card w-full xl:w-96 xl:ml-4 bg-base-100 shadow-xl mt-4 xl:mt-0">
-                        <div class="card-body p-4 flex">
+                    <div class="card w-full xl:w-96 xl:ml-4 bg-base-100 shadow-xl mt-4 xl:mt-0 min-h-300">
+                        <div class="card-body p-4 flex min-h-[260px]">
                             <div class="flex">
                                 <div class="card-title grow">{format(toDate(searchParams.date), 'MMMM d')}</div>
                                 <Show when={isAdmin()}>
@@ -152,7 +152,7 @@ const FullCalendar: Component = () => {
                             </Show>
                             <Show when={selectedEvents()?.length > 0}>
                                 <For each={selectedEvents()}>
-                                    {(robotEvent) => {
+                                    {(robotEvent, index) => {
                                         return (
                                             <div class="mt-4">
                                                 <div class="flex">
@@ -182,6 +182,11 @@ const FullCalendar: Component = () => {
                                                         <EventMenu
                                                             eventId={robotEvent.event_id}
                                                             takeAttendance={robotEvent.take_attendance}
+                                                            dropdownDirection={
+                                                                index() > 0 && index() === selectedEvents().length - 1
+                                                                    ? 'dropdown-end'
+                                                                    : 'dropdown-bottom'
+                                                            }
                                                         />
                                                     </Show>
                                                 </div>
