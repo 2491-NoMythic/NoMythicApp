@@ -152,8 +152,17 @@ type Checkin = {
     checkin_id?: number
     event_id: number
     member_id: number
-    status: CheckinStatusType
+    member_status: CheckinStatusType
     description?: string
+}
+
+type MemberCheckin = {
+    member_id: number
+    first_name: string
+    last_name: string
+    sub_team: SubTeamType
+    team_role: TeamRoleType
+    checkin: Checkin
 }
 
 export type {
@@ -174,6 +183,7 @@ export type {
     EventAttendance,
     Checkin,
     CheckinStatusType,
+    MemberCheckin,
 }
 
 export { SubTeam, TeamRole, AttendanceTypes, School, EventTypes, CheckinStatus }

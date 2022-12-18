@@ -56,7 +56,7 @@ type props = { mid?: number | string; pid?: number | string; id?: number | strin
 /**
  * Formats a URL with id values and query string
  *
- * @param url the RouterKeys.nav url with :mid or :pid in it
+ * @param url the RouterKeys.nav url with :id or :mid or :pid in it
  * @param props the mid or pid values to insert into the url
  * @param params the query string parameters to add to the end
  * @returns

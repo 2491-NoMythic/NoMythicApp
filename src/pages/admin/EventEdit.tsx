@@ -137,6 +137,8 @@ const EventEdit: Component = () => {
     const navUrl = () => {
         if (searchParams.back === 'ATTENDANCE') {
             return formatUrl(RouteKeys.TAKE_ATTENDANCE.nav)
+        } else if (searchParams.back === 'CHECKIN') {
+            return formatUrl(RouteKeys.TAKE_CHECKIN.nav)
         } else {
             return formatUrl(RouteKeys.FULL_CALENDAR.nav, {}, { date: formData().event_date })
         }
