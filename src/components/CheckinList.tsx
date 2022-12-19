@@ -87,7 +87,7 @@ const CheckinList: Component<{
                                                 type="radio"
                                                 name={'options' + teamMember.member_id}
                                                 data-title="GOOD"
-                                                class="btn"
+                                                class="btn min-w-[58px]"
                                                 checked={teamMember?.checkin[0]?.member_status === CheckinStatus.GOOD}
                                                 onClick={[
                                                     handleClick,
@@ -103,7 +103,7 @@ const CheckinList: Component<{
                                                 type="radio"
                                                 name={'options' + teamMember.member_id}
                                                 data-title="OK"
-                                                class="btn"
+                                                class="btn min-w-[40px]"
                                                 checked={teamMember?.checkin[0]?.member_status === CheckinStatus.OK}
                                                 onClick={[
                                                     handleClick,
@@ -119,7 +119,7 @@ const CheckinList: Component<{
                                                 type="radio"
                                                 name={'options' + teamMember.member_id}
                                                 data-title="BAD"
-                                                class="btn"
+                                                class="btn min-w-[50px]"
                                                 checked={teamMember?.checkin[0]?.member_status === CheckinStatus.BAD}
                                                 onClick={[
                                                     handleClick,
