@@ -59,6 +59,22 @@ const updateCheckIn = async (checkinId: number, memberStatus: CheckinStatusType,
     if (error) throw error
 }
 
+const updateCheckinStatus = async (checkinId: number, memberStatus: CheckinStatusType) => {
+    const { data, error } = await supabase
+        .from('checkin')
+        .update([{ member_status: memberStatus }])
+        .eq('checkin_id', checkinId)
+    if (error) throw error
+}
+
+const updateCheckinDescription = async (checkinId: number, description: string) => {
+    const { data, error } = await supabase
+        .from('checkin')
+        .update([{ description: description }])
+        .eq('checkin_id', checkinId)
+    if (error) throw error
+}
+
 const insertCheckin = async (
     eventId: number,
     memberId: number,
@@ -71,4 +87,12 @@ const insertCheckin = async (
     if (error) throw error
 }
 
-export { getMemberCheckins, checkCheckinForEvent, getCheckins, updateCheckIn, insertCheckin }
+export {
+    getMemberCheckins,
+    checkCheckinForEvent,
+    getCheckins,
+    updateCheckIn,
+    updateCheckinStatus,
+    updateCheckinDescription,
+    insertCheckin,
+}
