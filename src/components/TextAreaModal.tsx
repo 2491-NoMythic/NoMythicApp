@@ -12,13 +12,13 @@ const TextAreaModal: Component<{ title: string; text: string; callback: Function
 
     return (
         <div class="modal modal-open modal-bottom sm:modal-middle">
-            <div class="modal-box text-primary-content">
+            <div class="modal-box">
                 <div class="flex">
                     <HiOutlineDocumentText fill="none" />
                     <h3 class="font-bold ml-4">{props.title}</h3>
                 </div>
                 <div class="mt-8">
-                    <textarea ref={textbox} class="textarea textarea-bordered h-48 w-full">
+                    <textarea ref={textbox} class="textarea textarea-bordered h-48 w-full text-base">
                         {props.text}
                     </textarea>
                 </div>
