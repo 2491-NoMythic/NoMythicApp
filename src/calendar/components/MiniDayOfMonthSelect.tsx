@@ -26,7 +26,7 @@ const MiniDayOfMonthSelect: Component<inputs> = (props) => {
                 <div
                     class={`w-6 h-6 pr-1 text-right font-bold rounded-full ${
                         props?.day?.isToday ? 'bg-secondary' : ''
-                    } ${props?.day?.isSelected ? 'ring ring-primary-content' : ''}`}
+                    } ${props?.day?.isSelected ? 'ring ring-accent-content' : ''}`}
                 >
                     {getDate(props?.day?.date)}
                 </div>
