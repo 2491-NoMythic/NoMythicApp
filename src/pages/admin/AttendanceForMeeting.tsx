@@ -56,23 +56,23 @@ const AttendanceForMeeting: Component = () => {
     return (
         <Suspense fallback={<PageLoading />}>
             <div class="overflow-x-auto">
-                <div class="flex">
+                <AttendanceStats
+                    eventId={anEvent()?.event_id}
+                    meetingDate={anEvent()?.event_date}
+                    meetingCount={eventCount()}
+                    meetingType={formatEnumValue(anEvent()?.event_type)}
+                    teamSize={memberCount()}
+                />
+                <div class="flex items-end">
                     <div class="grow">
-                        <AttendanceStats
-                            eventId={anEvent()?.event_id}
-                            meetingDate={anEvent()?.event_date}
-                            meetingCount={eventCount()}
-                            meetingType={formatEnumValue(anEvent()?.event_type)}
-                            teamSize={memberCount()}
-                        />
+                        <SubTeamSelector />
                     </div>
-                    <div class="mt-4">
+                    <div class="ml-4">
                         <A class="btn btn-secondary" href={RouteKeys.ATTENDANCE_SEASON.nav}>
                             Back
                         </A>
                     </div>
                 </div>
-                <SubTeamSelector />
                 <AttendanceList
                     eventId={anEvent()?.event_id}
                     meetingDate={anEvent()?.event_date}

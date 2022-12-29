@@ -4,6 +4,7 @@ import { getMonthValues, getToday, toDate, toYMD } from '../calendar/utilities'
 import { isEmpty } from '../utilities/bitsAndBobs'
 import { getStartEndOfSeason } from '../utilities/converters'
 import { isBefore } from 'date-fns'
+import Config from '../config'
 
 /**
  * Get the events for the month that aDate falls within that are not deleted
@@ -74,7 +75,7 @@ const getNextEvents = async (meetingDate: string) => {
         .gte('event_date', meetingDate)
         .eq('deleted', false)
         .order('event_date')
-        .limit(3)
+        .limit(Config.numberOfNextEvents)
 
     if (error) throw error
     return data as RobotEvent[]

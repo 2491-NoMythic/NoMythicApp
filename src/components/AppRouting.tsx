@@ -104,7 +104,7 @@ export const RouteKeys = {
         route: '/attendance/event/:id',
         nav: '/admin/attendance/event/:id',
         regex: /\/admin\/attendance\/event\/[0-9]+$/,
-        display: 'Meeting/Event Attendance',
+        display: 'Meeting Attendance',
     },
     FULL_CALENDAR: {
         route: '/fullcalendar',

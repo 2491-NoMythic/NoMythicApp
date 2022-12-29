@@ -2,10 +2,10 @@ import { A } from '@solidjs/router'
 import { HiOutlineMenu } from 'solid-icons/hi'
 import { children, Component, createSignal, JSX, Show } from 'solid-js'
 import PersonMenu from './PersonMenu'
-import logo from '../assets/logo.png'
 import { useNoMythicUser } from '../contexts/UserContext'
 import PageTitle from './PageTitle'
 import { RouteKeys } from './AppRouting'
+import FunLogo from './FunLogo'
 
 /**
  * Provides the menu for the app, in either mobile or desktop view.
@@ -18,23 +18,11 @@ const MainMenu: Component<{ children: JSX.Element }> = (props) => {
     const content = children(() => props.children)
     const { isMember, isAdmin } = useNoMythicUser()
     const [checked, setChecked] = createSignal(false)
-    const [doSpin, setDoSpin] = createSignal(false)
 
     // the state is changed in the dom, so solid doesn't know it changed, so we need to switch it twice
     const closeMenu = () => {
         setChecked(true)
         setChecked(false)
-    }
-
-    /* When clicked and not spinning, start spin of 2s, after spin done ~2 reset spin for next click
-       See tailwind.config.js for how the spin-once is set up */
-    const handleSpinClick = () => {
-        if (doSpin() === false) {
-            setDoSpin(true)
-            setTimeout(() => {
-                setDoSpin(false)
-            }, 2100)
-        }
     }
 
     return (
@@ -57,11 +45,7 @@ const MainMenu: Component<{ children: JSX.Element }> = (props) => {
                     <label for="my-drawer-2" class="drawer-overlay"></label>
                     <div class="overflow-y-auto w-80 bg-base-100 text-base-content rounded-lg">
                         <div class="mt-4 mb-8 flex justify-center">
-                            <img
-                                src={logo}
-                                class={`${doSpin() ? 'animate-spin-once' : 'animate-none'} w-60 h-60 cursor-pointer`}
-                                onClick={handleSpinClick}
-                            ></img>
+                            <FunLogo />
                         </div>
                         <ul class="menu">
                             <li>

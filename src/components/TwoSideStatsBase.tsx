@@ -1,6 +1,5 @@
-import { A, useNavigate } from '@solidjs/router'
+import { useNavigate } from '@solidjs/router'
 import { Component } from 'solid-js'
-import { calculateDay, calculatePercent } from '../utilities/formatters'
 import HiSolidUserGroup from './icons/HiSolidUserGroup'
 import IoCalendarOutline from './icons/IoCalendarOutline'
 
@@ -22,7 +21,10 @@ const TwoSideStatsBase: Component<{
     }
 
     return (
-        <div class={`stats shadow md:mr-4 mt-4 ${props.link ? 'cursor-pointer' : ''}`} onClick={handleClick}>
+        <div
+            class={`stats shadow md:mr-4 mt-4 ${props.link ? 'cursor-pointer' : ''} w-full md:w-auto`}
+            onClick={handleClick}
+        >
             <div class="stat">
                 <div class="stat-figure text-secondary mt-2">
                     <IoCalendarOutline />

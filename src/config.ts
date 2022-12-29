@@ -2,8 +2,10 @@
  * Team configuration
  */
 const Config = {
-    teamName: 'NoMythic',
-    lastNumPracticesAttended: 3,
+    teamName: 'NoMythic', // displayed in header
+    logoAnimate: 'SWITCH', // 'STATIC', 'SWITCH', 'SPIN'
+    lastNumPracticesAttended: 3, // show how many of this number a member attended
+    numberOfNextEvents: 3, // show how many next events on the welcome page, 0 for none
 }
 
 export default Config
