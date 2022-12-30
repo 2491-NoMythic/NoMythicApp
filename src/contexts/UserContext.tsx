@@ -7,16 +7,16 @@ import { isEmpty } from '../utilities/bitsAndBobs'
 
 type UserStore = {
     authSession: Accessor<AuthSession>
-    googleUser: Accessor<GoogleUser>
-    member: Accessor<Member>
+    googleUser: Accessor<GoogleUser> // data from google login
+    member: Accessor<Member> // profile data of current logged in member
     loadUser: (googleUser: Session) => void
     loadMember: (member: Member) => void
     removeUser: () => void
-    resetMember: () => void
-    isLoggedIn: () => boolean
-    isFound: () => boolean
-    isMember: () => boolean
-    isAdmin: () => boolean
+    resetMember: () => void // removes just user data and App.tsx reloads new data
+    isLoggedIn: () => boolean // is logged into google
+    isFound: () => boolean // is a member record found
+    isMember: () => boolean // are they a linked member
+    isAdmin: () => boolean // are they an admin user
     getMemberStatus: () => string
 }
 
