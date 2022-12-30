@@ -7,6 +7,7 @@ import { A, useNavigate } from '@solidjs/router'
 import { saveMemberFromProfile } from '../../api/members'
 import { SubTeam, SubTeamType, TeamRole, TeamRoleType } from '../../types/Api'
 import { RouteKeys } from '../../components/AppRouting'
+import { createInputMask } from '@solid-primitives/input-mask'
 
 type User = {
     first_name: string
@@ -19,6 +20,14 @@ type User = {
     food_needs?: string
 }
 
+// helper for yup transform function
+const emptyStringToNull = (value, originalValue) => {
+    if (typeof originalValue === 'string' && originalValue === '') {
+        return null
+    }
+    return value
+}
+
 export const userSchema: yup.SchemaOf<User> = yup.object({
     first_name: yup.string().required('Required field'),
     last_name: yup.string().required('Required field'),
@@ -26,7 +35,13 @@ export const userSchema: yup.SchemaOf<User> = yup.object({
     sub_team: yup.mixed<SubTeamType>(),
     team_role: yup.mixed<TeamRoleType>(),
     email: yup.string().email('Invalid email').required('Required field'),
-    phone: yup.string().notRequired(),
+    phone: yup
+        .string()
+        .notRequired()
+        .min(14, 'Number Incomplete')
+        .max(14, 'Max 14 characters')
+        .transform(emptyStringToNull)
+        .nullable(),
     food_needs: yup.string().notRequired(),
 })
 
@@ -34,7 +49,8 @@ const ProfileEdit: Component = () => {
     const formHandler = useFormHandler(yupSchema(userSchema))
     const { formData } = formHandler
     const navigate = useNavigate()
-    const { member } = useNoMythicUser()
+    const { member, resetMember } = useNoMythicUser()
+    const phoneInputHandler = createInputMask('(999) 999-9999')
 
     const submit = async (event: Event) => {
         event.preventDefault()
@@ -52,6 +68,8 @@ const ProfileEdit: Component = () => {
                 food_needs: formData().food_needs,
             }
             await saveMemberFromProfile(updatedMember)
+            // remove member, but App will reload new data
+            resetMember()
             navigate(RouteKeys.PROFILE.nav)
         } catch (error) {
             console.error(error)
@@ -117,7 +135,14 @@ const ProfileEdit: Component = () => {
                             readonly
                             formHandler={formHandler}
                         />
-                        <TextField label="Phone Number" name="phone" value={member().phone} formHandler={formHandler} />
+                        <TextField
+                            label="Phone Number"
+                            name="phone"
+                            value={member().phone}
+                            formHandler={formHandler}
+                            onInput={phoneInputHandler}
+                            onPaste={phoneInputHandler}
+                        />
                         <TextField
                             label="Food needs"
                             altLabel="vegan/gluten free"
