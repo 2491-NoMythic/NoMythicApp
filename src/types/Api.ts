@@ -146,6 +146,7 @@ type RobotEvent = {
     virtual?: boolean
     title?: string
     take_attendance: boolean
+    has_meal: boolean
 }
 
 type Checkin = {
@@ -163,6 +164,24 @@ type MemberCheckin = {
     sub_team: SubTeamType
     team_role: TeamRoleType
     checkin: Checkin
+}
+
+type Meal = {
+    meal_id: number
+    event_id: number
+    mentor_id: number
+    parent_id: number
+    meal_name: string
+    description: string
+}
+
+type MealInfo = {
+    meal_id: number
+    event_id: number
+    members: Member
+    parent: Parent
+    meal_name: string
+    description: string
 }
 
 export type {
@@ -184,6 +203,8 @@ export type {
     Checkin,
     CheckinStatusType,
     MemberCheckin,
+    Meal,
+    MealInfo,
 }
 
 export { SubTeam, TeamRole, AttendanceTypes, School, EventTypes, CheckinStatus }

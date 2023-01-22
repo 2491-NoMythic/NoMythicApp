@@ -23,6 +23,8 @@ const AttendanceForMember = lazy(() => import('../pages/admin/AttendanceForMembe
 const FullCalendar = lazy(() => import('../calendar/components/FullCalendar'))
 const EventEdit = lazy(() => import('../pages/admin/EventEdit'))
 const CheckinPage = lazy(() => import('../pages/admin/CheckinPage'))
+const MealView = lazy(() => import('../pages/members/MealView'))
+const MealEdit = lazy(() => import('../pages/admin/MealEdit'))
 
 /**
  * route: the path to give in the <Route> tags - no prefix like /admin or /members
@@ -130,6 +132,18 @@ export const RouteKeys = {
         regex: /\/admin\/checkin\/event\/[0-9]+$/,
         display: 'Member Checkin',
     },
+    MEAL_VIEW: {
+        route: '/meal/event/:id',
+        nav: '/members/meal/event/:id',
+        regex: /\/members\/meal\/event\/[0-9]+$/,
+        display: 'Meal View',
+    },
+    MEAL_EDIT: {
+        route: '/meal/event/:id/edit',
+        nav: '/admin/meal/event/:id/edit',
+        regex: /\/admin\/meal\/event\/[0-9]+\/edit$/,
+        display: 'Meal Edit',
+    },
 } as const
 
 /**
@@ -157,6 +171,7 @@ const AppRouting = () => {
                 <Route path={RouteKeys.PROFILE_EDIT.route} component={ProfileEdit} />
                 <Route path={RouteKeys.TAKE_ATTENDANCE.route} component={AttendancePage} />
                 <Route path={RouteKeys.TAKE_ATTENDANCE_ID.route} component={AttendancePage} />
+                <Route path={RouteKeys.MEAL_VIEW.route} component={MealView} />
             </Route>
 
             {/* must be an admin to view these pages */}
@@ -173,6 +188,7 @@ const AppRouting = () => {
                 <Route path={RouteKeys.EVENT_EDIT.route} component={EventEdit} />
                 <Route path={RouteKeys.TAKE_CHECKIN.route} component={CheckinPage} />
                 <Route path={RouteKeys.TAKE_CHECKIN_ID.route} component={CheckinPage} />
+                <Route path={RouteKeys.MEAL_EDIT.route} component={MealEdit} />
             </Route>
 
             <Route path="*" component={Redirect} />

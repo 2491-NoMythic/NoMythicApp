@@ -1,4 +1,4 @@
-import { Component, createEffect, createResource, createSignal, Show, Suspense } from 'solid-js'
+import { Component, createResource, createSignal, Show, Suspense } from 'solid-js'
 import { EventTypes, EventTypesType } from '../../types/Api'
 import * as yup from 'yup'
 import { useParams, useSearchParams, useNavigate, A } from '@solidjs/router'
@@ -14,10 +14,9 @@ import { formatUrl } from '../../utilities/formatters'
 import { Checkbox } from '../../components/forms/Checkbox'
 import { createInputMask } from '@solid-primitives/input-mask'
 import { HiOutlineTrash } from 'solid-icons/hi'
-import { isEmpty } from '../../utilities/bitsAndBobs'
-import { transform } from '@babel/core'
+import Config from '../../config'
 
-// Definition of the fields we will do validatio on
+// Definition of the fields we will do validation on
 type RobotEvent = {
     event_date: string
     event_type: EventTypesType
@@ -28,6 +27,7 @@ type RobotEvent = {
     virtual: boolean
     all_day: boolean
     take_attendance: boolean
+    has_meal: boolean
 }
 
 // helper for yup transform function
@@ -71,6 +71,7 @@ export const eventSchema: yup.SchemaOf<RobotEvent> = yup.object({
     virtual: yup.boolean().required().default(false),
     all_day: yup.boolean().required().default(false),
     take_attendance: yup.boolean().required().default(false), // will not work defaulting to true
+    has_meal: yup.boolean().required().default(false),
 })
 
 const timeInputHandler = createInputMask([/^[0-9]{1,2}/, ':', /[0-9]{1,2}/, ' ', /[ap|AP]/, /[m|M]/])
@@ -110,6 +111,7 @@ const EventEdit: Component = () => {
                 virtual: formData().virtual,
                 all_day: formData().all_day,
                 take_attendance: formData().take_attendance,
+                has_meal: formData().has_meal,
             }
             if (robotEvent()?.event_id === undefined) {
                 await saveEvent(updatedEvent)
@@ -235,6 +237,15 @@ const EventEdit: Component = () => {
                                     checked={robotEvent() === null ? true : robotEvent().take_attendance}
                                     formHandler={formHandler}
                                 />
+
+                                <Show when={Config.hasTeamMeals}>
+                                    <Checkbox
+                                        label="Includes Meal"
+                                        name="has_meal"
+                                        checked={robotEvent() === null ? true : robotEvent().has_meal}
+                                        formHandler={formHandler}
+                                    />
+                                </Show>
                             </div>
                         </form>
                         <div class="flex">

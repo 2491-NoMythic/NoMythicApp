@@ -3,8 +3,9 @@ import { A, useSearchParams } from '@solidjs/router'
 import { HiOutlineMenu } from 'solid-icons/hi'
 import { RouteKeys } from './AppRouting'
 import { formatUrl } from '../utilities/formatters'
+import { RobotEvent } from '../types/Api'
 
-type inputs = { eventId: number; takeAttendance: boolean; dropdownDirection?: string }
+type inputs = { robotEvent: RobotEvent; takeAttendance: boolean; dropdownDirection?: string }
 const EventMenu: Component<inputs> = (props) => {
     const [show, setShow] = createSignal(false)
     const [searchParams] = useSearchParams()
@@ -37,7 +38,7 @@ const EventMenu: Component<inputs> = (props) => {
                     <Show when={props.takeAttendance === true}>
                         <li>
                             <A
-                                href={formatUrl(RouteKeys.TAKE_ATTENDANCE_ID.nav, { id: props.eventId })}
+                                href={formatUrl(RouteKeys.TAKE_ATTENDANCE_ID.nav, { id: props.robotEvent.event_id })}
                                 onClick={close}
                             >
                                 Take Attendance
@@ -45,7 +46,7 @@ const EventMenu: Component<inputs> = (props) => {
                         </li>
                         <li>
                             <A
-                                href={formatUrl(RouteKeys.ATTENDANCE_MEETING.nav, { id: props.eventId })}
+                                href={formatUrl(RouteKeys.ATTENDANCE_MEETING.nav, { id: props.robotEvent.event_id })}
                                 onClick={close}
                             >
                                 Admin Attendance
@@ -59,7 +60,7 @@ const EventMenu: Component<inputs> = (props) => {
                         <A
                             href={formatUrl(
                                 RouteKeys.EVENT_EDIT.nav,
-                                { id: props.eventId },
+                                { id: props.robotEvent.event_id },
                                 { date: searchParams?.date }
                             )}
                             onClick={close}
@@ -68,10 +69,27 @@ const EventMenu: Component<inputs> = (props) => {
                         </A>
                     </li>
                     <li>
-                        <A href={formatUrl(RouteKeys.TAKE_CHECKIN_ID.nav, { id: props.eventId })} onClick={close}>
+                        <A
+                            href={formatUrl(RouteKeys.TAKE_CHECKIN_ID.nav, { id: props.robotEvent.event_id })}
+                            onClick={close}
+                        >
                             Checkin
                         </A>
                     </li>
+                    <Show when={props.robotEvent.has_meal === true}>
+                        <li>
+                            <A
+                                href={formatUrl(
+                                    RouteKeys.MEAL_VIEW.nav,
+                                    { id: props.robotEvent.event_id },
+                                    { date: searchParams?.date }
+                                )}
+                                onClick={close}
+                            >
+                                Meal
+                            </A>
+                        </li>
+                    </Show>
                 </ul>
             </div>
         </div>

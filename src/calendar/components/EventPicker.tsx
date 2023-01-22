@@ -195,6 +195,9 @@ const EventPicker: Component<inputs> = (props) => {
                                                                     )}
                                                                     {robotEvent.virtual && <span> - Virtual</span>}
                                                                 </div>
+                                                                <Show when={robotEvent.has_meal === true}>
+                                                                    <div>Meal Provided</div>
+                                                                </Show>
                                                             </div>
                                                         </div>
                                                     </div>

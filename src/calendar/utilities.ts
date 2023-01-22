@@ -170,7 +170,7 @@ const toMDY = (aDate: Date) => {
  */
 const toDate = (aDate: string) => {
     if (aDate === undefined || aDate === null) {
-        return null
+        return new Date()
     }
     return parse(aDate, 'yyyy-MM-dd', new Date())
 }

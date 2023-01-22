@@ -22,7 +22,7 @@ const FunLogo: Component = () => {
             setDoSpin(true)
             setTimeout(() => {
                 setDoSpin(false)
-            }, 2100)
+            }, 2600)
         }
     }
 

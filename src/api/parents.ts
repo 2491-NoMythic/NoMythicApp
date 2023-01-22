@@ -1,6 +1,15 @@
 import { Parent } from '../types/Api'
 import { supabase } from './SupabaseClient'
 
+//TODO: need parents for the students of the year specified - used in meal dropdown
+const getAllParents = async (year: string) => {
+    const { data, error } = await supabase.from('parent').select().eq('deleted', false)
+
+    if (error) throw error
+
+    return data as Parent[]
+}
+
 const getParents = async (memberId: number) => {
     const { data, error } = await supabase.from('parent').select().eq('member_id', memberId).eq('deleted', false)
 
@@ -68,4 +77,4 @@ const updateParent = async (parent: Parent) => {
     if (error) throw error
 }
 
-export { getParents, getParentById, deleteParent, saveParent, updateParent }
+export { getAllParents, getParents, getParentById, deleteParent, saveParent, updateParent }

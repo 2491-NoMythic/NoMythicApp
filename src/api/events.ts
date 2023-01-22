@@ -127,6 +127,7 @@ const saveEvent = async (event: RobotEvent) => {
         virtual: event.virtual,
         all_day: event.all_day,
         take_attendance: event.take_attendance,
+        has_meal: event.has_meal,
     })
     if (error) throw error
 }
@@ -144,6 +145,7 @@ const updateEvent = async (event: RobotEvent) => {
             virtual: event.virtual,
             all_day: event.all_day,
             take_attendance: event.take_attendance,
+            has_meal: event.has_meal,
         })
         .eq('event_id', event.event_id)
 

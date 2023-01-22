@@ -2,7 +2,7 @@
 
 This web app will provide access to the day to day housekeeping and admin type stuff that a First Robotics team has to do to keep going. Right now it might be NoMythic centric, but the hope would be that other teams would be able to deploy it and use it too.
 
-Since most students run their lives through their phones, the goal is to keep the app as responsive as possible to allow most useage that students would have possible via phone.
+Since most students run their lives through their phones, the goal is to keep the app as responsive as possible to allow most usage that students would have possible via phone.
 
 ## Tech
 
@@ -21,7 +21,7 @@ Since most students run their lives through their phones, the goal is to keep th
 
 This is going to look pretty overwhelming looking at the above tech stack. There is no doubt that there are a lot of things to learn, but at the core, it is a HTML / CSS / Javascript application that runs on a server.
 
-To get started you should get some basic skills in HTML, and the most common tags used. CSS is simply about making that HTML pretty. Then learn some Javascript. If you are already programming a robot, this is not going to be too unfamiliiar to you. Do you use Java and understand Generics? That is pretty much what the Types are Typescript adds to Javascript.
+To get started you should get some basic skills in HTML, and the most common tags used. CSS is simply about making that HTML pretty. Then learn some Javascript. If you are already programming a robot, this is not going to be too unfamiliar to you. Do you use Java and understand Generics? That is pretty much what the Types are Typescript adds to Javascript.
 
 You get a basic understanding of those things, and you can start to understand this app. SolidJS is a Javascript framework and learning about that will be the next task. At it's core, it allows data to change, and immediately update the HTML (actually JSX here) so that you see the changes immediately. All this runs in the browser.
 
@@ -33,7 +33,7 @@ We are using Google Cloud to get our credentials. When logging in to this app, y
 
 You will need to get your Supabase keys to run. If you are not NoMythic, you will have to set up a Supabase and GoogleCloud account for login and storing data.
 
-These things are beyond the scope of this readme. If you are another First Robotics team interrested in this, contact. Chris Ward <veggie2u@cyberward.net>
+These things are beyond the scope of this readme. If you are another First Robotics team interested in this, contact. Chris Ward <veggie2u@cyberward.net>
 
 ## Usage
 
