@@ -86,7 +86,7 @@ const MealEdit: Component = () => {
                 meal_id: eventMeal()?.meal_id,
                 event_id: parseInt(params.id),
                 mentor_id: formData().mentor_id,
-                parent_id: formData().parent_id,
+                parent_id: emptyStringToNull(formData().parent_id, formData().parent_id),
                 meal_name: formData().meal_name,
                 description: formData().description,
             }
