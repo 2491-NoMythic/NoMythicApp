@@ -25,6 +25,7 @@ const EventEdit = lazy(() => import('../pages/admin/EventEdit'))
 const CheckinPage = lazy(() => import('../pages/admin/CheckinPage'))
 const MealView = lazy(() => import('../pages/members/MealView'))
 const MealEdit = lazy(() => import('../pages/admin/MealEdit'))
+const MealList = lazy(() => import('../pages/admin/MealList'))
 
 /**
  * route: the path to give in the <Route> tags - no prefix like /admin or /members
@@ -144,6 +145,12 @@ export const RouteKeys = {
         regex: /\/admin\/meal\/event\/[0-9]+\/edit$/,
         display: 'Meal Edit',
     },
+    MEAL_LIST: {
+        route: '/meal/list',
+        nav: '/admin/meal/list',
+        regex: /\/admin\/meal\/list$/,
+        display: 'Meal List',
+    },
 } as const
 
 /**
@@ -189,6 +196,7 @@ const AppRouting = () => {
                 <Route path={RouteKeys.TAKE_CHECKIN.route} component={CheckinPage} />
                 <Route path={RouteKeys.TAKE_CHECKIN_ID.route} component={CheckinPage} />
                 <Route path={RouteKeys.MEAL_EDIT.route} component={MealEdit} />
+                <Route path={RouteKeys.MEAL_LIST.route} component={MealList} />
             </Route>
 
             <Route path="*" component={Redirect} />

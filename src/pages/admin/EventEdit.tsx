@@ -1,4 +1,4 @@
-import { Component, createResource, createSignal, Show, Suspense } from 'solid-js'
+import { Component, createEffect, createResource, createSignal, Show, Suspense } from 'solid-js'
 import { EventTypes, EventTypesType } from '../../types/Api'
 import * as yup from 'yup'
 import { useParams, useSearchParams, useNavigate, A } from '@solidjs/router'
@@ -15,6 +15,7 @@ import { Checkbox } from '../../components/forms/Checkbox'
 import { createInputMask } from '@solid-primitives/input-mask'
 import { HiOutlineTrash } from 'solid-icons/hi'
 import Config from '../../config'
+import { hasMealDefault } from '../../defaultFunctions'
 
 // Definition of the fields we will do validation on
 type RobotEvent = {
@@ -136,13 +137,30 @@ const EventEdit: Component = () => {
         return theDate
     }
 
+    /**
+     * Url for returning to the calling page
+     *
+     * @returns string
+     */
     const navUrl = () => {
         if (searchParams.back === 'ATTENDANCE') {
             return formatUrl(RouteKeys.TAKE_ATTENDANCE.nav)
         } else if (searchParams.back === 'CHECKIN') {
             return formatUrl(RouteKeys.TAKE_CHECKIN.nav)
+        } else if (searchParams.back === 'MEAL_LIST') {
+            return formatUrl(RouteKeys.MEAL_LIST.nav)
         } else {
             return formatUrl(RouteKeys.FULL_CALENDAR.nav, {}, { date: formData().event_date })
+        }
+    }
+
+    /**
+     * Called when the event type field changes.
+     * Checks to see if has_meal has been modified before setting the default value
+     */
+    const checkDefault = () => {
+        if (formHandler.getFormState()['has_meal'].touched === false) {
+            formHandler.setFieldDefaultValue('has_meal', hasMealDefault(formData().event_type, dateToShow()))
         }
     }
 
@@ -177,6 +195,7 @@ const EventEdit: Component = () => {
                                     ]}
                                     value={robotEvent()?.event_type}
                                     formHandler={formHandler}
+                                    onChange={checkDefault}
                                 />
 
                                 <TextField
@@ -242,7 +261,7 @@ const EventEdit: Component = () => {
                                     <Checkbox
                                         label="Includes Meal"
                                         name="has_meal"
-                                        checked={robotEvent() === null ? true : robotEvent().has_meal}
+                                        checked={robotEvent() === null ? false : robotEvent().has_meal}
                                         formHandler={formHandler}
                                     />
                                 </Show>

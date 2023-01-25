@@ -12,6 +12,7 @@ export interface SelectableProps extends JSX.SelectHTMLAttributes<HTMLSelectElem
     altLabel?: string
     options?: Array<SelectableOption>
     placeholder?: string
+    allowEmpty?: boolean
 }
 
 export const SelectableField: Component<SelectableProps> = (props) => {
@@ -33,6 +34,7 @@ export const SelectableField: Component<SelectableProps> = (props) => {
         'options',
         'placeholder',
         'value',
+        'allowEmpty',
     ])
 
     /**
@@ -161,7 +163,7 @@ export const SelectableField: Component<SelectableProps> = (props) => {
                     value={store.value}
                     class="select select-bordered"
                 >
-                    <option disabled value={''} selected={store.value === ''}>
+                    <option disabled={!local.allowEmpty} value={''} selected={store.value === ''}>
                         Select One
                     </option>
                     <For each={options()}>{(option) => <option value={option.value}>{option.label}</option>}</For>

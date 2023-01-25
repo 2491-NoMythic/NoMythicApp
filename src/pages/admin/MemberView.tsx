@@ -1,4 +1,4 @@
-import { A, useNavigate, useParams } from '@solidjs/router'
+import { A, useNavigate, useParams, useSearchParams } from '@solidjs/router'
 import { Component, createEffect, createResource, createSignal, For, Show, Suspense } from 'solid-js'
 import { deleteMember, getMemberById } from '../../api/members'
 import { HiOutlineEye, HiOutlineTrash } from 'solid-icons/hi'
@@ -11,6 +11,7 @@ import { RouteKeys } from '../../components/AppRouting'
 
 const MemberView: Component = () => {
     const params = useParams()
+    const [searchParams] = useSearchParams()
     const [member] = createResource(() => parseInt(params.mid), getMemberById)
     const [parents] = createResource(() => parseInt(params.mid), getParents)
     const [opened, setOpened] = createSignal(false)
@@ -39,6 +40,18 @@ const MemberView: Component = () => {
             setParentNames(['Not entered'])
         }
     })
+
+    /**
+     * Url for returning to the calling page
+     *
+     * @returns string
+     */
+    const navUrl = () => {
+        if (searchParams.back === 'MEAL_LIST') {
+            return formatUrl(RouteKeys.MEAL_LIST.nav)
+        }
+        return formatUrl(RouteKeys.TEAM_LIST.nav)
+    }
 
     return (
         <Suspense fallback={<PageLoading />}>
@@ -128,7 +141,7 @@ const MemberView: Component = () => {
                         </div>
                         <div class="flex flex-auto justify-end">
                             <label class="btn btn-secondary modal-button mr-4">
-                                <A href={RouteKeys.TEAM_LIST.nav}>Back</A>
+                                <A href={navUrl()}>Back</A>
                             </label>
                             <label class="btn btn-primary modal-button">
                                 <A href={formatUrl(RouteKeys.MEMBER_EDIT.nav, { mid: member()?.member_id })}>Edit</A>

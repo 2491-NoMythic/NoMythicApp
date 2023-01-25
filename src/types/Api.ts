@@ -184,6 +184,15 @@ type MealInfo = {
     description: string
 }
 
+type MealListItem = {
+    event_id?: number
+    event_date: string
+    event_type: EventTypesType
+    title?: string
+    has_meal: boolean
+    meals: MealInfo
+}
+
 export type {
     MemberAttendance,
     Member,
@@ -205,6 +214,7 @@ export type {
     MemberCheckin,
     Meal,
     MealInfo,
+    MealListItem,
 }
 
 export { SubTeam, TeamRole, AttendanceTypes, School, EventTypes, CheckinStatus }
