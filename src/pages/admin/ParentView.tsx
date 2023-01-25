@@ -9,6 +9,7 @@ import { RouteKeys } from '../../components/AppRouting'
 
 const ParentView: Component = () => {
     const params = useParams()
+    const [searchParams] = useSearchParams()
     const [member] = createResource(() => parseInt(params.mid), getMemberById)
     const [parent] = createResource(() => parseInt(params.pid), getParentById)
     const [opened, setOpened] = createSignal(false)
@@ -22,6 +23,18 @@ const ParentView: Component = () => {
         toggleModal()
         await deleteParent(parent().parent_id)
         navigate(formatUrl(RouteKeys.PARENT_VIEW.nav, { mid: member()?.member_id }))
+    }
+
+    /**
+     * Url for returning to the calling page
+     *
+     * @returns string
+     */
+    const navUrl = () => {
+        if (searchParams.back === 'MEAL_LIST') {
+            return formatUrl(RouteKeys.MEAL_LIST.nav)
+        }
+        return formatUrl(RouteKeys.PARENT_LIST.nav, { mid: member()?.member_id })
     }
 
     return (
@@ -97,7 +110,7 @@ const ParentView: Component = () => {
                         </div>
                         <div class="flex flex-auto justify-end">
                             <label class="btn btn-secondary modal-button mr-4">
-                                <A href={formatUrl(RouteKeys.PARENT_LIST.nav, { mid: member()?.member_id })}>Back</A>
+                                <A href={navUrl()}>Back</A>
                             </label>
                             <label class="btn btn-primary modal-button">
                                 <A

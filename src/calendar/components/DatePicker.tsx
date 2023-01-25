@@ -28,7 +28,7 @@ const DatePicker: Component<inputs> = (props) => {
     }
 
     type Data = { date: Date }
-    const handleClose = (data: Data, event) => {
+    const handleClose = (data: Data, event: Event) => {
         event.preventDefault()
         props.handleSelect(data.date)
     }

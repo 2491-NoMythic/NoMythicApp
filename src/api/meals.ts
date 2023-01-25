@@ -1,4 +1,4 @@
-import { Meal, MealInfo } from '../types/Api'
+import { Meal, MealInfo, MealListItem } from '../types/Api'
 import { supabase } from './SupabaseClient'
 
 const getMealById = async (mealId: number) => {
@@ -37,6 +37,22 @@ const getMealInfoByEventId = async (eventId: number) => {
     return data[0] as unknown as MealInfo
 }
 
+const getMealList = async (year: string) => {
+    const { data, error } = await supabase
+        .from('events')
+        .select(
+            'event_id, event_type, event_date, has_meal, title, meals(event_id, meal_id, meal_name, members(*), parent(*))'
+        )
+        .eq('has_meal', true)
+        .eq('deleted', false)
+
+    if (error) throw error
+    if (data.length === 0) {
+        return null
+    }
+    return data as MealListItem[]
+}
+
 const saveMeal = async (meal: Meal) => {
     const { error } = await supabase.from('meals').insert({
         event_id: meal.event_id,
@@ -45,6 +61,24 @@ const saveMeal = async (meal: Meal) => {
         meal_name: meal.meal_name,
         description: meal.description,
     })
+    if (error) throw error
+}
+const saveMentor = async (eventId: number, mentorId: number) => {
+    const { error } = await supabase.from('meals').insert({
+        event_id: eventId,
+        mentor_id: mentorId,
+        parent_id: null,
+        meal_name: null,
+        description: null,
+    })
+    if (error) throw error
+}
+/**
+ * Update just the mentor on a meal
+ * @param mentorId member_id number
+ */
+const updateMentor = async (eventId: number, mentorId: number) => {
+    const { error } = await supabase.from('meals').update({ mentor_id: mentorId }).eq('event_id', eventId)
     if (error) throw error
 }
 
@@ -77,4 +111,14 @@ const deleteMeal = async (mealId: number) => {
     if (error) throw error
 }
 
-export { getMealById, getMealByEventId, getMealInfoByEventId, saveMeal, updateMeal, deleteMeal }
+export {
+    getMealById,
+    getMealByEventId,
+    getMealInfoByEventId,
+    getMealList,
+    saveMeal,
+    saveMentor,
+    updateMentor,
+    updateMeal,
+    deleteMeal,
+}

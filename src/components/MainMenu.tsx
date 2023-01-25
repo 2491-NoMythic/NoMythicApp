@@ -6,6 +6,7 @@ import { useNoMythicUser } from '../contexts/UserContext'
 import PageTitle from './PageTitle'
 import { RouteKeys } from './AppRouting'
 import FunLogo from './FunLogo'
+import Config from '../config'
 
 /**
  * Provides the menu for the app, in either mobile or desktop view.
@@ -81,6 +82,13 @@ const MainMenu: Component<{ children: JSX.Element }> = (props) => {
                                         Admin Attendance
                                     </A>
                                 </li>
+                                <Show when={Config.hasTeamMeals}>
+                                    <li>
+                                        <A href={RouteKeys.MEAL_LIST.nav} onClick={closeMenu}>
+                                            Admin Meals
+                                        </A>
+                                    </li>
+                                </Show>
                             </Show>
                             <li>
                                 <A href={RouteKeys.GUEST.nav} onClick={closeMenu}>

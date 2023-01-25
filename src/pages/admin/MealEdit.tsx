@@ -5,7 +5,7 @@ import { HiOutlineTrash } from 'solid-icons/hi'
 import { Component, createMemo, createResource, createSignal, Show, Suspense } from 'solid-js'
 import * as yup from 'yup'
 import { getEventById } from '../../api/events'
-import { deleteMeal, getMealByEventId, getMealById, saveMeal, updateMeal } from '../../api/meals'
+import { deleteMeal, getMealByEventId, saveMeal, updateMeal } from '../../api/meals'
 import { getMembers } from '../../api/members'
 import { getAllParents } from '../../api/parents'
 import { toDate } from '../../calendar/utilities'
@@ -34,7 +34,7 @@ const emptyStringToNull = (value, originalValue) => {
 }
 
 export const mealSchema: yup.SchemaOf<Meal> = yup.object({
-    mentor_id: yup.number().required('Required Field').transform(emptyStringToNull).nullable(),
+    mentor_id: yup.number().notRequired().transform(emptyStringToNull).nullable(),
     parent_id: yup.number().notRequired().transform(emptyStringToNull).nullable(),
     meal_name: yup.string().notRequired().max(50),
     description: yup.string().notRequired().max(250),
@@ -85,7 +85,7 @@ const MealEdit: Component = () => {
             const updatedMeal = {
                 meal_id: eventMeal()?.meal_id,
                 event_id: parseInt(params.id),
-                mentor_id: formData().mentor_id,
+                mentor_id: emptyStringToNull(formData().mentor_id, formData().mentor_id),
                 parent_id: emptyStringToNull(formData().parent_id, formData().parent_id),
                 meal_name: formData().meal_name,
                 description: formData().description,
@@ -101,10 +101,16 @@ const MealEdit: Component = () => {
         }
     }
 
+    /**
+     * Url for returning to the calling page
+     *
+     * @returns string
+     */
     const navUrl = () => {
-        //if (searchParams.back === 'CALENDAR') {
+        if (searchParams.back === 'MEAL_LIST') {
+            return formatUrl(RouteKeys.MEAL_LIST.nav)
+        }
         return formatUrl(RouteKeys.FULL_CALENDAR.nav, {}, { date: searchParams?.date })
-        //}
     }
 
     const getEventInfo = () => {
@@ -136,6 +142,7 @@ const MealEdit: Component = () => {
             </div>
         )
     }
+
     return (
         <Suspense fallback={<PageLoading />}>
             <div class="card max-w-5xl bg-base-100 shadow-xl mt-4">
@@ -152,18 +159,19 @@ const MealEdit: Component = () => {
                             <div class="grid grid-cols-1 gap-4 lg:grid-cols-2 mt-8">
                                 <SelectableField
                                     label="Meal Mentor"
-                                    altLabel="Required"
                                     name="mentor_id"
                                     options={mentors()}
-                                    value={eventMeal()?.mentor_id}
+                                    value={eventMeal()?.mentor_id === null ? '' : eventMeal()?.mentor_id}
                                     formHandler={formHandler}
+                                    allowEmpty={true}
                                 />
                                 <SelectableField
                                     label="Meal Parent"
                                     name="parent_id"
                                     options={parents()}
-                                    value={eventMeal()?.parent_id}
+                                    value={eventMeal()?.parent_id === null ? '' : eventMeal()?.parent_id}
                                     formHandler={formHandler}
+                                    allowEmpty={true}
                                 />
                                 <TextField
                                     label="Meal Name"
