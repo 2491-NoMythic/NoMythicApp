@@ -97,7 +97,7 @@ const AttendanceForSeasonByMember: Component<{ season: Accessor<string> }> = (pr
                                     all_count: allCount,
                                     regular_count: regularCount,
                                     last_few_count: lastFewCount,
-                                } = allAttendanceStats().find(({ member_id }) => (member_id = record.member_id))
+                                } = allAttendanceStats().find((candidate) => candidate.member_id === record.member_id)
                                 return (
                                     <tr>
                                         <td
