@@ -99,6 +99,13 @@ type Attendance = {
     event_id: number
 }
 
+type AttendanceStats = {
+    member_id: number
+    all_count: number
+    regular_count: number
+    last_few_count: number
+}
+
 type MemberAttendance = {
     member_id: number
     first_name: string
@@ -203,6 +210,7 @@ export type {
     TeamRoleType,
     AttendanceTypesType,
     Attendance,
+    AttendanceStats,
     SchoolType,
     MeetingCount,
     Parent,
