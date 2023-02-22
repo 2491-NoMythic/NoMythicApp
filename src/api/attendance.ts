@@ -133,7 +133,7 @@ const getAttendanceStatsForAllMembers = async (season: string) => {
         start_date: startDate,
         end_date: theEnd,
         //number of attended events by a member of the last few regular events (Config.lastNumPracticesAttended).
-        last_num_practices: Config.lastNumPracticesAttended - 1,
+        last_num_practices: Config.lastNumPracticesAttended,
     })
     if (error) throw error
 
