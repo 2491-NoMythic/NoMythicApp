@@ -1,5 +1,6 @@
 import { useNavigate, useSearchParams } from '@solidjs/router'
 import { Component, Show } from 'solid-js'
+import { useNoMythicUser } from '../contexts/UserContext'
 import { Member, SubTeam, TeamRole } from '../types/Api'
 import { capitalizeWord, formatUrl } from '../utilities/formatters'
 import { RouteKeys } from './AppRouting'
@@ -7,16 +8,19 @@ import { RouteKeys } from './AppRouting'
 const DisplayTeamDataRow: Component<{ teamMember: Member }> = (props) => {
     const navigate = useNavigate()
     const [searchParams] = useSearchParams()
+    const { isAdmin } = useNoMythicUser()
 
     type data = { memberId: number }
     const handleClick = async (data: data, _event) => {
-        navigate(formatUrl(RouteKeys.MEMBER_VIEW.nav, { mid: data.memberId }))
+        if (isAdmin()) {
+            navigate(formatUrl(RouteKeys.MEMBER_VIEW.nav, { mid: data.memberId }))
+        }
     }
 
     return (
         <>
             <tr
-                class="hover cursor-pointer hidden lg:table-row"
+                class={`hover ${isAdmin() ? 'cursor-pointer' : ''} hidden lg:table-row`}
                 onClick={[
                     handleClick,
                     {
@@ -31,8 +35,9 @@ const DisplayTeamDataRow: Component<{ teamMember: Member }> = (props) => {
                 <td>{props.teamMember.email}</td>
                 <td>{props.teamMember.phone}</td>
             </tr>
+
             <tr
-                class="hover cursor-pointer lg:hidden"
+                class={`hover ${isAdmin() ? 'cursor-pointer' : ''} lg:hidden`}
                 onClick={[
                     handleClick,
                     {
