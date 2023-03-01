@@ -32,7 +32,6 @@ const DisplayTeamDataRow: Component<{ teamMember: Member }> = (props) => {
                 <td>{props.teamMember.pronouns}</td>
                 <td>{capitalizeWord(props.teamMember.sub_team)}</td>
                 <td>{capitalizeWord(props.teamMember.team_role)}</td>
-                <td>{props.teamMember.email}</td>
                 <td>{props.teamMember.phone}</td>
             </tr>
 
@@ -69,7 +68,6 @@ const DisplayTeamDataRow: Component<{ teamMember: Member }> = (props) => {
                             </div>
                         </div>
                         <div class="flex flex row gap-2">
-                            <div class="text-sm">E: {props.teamMember.email}</div>
                             <div class="text-sm">P: {props.teamMember.phone}</div>
                         </div>
                     </div>

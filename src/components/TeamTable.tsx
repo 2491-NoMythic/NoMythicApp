@@ -12,7 +12,6 @@ const TeamTable: Component<{ teamMembers: Accessor<Member[]> }> = (props) => {
                         <td>Pronouns</td>
                         <td>Sub Team</td>
                         <td>Team Role</td>
-                        <td>Eamil</td>
                         <td>Phone</td>
                     </tr>
                 </thead>
