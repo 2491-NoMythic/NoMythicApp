@@ -56,6 +56,11 @@ const MainMenu: Component<{ children: JSX.Element }> = (props) => {
                             </li>
                             <Show when={isMember()}>
                                 <li>
+                                    <A href={RouteKeys.TEAM_LIST.nav} onClick={closeMenu}>
+                                        Team List
+                                    </A>
+                                </li>
+                                <li>
                                     <A href={RouteKeys.TAKE_ATTENDANCE.nav} onClick={closeMenu}>
                                         Take Attendance
                                     </A>
@@ -67,11 +72,6 @@ const MainMenu: Component<{ children: JSX.Element }> = (props) => {
                                 </li>
                             </Show>
                             <Show when={isAdmin()}>
-                                <li>
-                                    <A href={RouteKeys.TEAM_LIST.nav} onClick={closeMenu}>
-                                        Team List
-                                    </A>
-                                </li>
                                 <li>
                                     <A href={RouteKeys.TAKE_CHECKIN.nav} onClick={closeMenu}>
                                         Check In

@@ -10,7 +10,7 @@ const MiniDayOfMonthSelect: Component<inputs> = (props) => {
 
     const handleClick = (event) => {
         event.preventDefault()
-        if (isAdmin) {
+        if (isAdmin()) {
             props.handleSelect(props.day)
         }
     }

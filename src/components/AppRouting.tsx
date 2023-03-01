@@ -10,7 +10,7 @@ const Welcome = lazy(() => import('../pages/Welcome'))
 const Guest = lazy(() => import('../pages/Guest'))
 const Profile = lazy(() => import('../pages/Profile'))
 const ProfileEdit = lazy(() => import('../pages/members/ProfileEdit'))
-const TeamList = lazy(() => import('../pages/admin/TeamList'))
+const TeamList = lazy(() => import('../pages/members/TeamList'))
 const MemberView = lazy(() => import('../pages/admin/MemberView'))
 const MemberEdit = lazy(() => import('../pages/admin/MemberEdit'))
 const Parents = lazy(() => import('../pages/admin/Parents'))
@@ -60,7 +60,7 @@ export const RouteKeys = {
         regex: /\/members\/attendance\/[0-9]+$/,
         display: 'Take Attendance',
     },
-    TEAM_LIST: { route: '/teamlist', nav: '/admin/teamlist', regex: /\/admin\/teamlist$/, display: 'Team List' },
+    TEAM_LIST: { route: '/teamlist', nav: '/members/teamlist', regex: /\/members\/teamlist$/, display: 'Team List' },
     MEMBER_VIEW: {
         route: '/member/:mid',
         nav: '/admin/member/:mid',
@@ -175,6 +175,7 @@ const AppRouting = () => {
 
             {/* must be a member to view these pages */}
             <Route path="/members" component={MemberAccess}>
+                <Route path={RouteKeys.TEAM_LIST.route} component={TeamList} />
                 <Route path={RouteKeys.PROFILE_EDIT.route} component={ProfileEdit} />
                 <Route path={RouteKeys.TAKE_ATTENDANCE.route} component={AttendancePage} />
                 <Route path={RouteKeys.TAKE_ATTENDANCE_ID.route} component={AttendancePage} />
@@ -183,7 +184,6 @@ const AppRouting = () => {
 
             {/* must be an admin to view these pages */}
             <Route path="/admin" component={AdminAccess}>
-                <Route path={RouteKeys.TEAM_LIST.route} component={TeamList} />
                 <Route path={RouteKeys.MEMBER_VIEW.route} component={MemberView} />
                 <Route path={RouteKeys.MEMBER_EDIT.route} component={MemberEdit} />
                 <Route path={RouteKeys.PARENT_LIST.route} component={Parents} />

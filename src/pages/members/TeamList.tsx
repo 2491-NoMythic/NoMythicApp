@@ -12,12 +12,14 @@ import SubTeamSelector from '../../components/SubTeamSelector'
 import { useSessionContext } from '../../contexts/SessionContext'
 import { RouteKeys } from '../../components/AppRouting'
 import { formatUrl } from '../../utilities/formatters'
+import { useNoMythicUser } from '../../contexts/UserContext'
 
 const TeamList: Component = () => {
     const [filteredTeam, setFilteredTeam] = createSignal<Member[]>([])
     const [year, setYear] = createSignal('2023')
     const [team] = createResource(year, getMembers)
     const [sessionValues] = useSessionContext()
+    const { isAdmin } = useNoMythicUser()
 
     // runs whenever team or subTeam are changed
     createEffect(() => {
@@ -35,16 +37,18 @@ const TeamList: Component = () => {
                     </div>
                     <YearPicker year={year} setYear={setYear} />
                 </div>
-                <div class="flex mt-4 items-end inlign-flex">
-                    <Show when={filteredTeam().length !== 0}>
-                        <div class="flex-none ml-4">Click a row to view</div>
-                    </Show>
-                    <div class="flex flex-auto justify-end">
-                        <A class="btn btn-primary" href={formatUrl(RouteKeys.MEMBER_EDIT.nav, { mid: 0 })}>
-                            Add Member
-                        </A>
+                {isAdmin() && (
+                    <div class="flex mt-4 items-end">
+                        <Show when={filteredTeam().length !== 0}>
+                            <div class="flex-none ml-4">Click a row to view</div>
+                        </Show>
+                        <div class="flex flex-auto justify-end">
+                            <A class="btn btn-primary" href={formatUrl(RouteKeys.MEMBER_EDIT.nav, { mid: 0 })}>
+                                Add Member
+                            </A>
+                        </div>
                     </div>
-                </div>
+                )}
                 <SelectTeamInfoMessage show={filteredTeam().length === 0} extraMessage="Defaults to current season." />
                 <TeamTable teamMembers={filteredTeam} />
             </div>
