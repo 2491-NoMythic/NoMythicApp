@@ -26,6 +26,7 @@ const CheckinPage = lazy(() => import('../pages/admin/CheckinPage'))
 const MealView = lazy(() => import('../pages/members/MealView'))
 const MealEdit = lazy(() => import('../pages/admin/MealEdit'))
 const MealList = lazy(() => import('../pages/admin/MealList'))
+const Duluth = lazy(() => import('../pages/members/Duluth'))
 
 /**
  * route: the path to give in the <Route> tags - no prefix like /admin or /members
@@ -151,6 +152,12 @@ export const RouteKeys = {
         regex: /\/admin\/meal\/list$/,
         display: 'Meal List',
     },
+    DULUTH: {
+        route: '/duluth',
+        nav: '/members/duluth',
+        regex: /\/members\/duluth$/,
+        display: 'Duluth Tournament',
+    },
 } as const
 
 /**
@@ -180,6 +187,7 @@ const AppRouting = () => {
                 <Route path={RouteKeys.TAKE_ATTENDANCE.route} component={AttendancePage} />
                 <Route path={RouteKeys.TAKE_ATTENDANCE_ID.route} component={AttendancePage} />
                 <Route path={RouteKeys.MEAL_VIEW.route} component={MealView} />
+                <Route path={RouteKeys.DULUTH.route} component={Duluth} />
             </Route>
 
             {/* must be an admin to view these pages */}

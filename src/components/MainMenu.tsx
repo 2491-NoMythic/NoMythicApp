@@ -70,6 +70,11 @@ const MainMenu: Component<{ children: JSX.Element }> = (props) => {
                                         Team Calendar
                                     </A>
                                 </li>
+                                <li>
+                                    <A href={RouteKeys.DULUTH.nav} onClick={closeMenu}>
+                                        Duluth
+                                    </A>
+                                </li>
                             </Show>
                             <Show when={isAdmin()}>
                                 <li>
