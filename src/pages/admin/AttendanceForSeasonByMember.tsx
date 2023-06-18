@@ -15,7 +15,7 @@ import { sortByFirstName } from '../../utilities/sorts'
 import Config from '../../config'
 
 const AttendanceForSeasonByMember: Component<{ season: Accessor<string> }> = (props) => {
-    const [allAttendance] = createResource(props.season, getAttendanceForAllMembers)
+    const [allAttendanceStats] = createResource(props.season, getAttendanceForAllMembers)
     const [members] = createResource(props.season, getMembers)
     const [events] = createResource(props.season, getSeasonEvents)
     const [filteredMembers, setfilteredMembers] = createSignal<Member[]>([])
@@ -48,73 +48,6 @@ const AttendanceForSeasonByMember: Component<{ season: Accessor<string> }> = (pr
         return records.length
     })
 
-    // function to get the number of attended events by a member of the last few regular events (Config.lastNumPracticesAttended).
-    // events should be sorted on backend
-    const lastFewRegularCount = (memberId: number) => {
-        if (isEmpty(events())) {
-            return 0
-        }
-        // get only regular events
-        const filtered = events().filter((event: RobotEvent) => {
-            return event.event_type === EventTypes.REGULAR_PRACTICE
-        })
-        // need the date of the practice we are going by
-        let lastDate: string
-        // if we have less events than the number we are looking for, take the last one
-        if (filtered.length < Config.lastNumPracticesAttended) {
-            lastDate = filtered[filtered.length - 1].event_date
-        } else {
-            lastDate = filtered[Config.lastNumPracticesAttended - 1].event_date
-        }
-        // now find the attendance records for the events limited by the date we figured out
-        const records = allAttendance().filter((record) => {
-            const event = eventMap().get(record.event_id)
-            // undefined means the event shouldn't have had attendance records on it
-            return (
-                event !== undefined &&
-                record.member_id === memberId &&
-                event.event_type === EventTypes.REGULAR_PRACTICE &&
-                record.attendance !== AttendanceTypes.ABSENT &&
-                toDate(record.meeting_date) >= toDate(lastDate)
-            )
-        })
-        if (isEmpty(records)) {
-            return 0
-        }
-        return records.length
-    }
-
-    // function to get practices attended by a member
-    const getFullCount = (memberId: number) => {
-        if (isEmpty(allAttendance())) {
-            return 0
-        }
-        const data = allAttendance().filter((record) => {
-            const event = eventMap().get(record.event_id)
-            // undefined means the event shouldn't have had attendance records on it
-            return event !== undefined && record.member_id === memberId && record.attendance !== AttendanceTypes.ABSENT
-        })
-        return isEmpty(data) ? 0 : data.length
-    }
-
-    // function to get regular practices attended by a member
-    const getRegularCount = (memberId: number) => {
-        if (isEmpty(allAttendance())) {
-            return 0
-        }
-        const data = allAttendance().filter((record) => {
-            const event = eventMap().get(record.event_id)
-            // undefined means the event shouldn't have had attendance records on it
-            return (
-                event !== undefined &&
-                record.member_id === memberId &&
-                event.event_type === EventTypes.REGULAR_PRACTICE &&
-                record.attendance !== AttendanceTypes.ABSENT
-            )
-        })
-        return isEmpty(data) ? 0 : data.length
-    }
-
     type memberIdType = { memberId: number }
     const handleNavToMember = (data: memberIdType, event) => {
         event.preventDefault()
@@ -131,7 +64,7 @@ const AttendanceForSeasonByMember: Component<{ season: Accessor<string> }> = (pr
 
     // the show prevents race condition when solid can't tell eventMap updated on it's own
     return (
-        <Show when={eventMap()?.size > 0 && allAttendance()?.length > 0}>
+        <Show when={eventMap()?.size > 0 && allAttendanceStats()?.length > 0}>
             <div>
                 <div class="text-l lg:text-xl font-semibold p-4">
                     {allRegularCount()} regular meetings of {allEventCount()} total events in season {props.season()}
@@ -160,9 +93,11 @@ const AttendanceForSeasonByMember: Component<{ season: Accessor<string> }> = (pr
                     <tbody>
                         <For each={filteredMembers()}>
                             {(record) => {
-                                const fullCount = getFullCount(record.member_id)
-                                const regularCount = getRegularCount(record.member_id)
-                                const lastFew = lastFewRegularCount(record.member_id)
+                                const {
+                                    all_count: allCount,
+                                    regular_count: regularCount,
+                                    last_few_count: lastFewCount,
+                                } = allAttendanceStats().find((candidate) => candidate.member_id === record.member_id)
                                 return (
                                     <tr>
                                         <td
@@ -193,12 +128,12 @@ const AttendanceForSeasonByMember: Component<{ season: Accessor<string> }> = (pr
                                             </div>
                                         </td>
                                         <td>
-                                            {fullCount} ({calculatePercent(fullCount, allEventCount())}%)
+                                            {allCount} ({calculatePercent(allCount, allEventCount())}%)
                                         </td>
                                         <td>
                                             {regularCount} ({calculatePercent(regularCount, allRegularCount())}%)
                                         </td>
-                                        <td>{lastFew}</td>
+                                        <td>{lastFewCount}</td>
                                     </tr>
                                 )
                             }}

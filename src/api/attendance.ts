@@ -1,6 +1,7 @@
 import { isBefore } from 'date-fns'
 import { getToday, toDate, toYMD } from '../calendar/utilities'
-import { Attendance, AttendanceTypesType, EventAttendance, MemberAttendance } from '../types/Api'
+import Config from '../config'
+import { Attendance, AttendanceStats, AttendanceTypesType, EventAttendance, MemberAttendance } from '../types/Api'
 import { getStartEndOfSeason } from '../utilities/converters'
 import { supabase } from './SupabaseClient'
 
@@ -125,23 +126,21 @@ const getAttendanceForMember = async ({ season, memberId }) => {
  * Fetch Attendance for all members within the season (so far)
  * Seaason is the year the game comes out (in January)
  */
-const getAttendanceForAllMembers = async (season: string) => {
+const getAttendanceStatsForAllMembers = async (season: string) => {
     const { startDate, endDate } = getStartEndOfSeason(season)
     const theEnd = isBefore(getToday(), toDate(endDate)) ? toYMD(getToday()) : endDate
-    const { data, error } = await supabase
-        .from('attendance')
-        .select('attendance_id, member_id, meeting_date, attendance, event_id, events(*)')
-        .gte('meeting_date', startDate)
-        .lte('meeting_date', theEnd)
-        .eq('events.deleted', false)
-        // doesn't work how we want it to. just returns null for an event, doesn't remove attendance record
-        .eq('events.take_attendance', true)
+    const { data, error } = await supabase.rpc('aggregate_attendance_stats', {
+        start_date: startDate,
+        end_date: theEnd,
+        //number of attended events by a member of the last few regular events (Config.lastNumPracticesAttended).
+        last_num_practices: Config.lastNumPracticesAttended,
+    })
     if (error) throw error
 
     if (data.length === 0) {
         return null
     }
-    return data as Attendance[]
+    return data as AttendanceStats[]
 }
 
 export {
@@ -152,5 +151,5 @@ export {
     insertAttendance,
     getAttendanceForMember,
     getAttendanceByEvent,
-    getAttendanceForAllMembers,
+    getAttendanceStatsForAllMembers as getAttendanceForAllMembers,
 }
