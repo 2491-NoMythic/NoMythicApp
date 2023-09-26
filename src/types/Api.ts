@@ -53,6 +53,9 @@ const CheckinStatus = {
 } as const
 type CheckinStatusType = typeof CheckinStatus[keyof typeof CheckinStatus]
 
+export { SubTeam, TeamRole, AttendanceTypes, School, EventTypes, CheckinStatus }
+
+
 type Member = {
     member_id?: number
     auth_id?: string
@@ -100,12 +103,12 @@ type Attendance = {
 }
 
 type MemberAttendance = {
-    member_id: number
-    first_name: string
-    last_name: string
-    sub_team: SubTeamType
-    team_role: TeamRoleType
-    attendance: Attendance
+    member_id?: number
+    first_name?: string
+    last_name?: string
+    sub_team?: SubTeamType
+    team_role?: TeamRoleType
+    attendance?: Attendance
 }
 
 type EventAttendance = {
@@ -193,6 +196,17 @@ type MealListItem = {
     meals: MealInfo
 }
 
+type Year = {
+    year: number
+    game?: string
+}
+
+type MemberYear = {
+    member_year_id?: number
+    member_id: number
+    year: number
+}
+
 export type {
     MemberAttendance,
     Member,
@@ -215,6 +229,6 @@ export type {
     Meal,
     MealInfo,
     MealListItem,
+    Year,
+    MemberYear,
 }
-
-export { SubTeam, TeamRole, AttendanceTypes, School, EventTypes, CheckinStatus }

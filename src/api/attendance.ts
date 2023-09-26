@@ -1,8 +1,31 @@
 import { isBefore } from 'date-fns'
 import { getToday, toDate, toYMD } from '../calendar/utilities'
 import { Attendance, AttendanceTypesType, EventAttendance, MemberAttendance } from '../types/Api'
-import { getStartEndOfSeason } from '../utilities/converters'
+import { getSeason, getStartEndOfSeason } from '../utilities/converters'
 import { supabase } from './SupabaseClient'
+import { getEventById } from './events'
+
+type MemberYear = {
+    members: MemberAttendance
+}
+
+const flattenMemberAttendance = (memberYears: MemberYear[]) => {
+    if (memberYears.length === 0) {
+        return null;
+    }
+    let memberAttendance = [] as MemberAttendance[]
+    memberYears.forEach((memberYear: MemberYear) => { 
+        let member: MemberAttendance = {}
+        member.member_id = memberYear.members.member_id
+        member.first_name = memberYear.members.first_name
+        member.last_name = memberYear.members.last_name
+        member.team_role = memberYear.members.team_role
+        member.sub_team = memberYear.members.sub_team
+        member.attendance = memberYear.members.attendance
+        memberAttendance.push(member) 
+    })
+    return memberAttendance
+} 
 
 /**
  * Get list of events for the season and their attendance
@@ -35,18 +58,25 @@ const getMemberAttendance = async (eventId: number) => {
     if (eventId === -1) {
         return []
     }
+    const robotEvent = await getEventById(eventId);
+    const year = getSeason(toDate(robotEvent.event_date))
+    console.log('year', year)
     const { data, error } = await supabase
-        .from('members')
-        .select('member_id, first_name, last_name, sub_team, team_role, attendance(*)')
-        .eq('attendance.event_id', eventId)
-        .eq('deleted', false)
+        .from('member_year')
+        .select('members(member_id, first_name, last_name, sub_team, team_role, attendance(*))')
+        .eq('members.attendance.event_id', eventId)
+        .eq('members.deleted', false)
+        .eq('year', year + '')
 
     if (error) throw error
 
     if (data.length === 0) {
         return []
     }
-    return data as unknown as MemberAttendance[]
+    const flattened = flattenMemberAttendance(data as MemberYear[])
+    console.log('data', data)
+    console.log('flattened', flattened);
+    return flattened
 }
 
 /**
@@ -123,7 +153,7 @@ const getAttendanceForMember = async ({ season, memberId }) => {
 
 /**
  * Fetch Attendance for all members within the season (so far)
- * Seaason is the year the game comes out (in January)
+ * Season is the year the game comes out (in January)
  */
 const getAttendanceForAllMembers = async (season: string) => {
     const { startDate, endDate } = getStartEndOfSeason(season)
