@@ -1,15 +1,39 @@
 import { Member } from '../types/Api'
 import { supabase } from './SupabaseClient'
 
+type MemberYear = {
+    members: Member
+}
+
+const flattenMembers = (memberYears: MemberYear[]) => {
+    if (memberYears.length === 0) {
+        return null;
+    }
+    let members = [] as Member[]
+    memberYears.forEach((memberYear: MemberYear) => { 
+        let member: Member = {}
+        member.member_id = memberYear.members.member_id
+        member.first_name = memberYear.members.first_name
+        member.last_name = memberYear.members.last_name
+        member.pronouns= memberYear.members.pronouns
+        member.team_role = memberYear.members.team_role
+        member.sub_team = memberYear.members.sub_team
+        member.email = memberYear.members.email
+        member.phone = memberYear.members.phone
+        member.food_needs = memberYear.members.food_needs
+        members.push(member) 
+    })
+    return members
+} 
+
 const getMembers = async (year: string) => {
     const { data, error } = await supabase
-        .from('members')
-        .select('member_id, first_name, last_name, pronouns, team_role, sub_team, email, phone, food_needs')
-        .eq('deleted', false)
+        .from('member_year')
+        .select('members(member_id, first_name, last_name, pronouns, team_role, sub_team, email, phone, food_needs)')
+        .eq('year', year)
 
     if (error) throw error
-
-    return data as Member[]
+    return flattenMembers(data as MemberYear[]) as Member[]
 }
 
 const getMemberByEmail = async (email: string) => {

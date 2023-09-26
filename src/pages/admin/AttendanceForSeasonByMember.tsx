@@ -18,7 +18,7 @@ const AttendanceForSeasonByMember: Component<{ season: Accessor<string> }> = (pr
     const [allAttendance] = createResource(props.season, getAttendanceForAllMembers)
     const [members] = createResource(props.season, getMembers)
     const [events] = createResource(props.season, getSeasonEvents)
-    const [filteredMembers, setfilteredMembers] = createSignal<Member[]>([])
+    const [filteredMembers, setFilteredMembers] = createSignal<Member[]>([])
     const [sessionValues] = useSessionContext()
     const navigate = useNavigate()
 
@@ -58,6 +58,9 @@ const AttendanceForSeasonByMember: Component<{ season: Accessor<string> }> = (pr
         const filtered = events().filter((event: RobotEvent) => {
             return event.event_type === EventTypes.REGULAR_PRACTICE
         })
+        if (isEmpty(filtered)) {
+            return 0
+        }
         // need the date of the practice we are going by
         let lastDate: string
         // if we have less events than the number we are looking for, take the last one
@@ -126,7 +129,7 @@ const AttendanceForSeasonByMember: Component<{ season: Accessor<string> }> = (pr
     createEffect(() => {
         const filtered = filterBySubTeam(members(), sessionValues.subTeam)
         const sorted = sortByFirstName(filtered)
-        setfilteredMembers(sorted)
+        setFilteredMembers(sorted)
     })
 
     // the show prevents race condition when solid can't tell eventMap updated on it's own

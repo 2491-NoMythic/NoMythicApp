@@ -29,10 +29,10 @@ const AttendancePage: Component = () => {
     const navigate = useNavigate()
     const [sessionValues] = useSessionContext()
     const { isAdmin } = useNoMythicUser()
-
+    
     const [team, { refetch }] = createResource(() => parseInt(params.id || '-1'), getMemberAttendance)
 
-    // meeting date is only used for getting inital data
+    // meeting date is only used for getting initial data
     const [meetingDate, setMeetingDate] = createSignal<string>(toYMD(getToday()))
     // eventsToday is only used to get initial data when hitting the page for first time
     const [eventsToday] = createResource(meetingDate, getEventsForDay)
