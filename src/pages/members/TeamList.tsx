@@ -13,11 +13,14 @@ import { useSessionContext } from '../../contexts/SessionContext'
 import { RouteKeys } from '../../components/AppRouting'
 import { formatUrl } from '../../utilities/formatters'
 import { useNoMythicUser } from '../../contexts/UserContext'
+import { getSeason } from '../../utilities/converters'
 
 const TeamList: Component = () => {
+    const today = new Date()
+    const formatted = getSeason(today) + ''
+    const [season, setSeason] = createSignal<string>(formatted)
     const [filteredTeam, setFilteredTeam] = createSignal<Member[]>([])
-    const [year, setYear] = createSignal('2023')
-    const [team] = createResource(year, getMembers)
+    const [team] = createResource(season, getMembers)
     const [sessionValues] = useSessionContext()
     const { isAdmin } = useNoMythicUser()
 
@@ -35,7 +38,7 @@ const TeamList: Component = () => {
                     <div class="grow mr-2">
                         <SubTeamSelector />
                     </div>
-                    <YearPicker year={year} setYear={setYear} />
+                    <YearPicker year={season} setYear={setSeason} />
                 </div>
                 {isAdmin() && (
                     <div class="flex mt-4 items-end">
