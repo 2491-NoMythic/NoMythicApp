@@ -121,8 +121,7 @@ const AttendanceForSeasonByMember: Component<{ season: Accessor<string> }> = (pr
     type memberIdType = { memberId: number }
     const handleNavToMember = (data: memberIdType, event) => {
         event.preventDefault()
-
-        navigate(formatUrl(RouteKeys.ATTENDANCE_MEMBER.nav, { mid: data.memberId }, { season: '2023' }))
+        navigate(formatUrl(RouteKeys.ATTENDANCE_MEMBER.nav, { mid: data.memberId }, { season: props.season() }))
     }
 
     // runs whenever team/subTeam are changed

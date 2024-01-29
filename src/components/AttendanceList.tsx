@@ -18,7 +18,7 @@ const AttendanceList: Component<{
     const handleNavToMember = (data: memberIdType, event) => {
         event.preventDefault()
         if (props.clickToMember) {
-            navigate(formatUrl(RouteKeys.ATTENDANCE_MEMBER.nav, { mid: data.memberId }, { season: '2023' }))
+            navigate(formatUrl(RouteKeys.ATTENDANCE_MEMBER.nav, { mid: data.memberId }, { season: '2024' }))
         }
     }
 
