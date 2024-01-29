@@ -9,7 +9,7 @@ import { isEmpty } from '../../utilities/bitsAndBobs'
 import { formatEnumValue, formatUrl } from '../../utilities/formatters'
 
 const MealList: Component = () => {
-    const [year, setYear] = createSignal('2023')
+    const [year, setYear] = createSignal('2024')
     const [mealList, { refetch }] = createResource(year, getMealList)
     const { member } = useNoMythicUser()
 
