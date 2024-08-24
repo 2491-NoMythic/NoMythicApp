@@ -1,7 +1,7 @@
 import { Accessor, Component, createSignal, For, Setter } from 'solid-js'
 
 // TODO: should get these from the db
-const validYears = ['2023', '2024']
+const validYears = ['2023', '2024', '2025']
 
 const YearPicker: Component<{
     year: Accessor<string>

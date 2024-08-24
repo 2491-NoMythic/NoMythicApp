@@ -1,5 +1,5 @@
 import { useNavigate } from '@solidjs/router'
-import { Accessor, Component, createEffect, For, Show } from 'solid-js'
+import { Accessor, Component, For, Show } from 'solid-js'
 import { checkAttendanceForEvent, insertAttendance, updateAttendance } from '../api/attendance'
 import { AttendanceTypes, AttendanceTypesType, MemberAttendance, SubTeam } from '../types/Api'
 import { capitalizeWord, formatUrl } from '../utilities/formatters'
@@ -17,8 +17,9 @@ const AttendanceList: Component<{
     type memberIdType = { memberId: number }
     const handleNavToMember = (data: memberIdType, event) => {
         event.preventDefault()
+        //TODO: hard coded to current year ???
         if (props.clickToMember) {
-            navigate(formatUrl(RouteKeys.ATTENDANCE_MEMBER.nav, { mid: data.memberId }, { season: '2024' }))
+            navigate(formatUrl(RouteKeys.ATTENDANCE_MEMBER.nav, { mid: data.memberId }, { season: '2025' }))
         }
     }
 

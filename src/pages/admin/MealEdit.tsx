@@ -48,8 +48,9 @@ const MealEdit: Component = () => {
     const [opened, setOpened] = createSignal(false)
     const [eventMeal] = createResource(() => parseInt(params.id), getMealByEventId)
     const [event] = createResource(() => parseInt(params.id), getEventById)
-    const [members] = createResource('2024', getMembers)
-    const [allParents] = createResource('2024', getAllParents)
+    //TODO: hard coded to current year ???
+    const [members] = createResource('2025', getMembers)
+    const [allParents] = createResource('2025', getAllParents)
     const navigate = useNavigate()
 
     const createOptions = (data: Array<any>, valueName: string) => {

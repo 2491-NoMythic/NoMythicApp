@@ -22,7 +22,8 @@ const CheckinList: Component<{
     const handleNavToMember = (data: memberIdType, event) => {
         event.preventDefault()
         if (props.clickToMember) {
-            navigate(formatUrl(RouteKeys.ATTENDANCE_MEMBER.nav, { mid: data.memberId }, { season: '2024' }))
+            //TODO: hard coded to current year ???
+            navigate(formatUrl(RouteKeys.ATTENDANCE_MEMBER.nav, { mid: data.memberId }, { season: '2025' }))
         }
     }
 
