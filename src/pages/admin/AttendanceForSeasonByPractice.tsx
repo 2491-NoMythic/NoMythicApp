@@ -6,15 +6,18 @@ import { Attendance, AttendanceTypes } from '../../types/Api'
 import { isEmpty } from '../../utilities/bitsAndBobs'
 import { calculateMonth, formatEnumValue } from '../../utilities/formatters'
 import { sortEventAttendance } from '../../utilities/sorts'
+import { useSessionContext } from '../../contexts/SessionContext'
 
 const AttendanceForSeasonByPractice: Component<{ season: Accessor<string> }> = (props) => {
+    const [sessionValues] = useSessionContext();
     const [attendance, { mutate, refetch }] = createResource(props.season, getAttendanceByEvent)
     const [memberCount, setMemberCount] = createSignal<number>(0)
 
     let currentMonth = ''
 
     onMount(async () => {
-        const count = await getMemberCount()
+        const year = sessionValues.season;
+        const count = await getMemberCount(year)
         setMemberCount(count)
     })
 

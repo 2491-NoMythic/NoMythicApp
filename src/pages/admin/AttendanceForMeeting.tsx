@@ -26,7 +26,8 @@ const AttendanceForMeeting: Component = () => {
     const [anEvent] = createResource(() => parseInt(params.id), getEventById)
 
     onMount(async () => {
-        const count = await getMemberCount()
+        const year = sessionValues.season;
+        const count = await getMemberCount(year)
         setMemberCount(count)
     })
 

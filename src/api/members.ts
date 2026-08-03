@@ -129,11 +129,11 @@ const deleteMember = async (memberId: number) => {
     if (error) throw error
 }
 
-const getMemberCount = async () => {
+const getMemberCount = async (year: string) => {
     const { count, error } = await supabase
-        .from('members')
+        .from('member_year')
         .select('*', { count: 'exact', head: true })
-        .eq('deleted', false)
+        .eq('year', year)
 
     if (error) throw error
     return count as number

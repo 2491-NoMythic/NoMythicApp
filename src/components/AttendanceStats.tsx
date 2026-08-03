@@ -10,6 +10,7 @@ const AttendanceStats: Component<{
     meetingType: string
     teamSize: number
 }> = (props) => {
+    console.log('teamSize', props.teamSize);
     return (
         <TwoSideStatsBase
             leftText={calculateDay(props.meetingDate)}
@@ -17,7 +18,7 @@ const AttendanceStats: Component<{
             leftSubText={props.meetingType}
             rightText="Attended"
             rightValue={props.meetingCount?.toString()}
-            rightSubText={calculatePercent(props.meetingCount, props.teamSize) + '%'}
+            rightSubText={calculatePercent(props.meetingCount, props.teamSize) + '% of ' + props.teamSize}
             link={formatUrl(RouteKeys.ATTENDANCE_MEETING.nav, { id: props.eventId })}
         />
     )

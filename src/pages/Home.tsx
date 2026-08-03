@@ -15,7 +15,7 @@ const Home: Component = () => {
         const { data, error } = await supabase.auth.signInWithOAuth({
             provider: 'google',
             options: {
-                redirectTo: redirectUrl,
+                redirectTo: 'http://localhost:3000/welcome' //redirectUrl,
             },
         })
         if (error) throw error
